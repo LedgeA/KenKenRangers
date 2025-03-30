@@ -1,0 +1,33 @@
+.background {
+    -fx-background-image: url("../images/bg1.png");
+    -fx-background-size: cover;  
+    -fx-background-position: center; 
+    -fx-background-repeat: no-repeat;
+}
+.title-text {
+    -fx-font-size: 150px;
+    -fx-font-family: "Press Start 2P Regular";
+    -fx-text-fill: linear-gradient(from 0% 0% to 0% 100%, #B02825, #FFD700);
+    -fx-effect: dropshadow(gaussian, black, 10, 0, 0, 0),
+    dropshadow(gaussian, black, 20, 0, 0, 0),
+    dropshadow(gaussian, black, 30, 0, 0, 0);
+}
+.button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 50px;
+    -fx-font-family: "Press Start 2P Regular";
+    -fx-border-color: transparent;
+    -fx-effect: 
+        dropshadow(gaussian, black, 5, 0, 0, 0),
+        dropshadow(gaussian, black, 10, 0, 0, 0),
+        dropshadow(gaussian, black, 15, 0, 0, 0);
+}
+
+.button:hover {
+    -fx-text-fill: #FFD700;
+    -fx-effect: 
+        dropshadow(gaussian, black, 5, 0, 0, 0),
+        dropshadow(gaussian, black, 10, 0, 0, 0),
+        dropshadow(gaussian, black, 15, 0, 0, 0);
+}
