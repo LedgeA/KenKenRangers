@@ -12,32 +12,75 @@ public class PuzzleController {
     @FXML
     GridPane puzzleGridPane;
     
-    int[][] solutionSet;
+    Cell[][] cells;
+    List<Cage> cages;
     int size = 4;
 
+    Random random;
+
     public PuzzleController() {
-        this.solutionSet = new int[size][size];
+        initializeCells();
         generateSolutionSet();
         printBoard();
         
     }
 
-    void generateSolutionSet() {
-        fillSolutionSet(0, 0);
+    private void createCages() {
+        boolean[][] used = new boolean[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (!used[i][j]) {
+                    createRandomCage(i, j);
+                }
+            }
+        }
     }
 
-    boolean fillSolutionSet(int row, int col) {
+    private void createRandomCage(int row, int col) {
+        int i = 0;
+        this.cells[row][col].cageNumber = cages.size();
+
+        int cageSize = random.nextInt(3) + 1;
+        // while (i < cageSize) {
+        //     int[] lastCell = cells.get(random.nextInt(cells.size()));
+        //     int newRow = lastCell[0] + (random.nextBoolean() ? 1 : -1);
+        //     int newCol = lastCell[1] + (random.nextBoolean() ? 1 : -1);
+
+        //     if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size && !used[newRow][newCol]) {
+        //         cells.add(new int[]{newRow, newCol});
+        //         used[newRow][newCol] = true;
+        //     }
+        // }
+
+        cages.add(new Cage());
+    }
+
+    void initializeCells() {
+        this.cells = new Cell[size][size];
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                this.cells[i][j] = new Cell(i, j, 0);
+            }
+        }
+    }
+
+    void generateSolutionSet() {
+        fillCells(0, 0);
+    }
+
+    boolean fillCells(int row, int col) {
 
         if (row == size) return true;
-        if (col == size) return fillSolutionSet(row + 1, 0);
+        if (col == size) return fillCells(row + 1, 0);
 
         List<Integer> numbers = generateRandomNumbers();
 
         for (int num : numbers) {
             if (isSafe(row, col, num)) {
-                solutionSet[row][col] = num;
-                if (fillSolutionSet(row, col + 1)) return true;
-                solutionSet[row][col] = 0;
+                cells[row][col].value = num;
+                if (fillCells(row, col + 1)) return true;
+                cells[row][col].value = 0;
             }
         }
 
@@ -46,7 +89,7 @@ public class PuzzleController {
 
     boolean isSafe(int row, int col, int num) {
         for (int i = 0; i < size; i++) {
-            if (solutionSet[row][i] == num || solutionSet[i][col] == num) return false;
+            if (cells[row][i].value == num || cells[i][col].value == num) return false;
         }
 
         return true;
@@ -65,7 +108,7 @@ public class PuzzleController {
     public void printBoard() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                System.out.print((solutionSet[i][j] == 0 ? " . " : " " + solutionSet[i][j] + " "));
+                System.out.print((cells[i][j].value == 0 ? " . " : " " + cells[i][j].value + " "));
             }
             System.out.println();
         }
@@ -74,21 +117,24 @@ public class PuzzleController {
 
     static class Cage {
 
-        Cell[] cells;
         char operator;
         int result;
         int size;
+        List<Integer> row, col;
 
+        Random random;
         Cage() {
+            List<Integer> row = new ArrayList<>();
+            List<Integer> col = new ArrayList<>();
+            
             generateRandomOperator();
-            this.cells = new Cell[size];
         }
 
         void generateRandomOperator() {
-            switch ((int)(Math.random() * 4) + 1) {
+            switch (random.nextInt(1, 3)) {
                 case 1 -> {
                     this.operator = '+';
-                    this.size = (int)(Math.random() * 4) + 3;
+                    this.size = random.nextInt(3, 5);
                 }
                 case 2 -> {
                     this.operator = '-';
@@ -103,14 +149,6 @@ public class PuzzleController {
                     this.size = 2;
                 }
             
-            }
-        }
-
-        void computeForResult() {
-            this.result = cells[0].value;
-
-            for (int i = 1; i < size; i++) {
-                this.result = performArithmetic(this.result, cells[i].value);
             }
         }
 
@@ -142,23 +180,15 @@ public class PuzzleController {
             return -1;
         }
 
-        void addCells(int row, int col, int value) {
-            for (int i = 0; i < size; i++) {
-                if (cells[i] == null) cells[i] = new Cell(row, col, value);
-            }
+        void addCellPosition(int row, int col) {
+            this.row.add(row);
+            this.col.add(col);
         }
 
-        Cell getCell(int row, int col) {
-            for (int i = 0; i < size; i++) {
-                if (cells[i].row == row && cells[i].col == col) return cells[i];
-            }
-
-            return null;
-        }
     }
 
     static class Cell {
-        int row, col, value;
+        int row, col, value = 0, cageNumber = -1;
 
         Cell(int row, int col, int value) {
             this.row = row;
