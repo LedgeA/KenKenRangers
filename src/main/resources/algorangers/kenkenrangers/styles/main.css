@@ -4,6 +4,7 @@
     -fx-background-position: center; 
     -fx-background-repeat: no-repeat;
 }
+
 .title-text {
     -fx-font-size: 150px;
     -fx-font-family: "Press Start 2P Regular";
@@ -12,6 +13,7 @@
     dropshadow(gaussian, black, 20, 0, 0, 0),
     dropshadow(gaussian, black, 30, 0, 0, 0);
 }
+
 .button {
     -fx-background-color: transparent;
     -fx-text-fill: white;
