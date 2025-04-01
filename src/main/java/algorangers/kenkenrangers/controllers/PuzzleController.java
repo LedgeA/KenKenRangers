@@ -139,6 +139,7 @@ public class PuzzleController {
                     label.setMaxWidth(Double.MAX_VALUE);
                     label.setMaxHeight(Double.MAX_VALUE);
                     label.setMouseTransparent(true);
+                    label.setPadding(new Insets(10, 10, 10, 10));
 
                     stackPane.getChildren().addAll(button, label);
                 } else {

@@ -7,7 +7,8 @@
         xmlns:fx="http://javafx.com/fxml"
         fx:id="gridPane"
         fx:controller="algorangers.kenkenrangers.controllers.PuzzleController"
-        hgap="10" vgap="10"
+        hgap="3" vgap="3"
+        style="-fx-padding: 3 3 3 3; -fx-background-color: #000000;"
         alignment="CENTER"
         >
 
