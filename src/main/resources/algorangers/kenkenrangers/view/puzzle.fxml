@@ -8,8 +8,8 @@
         fx:id="gridPane"
         fx:controller="algorangers.kenkenrangers.controllers.PuzzleController"
         hgap="3" vgap="3"
-        maxHeight="500" maxWidth="500"
-        prefHeight="500" prefWidth="500"
+        maxHeight="700" maxWidth="700"
+        prefHeight="700" prefWidth="700"
         style="-fx-padding: 3 3 3 3; -fx-background-color: #000000;"
         alignment="CENTER"
         >

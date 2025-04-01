@@ -34,7 +34,12 @@
             </ProgressBar>
          </left> -->
          <center>
-            <fx:include fx:id="puzzleInclude" source="puzzle.fxml" />
+            <VBox xmlns:fx="http://javafx.com/fxml" spacing="10" alignment="CENTER">
+               <fx:include fx:id="puzzleInclude" source="puzzle.fxml" />
+                  <VBox.margin>
+                     <Insets top="0" right="-100" bottom="0" left="0"/>
+                  </VBox.margin>
+            </VBox>
          </center>
          <right>
             <VBox maxHeight="950.0" prefHeight="980.0" prefWidth="600.0" BorderPane.alignment="BOTTOM_CENTER">
