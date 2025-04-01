@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1980.0" styleClass="background" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="1090.0" fitWidth="1980.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="false" styleClass="background">
+         <image>
+            <Image url="@images/jungle.jpg" />
+         </image>
+      </ImageView>
+     
+            <ImageView fitHeight="774.0" fitWidth="654.0" pickOnBounds="true" preserveRatio="false" styleClass="sprite">
+         <image>
+            <Image url="@images/v4.png" />
+         </image>
+      </ImageView>
+     
+            <ProgressBar fx:id="healthbar" prefWidth="200.0" progress="0.0" styleClass="healthBar" />
+     
+            <Button fx:id="powerupBtn1" prefHeight="125.0" prefWidth="158.0" style="-fx-background-image: url('powerup.png'); -fx-background-size: cover;" styleClass="powerUpButton">
+         <graphic>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/p1.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="powerupBtn2" mnemonicParsing="false" styleClass="powerUpButton2">
+         <graphic>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/p2.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="powerupBtn3" mnemonicParsing="false" styleClass="powerUpButton3">
+         <graphic>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/p3.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <StackPane prefHeight="150.0" prefWidth="200.0">
+         <children>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="Hello Ranger! Welcome to KENKEN RANGERS" />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="Your mission is to fill the grid with numbers, just like Sudoku. But there's a twist!" />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="The grid is divided into color-coded cages." />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="Your goal is to use the numbers inside the cage to match the target number using the given math operation." />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="+ and x deals damage to the enemy. - and / reduces the damage you receive." />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="Numbers must NOT repeat in any row or column." />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="The numbers you use depend on the grid size: For a 3×3 grid, use only numbers 1 to 3.For a 4×4 grid, use numbers 1 to 4 ... and so on!" />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="Take too long in solving the Kenken Puzzle and the enemy will beat you." />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="To make things exciting, we've added special power-ups!" />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="Invincibility makes you invincible for a set amount of time." />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="Damage Multiplier doubles your damage for a set amount of time." />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="3-Cell Reveal reveals 3 of your unsolved tiles." />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label fx:id="dialogueBubble" styleClass="dialogueBubble" text="Let's practice! Tap on a cell to enter a number." />
+               </children>
+            </StackPane>
+         </children>
+      </StackPane>
+   </children>
+</StackPane>
