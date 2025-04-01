@@ -1,200 +1,237 @@
 package algorangers.kenkenrangers.controllers;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import algorangers.models.Cage;
+import algorangers.models.Grid;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class PuzzleController {
-    @FXML
-    GridPane puzzleGridPane;
-    
-    Cell[][] cells;
-    List<Cage> cages;
-    int size = 4;
 
-    Random random;
+    @FXML
+    GridPane gridPane;
+
+    int pixelSize = 850;
+    int[] buttonFocus;
+
+    int[][] inputGrid;
+    int size;
+    int hp = 100;
+    int dps;
+
+    int invincibility = 3;
+    int dmgMultiplier = 3;
+    int cellReveal = 3; // random.nextInt(4) -> get cell from solutionGrid -> assign to inputGrid and disable
+
+    Grid grid;
+    List<Cage> cages;
+
+    ScheduledExecutorService scheduler;
 
     public PuzzleController() {
-        initializeCells();
-        generateSolutionSet();
-        printBoard();
+        this.inputGrid = new int[4][4];
+        this.size = 4;
+        this.dps = 15;
         
+        this.grid = new Grid(this.size);
+        this.cages = grid.getCages();
     }
 
-    private void createCages() {
-        boolean[][] used = new boolean[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (!used[i][j]) {
-                    createRandomCage(i, j);
-                }
-            }
-        }
+    @FXML
+    public void initialize() {
+        setConstraints();
+        addCells();
+        setColors();
+        startDecrementingHP();
     }
 
-    private void createRandomCage(int row, int col) {
-        int i = 0;
-        this.cells[row][col].cageNumber = cages.size();
-
-        int cageSize = random.nextInt(3) + 1;
-        // while (i < cageSize) {
-        //     int[] lastCell = cells.get(random.nextInt(cells.size()));
-        //     int newRow = lastCell[0] + (random.nextBoolean() ? 1 : -1);
-        //     int newCol = lastCell[1] + (random.nextBoolean() ? 1 : -1);
-
-        //     if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size && !used[newRow][newCol]) {
-        //         cells.add(new int[]{newRow, newCol});
-        //         used[newRow][newCol] = true;
-        //     }
-        // }
-
-        cages.add(new Cage());
-    }
-
-    void initializeCells() {
-        this.cells = new Cell[size][size];
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                this.cells[i][j] = new Cell(i, j, 0);
-            }
-        }
-    }
-
-    void generateSolutionSet() {
-        fillCells(0, 0);
-    }
-
-    boolean fillCells(int row, int col) {
-
-        if (row == size) return true;
-        if (col == size) return fillCells(row + 1, 0);
-
-        List<Integer> numbers = generateRandomNumbers();
-
-        for (int num : numbers) {
-            if (isSafe(row, col, num)) {
-                cells[row][col].value = num;
-                if (fillCells(row, col + 1)) return true;
-                cells[row][col].value = 0;
-            }
+    private void decrementHP() {    
+        if (this.hp <= 0) {
+            stopDecrementingHP();  
+            return;
         }
 
-        return false;
+        this.hp -= this.dps;
+        System.out.println(this.hp + " ");
     }
 
-    boolean isSafe(int row, int col, int num) {
-        for (int i = 0; i < size; i++) {
-            if (cells[row][i].value == num || cells[i][col].value == num) return false;
-        }
-
-        return true;
+    private void startDecrementingHP() {
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(this::decrementHP, 0, 5, TimeUnit.SECONDS);
     }
 
-    List<Integer> generateRandomNumbers() {
-        List<Integer> numbers = new ArrayList<>();
-        for (int i = 1; i <= size; i++) {
-            numbers.add(i);
-        }
-        Collections.shuffle(numbers, new Random());
-
-        return numbers;
+    private void stopDecrementingHP() {
+        scheduler.shutdown();
     }
 
-    public void printBoard() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                System.out.print((cells[i][j].value == 0 ? " . " : " " + cells[i][j].value + " "));
-            }
-            System.out.println();
-        }
-    }
+    private void setColors() {
+        int cageSize = this.cages.size();
 
-
-    static class Cage {
-
-        char operator;
-        int result;
-        int size;
-        List<Integer> row, col;
-
-        Random random;
-        Cage() {
-            List<Integer> row = new ArrayList<>();
-            List<Integer> col = new ArrayList<>();
+        for (int i = 0; i < cageSize; i++) {
+            String color = cages.get(i).getColor();
+            List<int[]> cells = cages.get(i).getCells();
+            int cellSize = cells.size();
             
-            generateRandomOperator();
-        }
-
-        void generateRandomOperator() {
-            switch (random.nextInt(1, 3)) {
-                case 1 -> {
-                    this.operator = '+';
-                    this.size = random.nextInt(3, 5);
-                }
-                case 2 -> {
-                    this.operator = '-';
-                    this.size = 2;
-                }
-                case 3 -> {
-                    this.operator = '*';
-                    this.size = 3;
-                }
-                case 4 -> {
-                    this.operator = '/';
-                    this.size = 2;
-                }
-            
+            for (int j = 0; j < cellSize; j++) {
+                findCell(cells.get(j)[0], cells.get(j)[1], color);
             }
-        }
-
-        int performArithmetic(int operandOne, int operandTwo) {
-            switch (this.operator) {
-                case '+' -> {
-                    return operandOne + operandTwo;
-                }
-                case '-' -> {
-                    return operandOne - operandTwo;
-                }
-                case '*' -> {
-                    return operandOne * operandTwo;
-                }
-                case '/' -> {
-                    float result = operandOne / operandTwo;
-                    
-                    // return if the result is an integer
-                    if ((int) result == operandOne / operandTwo) {
-                        return operandOne / operandTwo;
-                    }
-
-                    this.operator = '-';
-
-                    return -1;
-                }
-            }
-
-            return -1;
-        }
-
-        void addCellPosition(int row, int col) {
-            this.row.add(row);
-            this.col.add(col);
-        }
-
-    }
-
-    static class Cell {
-        int row, col, value = 0, cageNumber = -1;
-
-        Cell(int row, int col, int value) {
-            this.row = row;
-            this.col = col;
-            this.value = value;
         }
     }
 
+    private void setConstraints() {
+        double cellSize = pixelSize / size;
+        for (int i = 0; i < this.size; i++) {
+            ColumnConstraints colConstraints = new ColumnConstraints();
+            colConstraints.setPercentWidth(cellSize * 100);
+            gridPane.getColumnConstraints().add(colConstraints);
+
+            RowConstraints rowConstraints = new RowConstraints();
+            rowConstraints.setPrefHeight(cellSize);
+            gridPane.getRowConstraints().add(rowConstraints);
+        }
+    }
+
+    private void addCells() {
+        for (int row = 0; row < this.size; row++) {
+            for (int col = 0; col < this.size; col++) {
+                Button button = new Button();
+                button.setMaxWidth(Double.MAX_VALUE);
+                button.setMaxHeight(Double.MAX_VALUE);
+
+                Font customFont = Font.loadFont(
+                    getClass().getResourceAsStream(
+                        "/algorangers/kenkenrangers/fonts/PressStart2P-Regular.ttf"), 16);
+
+                button.setFont(customFont);
+                
+                button.setOnAction(event -> handleButtonClick(button));
+                button.setOnKeyPressed(event -> handleKeyPressed(button, event));
+
+                StackPane stackPane = new StackPane();
+
+                int cagePosition = findCage(row, col);
+                List<int[]> cells = cages.get(cagePosition).getCells();
+
+                if (cells.get(0)[0] == row && cells.get(0)[1] == col ) {
+                    Label label = new Label(cages.get(cagePosition).getTarget() + " " + Character.toString(cages.get(cagePosition).getOperation()));
+                    label.setFont(Font.loadFont(
+                        getClass().getResourceAsStream(
+                            "/algorangers/kenkenrangers/fonts/VT323-Regular.ttf"), 20));
+                    label.setAlignment(Pos.TOP_LEFT);
+                    label.setMaxWidth(Double.MAX_VALUE);
+                    label.setMaxHeight(Double.MAX_VALUE);
+                    label.setMouseTransparent(true);
+
+                    stackPane.getChildren().addAll(button, label);
+                } else {
+                    stackPane.getChildren().add(button);
+                }
+
+                gridPane.add(stackPane, col, row);
+            }
+        }
+    }
+
+    private int findCage(int row, int col) {
+        int cageSize = cages.size();
+
+        for (int cageIndex = 0; cageIndex < cageSize; cageIndex++) {
+            List<int[]> cells = cages.get(cageIndex).getCells();
+            int cellSize = cells.size();
+
+            for (int cellIndex = 0; cellIndex < cellSize; cellIndex++) {
+                if (cells.get(cellIndex)[0] == row && cells.get(cellIndex)[1] == col) {
+                    return cageIndex;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private void findCell(int row, int col, String color) {
+        for (Node node : this.gridPane.getChildren()) {
+            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col) {
+                changeCellColor((Button) ((StackPane) node).getChildren().get(0), color);
+            }
+        }
+    }
+
+    private void findCell(int row, int col) {
+        for (Node node : this.gridPane.getChildren()) {
+            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col) {
+                Button button = (Button) ((StackPane) node).getChildren().get(0);
+                button.setDisable(true);
+            }
+        }
+    }
+
+    private void changeCellColor(Button button, String color) {
+        button.setBackground(new Background(new BackgroundFill(Color.web(color), CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+
+    private void handleButtonClick(Button button) {
+        int row = GridPane.getRowIndex((StackPane) button.getParent());
+        int col = GridPane.getColumnIndex((StackPane) button.getParent());
+
+        buttonFocus = new int[]{row, col};
+    }
+
+    private void handleKeyPressed(Button button, KeyEvent event) {
+        System.err.print(event.getText());
+
+        if (isValidNumber(event.getText())) {
+            button.setText(event.getText());
+            inputGrid[GridPane.getRowIndex((StackPane) button.getParent())][GridPane.getColumnIndex((StackPane) button.getParent())] = Integer.parseInt(button.getText());
+        }
+
+        int[][] solutionGrid = grid.getGrid();
+
+        for (int i = 0; i < this.cages.size(); i++) {
+            if (this.cages.get(i).areCageEntriesAreValid(solutionGrid, inputGrid)) {
+                List<int[]> cells = this.cages.get(i).getCells();
+                
+                for (int j = 0; j < cells.size(); j++) {
+                    findCell(cells.get(j)[0], cells.get(j)[1]);
+                }
+                
+                this.cages.remove(i);
+                i--;
+                hp += 15;
+            }
+        }
+
+        System.err.println("HP: " + hp);
+
+
+    }
+
+    private boolean isValidNumber(String input) {
+        try {
+            int num = Integer.parseInt(input);
+            return num > 0 && num <= this.size;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    
 }
