@@ -28,7 +28,7 @@ public class PuzzleController {
 
     @FXML
     GridPane gridPane;
-
+    
     int pixelSize = 850;
     int[] buttonFocus;
 
@@ -45,7 +45,7 @@ public class PuzzleController {
     List<Cage> cages;
 
     ScheduledExecutorService scheduler;
-
+    
     public PuzzleController() {
         this.inputGrid = new int[4][4];
         this.size = 4;
@@ -61,6 +61,8 @@ public class PuzzleController {
         addCells();
         setColors();
         startDecrementingHP();
+
+        System.out.println("Done initializing");
     }
 
     private void decrementHP() {    
@@ -73,12 +75,12 @@ public class PuzzleController {
         System.out.println(this.hp + " ");
     }
 
-    private void startDecrementingHP() {
+    public void startDecrementingHP() {
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(this::decrementHP, 0, 5, TimeUnit.SECONDS);
     }
 
-    private void stopDecrementingHP() {
+    public void stopDecrementingHP() {
         scheduler.shutdown();
     }
 

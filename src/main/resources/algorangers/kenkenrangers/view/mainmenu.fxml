@@ -6,10 +6,25 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1980.0" styleClass="background" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane 
+   maxHeight="-Infinity" maxWidth="-Infinity" 
+   minHeight="-Infinity" minWidth="-Infinity" 
+   prefHeight="1080.0" prefWidth="1980.0" 
+   styleClass="background" stylesheets="@../styles/main.css" 
+   xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+   fx:controller="algorangers.kenkenrangers.controllers.MainMenuController"
+   >
+
    <children>
+      <ImageView fx:id="imageView">
+         <image>
+               <Image url="@../backgrounds/bg1.png"/>
+         </image>
+      </ImageView>
       <BorderPane prefHeight="200.0" prefWidth="200.0">
          <center>
             <!-- Titles VBox (KenKen and Rangers) -->
@@ -30,7 +45,7 @@
          <bottom>
             <VBox alignment="CENTER" prefHeight="548.0" prefWidth="1980.0" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" text="New Game">
+                  <Button mnemonicParsing="false" text="New Game" onAction="#handleButtonClick">
                      <font>
                         <Font size="50.0" />
                      </font>
