@@ -67,32 +67,33 @@ public class Grid {
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 if (!visited[r][c]) {
-                    List<int[]> cells = new ArrayList<>();
-                    Queue<int[]> queue = new LinkedList<>();
-                    queue.add(new int[]{r, c});
+                    List<Cell> cells = new ArrayList<>();
+                    Queue<Cell> queue = new LinkedList<>();
+                    queue.add(new Cell(r, c, this.cages.size()));
                     String color = this.colors.get(random.nextInt(colors.size() - 1));
                     this.colors.remove(colors.indexOf(color)); 
 
                     while (!queue.isEmpty() && cells.size() < random.nextInt(this.size) + 1) {
-                        int[] cell = queue.poll();
-                        int row = cell[0], col = cell[1];
+                        Cell cell = queue.poll();
+                        int row = cell.getRow(), col = cell.getColumn();
                         if (visited[row][col]) continue;
                         
                         visited[row][col] = true;
                         cells.add(cell);
                         
-                        if (row + 1 < size && !visited[row + 1][col]) queue.add(new int[]{row + 1, col});
-                        if (col + 1 < size && !visited[row][col + 1]) queue.add(new int[]{row, col + 1});
+                        if (row + 1 < size && !visited[row + 1][col]) queue.add(new Cell(row + 1, col, this.cages.size()));
+                        if (col + 1 < size && !visited[row][col + 1]) queue.add(new Cell(row, col + 1, this.cages.size()));
                     }
                     
                     char operation = cells.size() > 1 ? operations.get(random.nextInt(operations.size())): ' ';
                     int target = computeTarget(cells, operation);
                     // If target is not an integer, switch operation to subtraction and recompute
                     if (target == -404) {
-                        operation = '-';
+                        operation = '-'; // Bug
                         target = computeTarget(cells, operation);
                     // If target is equal or less than zero, switch operation to either addition or multiplication then recompute
-                    } else if (target <= 0) {
+                    } 
+                    if (target <= 0) {
                         operation = random.nextBoolean() ? '+' : '*';
                         target = computeTarget(cells, operation);
                     } 
@@ -103,10 +104,10 @@ public class Grid {
         }
     }
     
-    private int computeTarget(List<int[]> cells, char operation) {
-        float target = grid[cells.get(0)[0]][cells.get(0)[1]];
+    private int computeTarget(List<Cell> cells, char operation) {
+        float target = grid[cells.get(0).getRow()][cells.get(0).getColumn()];
         for (int i = 1; i < cells.size(); i++) {
-            int value = grid[cells.get(i)[0]][cells.get(i)[1]];
+            int value = grid[cells.get(i).getRow()][cells.get(i).getColumn()];
             target = performArithmetic(target, value, operation); 
         }
         // If target is not an integer (due to division)

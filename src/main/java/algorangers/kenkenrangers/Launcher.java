@@ -11,7 +11,7 @@ public class Launcher extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("view/mainmenu.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
+        Scene scene = new Scene(fxmlLoader.load(), 1980, 1080);
         stage.setTitle("KenKenRangers");
         stage.setScene(scene);
         stage.show();
@@ -20,4 +20,5 @@ public class Launcher extends Application {
     public static void main(String[] args) {
         launch();
     }
+    
 }

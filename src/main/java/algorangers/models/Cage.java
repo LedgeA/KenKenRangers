@@ -1,15 +1,14 @@
 package algorangers.models;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Cage {
-  List<int[]> cells;
+  List<Cell> cells;
   int target;
   char operation;
   String color;
   
-    public Cage(List<int[]> cells, int target, char operation, String color) {
+    public Cage(List<Cell> cells, int target, char operation, String color) {
         this.cells = cells;
         this.target = target;
         this.operation = operation;
@@ -18,20 +17,12 @@ public class Cage {
     }
 
     public boolean areCageEntriesAreValid(int[][] solutionGrid, int[][] inputGrid) {
-        int[][] inputGridCopy = Arrays.stream(inputGrid)
-                              .map(int[]::clone)
-                              .toArray(int[][]::new);
-
         for (int i = 0; i < cells.size(); i++) {
 
-            int row = this.cells.get(i)[0];
-            int col = this.cells.get(i)[1];
+            int row = this.cells.get(i).getRow();
+            int col = this.cells.get(i).getColumn();
 
-            int inputValue = inputGridCopy[row][col];
-            int solutionValue = inputGridCopy[row][col];
-
-            System.out.print("|Input Val: " + inputValue + " Sol Val: " + solutionValue); 
-            if (solutionGrid[row][col] != inputGridCopy[row][col]) {
+            if (solutionGrid[row][col] != inputGrid[row][col]) {
                 return false;
             }
         }
@@ -39,7 +30,7 @@ public class Cage {
         return true;
     }
     
-    public List<int[]> getCells() {
+    public List<Cell> getCells() {
         return this.cells;
     }
 
@@ -58,8 +49,8 @@ public class Cage {
     private String cellsToString() {
         String cells = "[";
 
-        for (int[] cell : this.cells) {
-            cells += "[" + cell[0] + ", " + cell[1] + "],";
+        for (Cell cell : this.cells) {
+            cells += "[" + cell.getRow() + ", " + cell.getColumn() + "],";
         }
 
         return cells + "] ";

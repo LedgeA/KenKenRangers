@@ -13,7 +13,6 @@ public class MainMenuController {
     @FXML
     private void handleButtonClick(ActionEvent event) {
         try {
-            // Load Scene2.fxml
             StackPane root = FXMLLoader.load(getClass().getResource("/algorangers/kenkenrangers/view/tutorial.fxml"));
             
             // Create a new scene and set it in the stage
