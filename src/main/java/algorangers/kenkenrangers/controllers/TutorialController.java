@@ -36,7 +36,7 @@ public class TutorialController extends BaseGameController{
         powerUpsHandler();
         startTimer();
 
-        // Add k_view just below the top most component
+        // Add k_view just below the top most component 
         a_main.getChildren().add(a_main.getChildren().size() - 1, k_view);
     }
 
