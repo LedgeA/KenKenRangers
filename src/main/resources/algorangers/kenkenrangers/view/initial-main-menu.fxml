@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algorangers.kenkenrangers.controllers.InitialMainMenuController">
+   <children>
+      <AnchorPane fx:id="a_main" prefHeight="200.0" prefWidth="200.0" StackPane.alignment="TOP_LEFT">
+         <children>
+            <Text fx:id="t_kenken" layoutX="448.0" layoutY="198.0" strokeType="OUTSIDE" strokeWidth="0.0" text="KenKen" textAlignment="CENTER">
+               <font>
+                  <Font name="Press Start 2P Regular" size="64.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_rangers" layoutX="416.0" layoutY="277.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rangers" textAlignment="CENTER">
+               <font>
+                  <Font name="Press Start 2P Regular" size="64.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_newGame" fill="WHITE" fontSmoothingType="LCD" layoutX="496.0" layoutY="468.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="New Game">
+               <font>
+                  <Font name="Press Start 2P Regular" size="36.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_continue" fill="WHITE" fontSmoothingType="LCD" layoutX="496.0" layoutY="542.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Continue">
+               <font>
+                  <Font name="Press Start 2P Regular" size="36.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

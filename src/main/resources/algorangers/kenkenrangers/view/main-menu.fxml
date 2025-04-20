@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algorangers.kenkenrangers.controllers.MainMenuController">
+   <children>
+      <AnchorPane fx:id="a_main" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Text fx:id="t_kenken" fontSmoothingType="LCD" layoutX="454.0" layoutY="198.0" stroke="TRANSPARENT" strokeType="OUTSIDE" strokeWidth="0.0" text="KenKen" textAlignment="CENTER">
+               <font>
+                  <Font name="Press Start 2P Regular" size="64.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_rangers" fontSmoothingType="LCD" layoutX="422.0" layoutY="277.0" stroke="TRANSPARENT" strokeType="OUTSIDE" strokeWidth="0.0" text="Rangers" textAlignment="CENTER">
+               <font>
+                  <Font name="Press Start 2P Regular" size="64.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_rangersSaga" fill="WHITE" fontSmoothingType="LCD" layoutX="412.0" layoutY="416.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Ranger's Saga" textAlignment="CENTER">
+               <font>
+                  <Font name="Press Start 2P Regular" size="36.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_bottomlessAbyss" fill="WHITE" fontSmoothingType="LCD" layoutX="358.0" layoutY="488.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Bottomless Abyss" textAlignment="CENTER">
+               <font>
+                  <Font name="Press Start 2P Regular" size="36.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_customTrial" fill="WHITE" fontSmoothingType="LCD" layoutX="430.0" layoutY="560.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Custom Trial" textAlignment="CENTER">
+               <font>
+                  <Font name="Press Start 2P Regular" size="36.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_tutorial" fill="WHITE" fontSmoothingType="LCD" layoutX="502.0" layoutY="632.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Tutorial" textAlignment="CENTER">
+               <font>
+                  <Font name="Press Start 2P Regular" size="36.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>
