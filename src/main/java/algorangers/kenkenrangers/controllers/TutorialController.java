@@ -42,18 +42,20 @@ public class TutorialController extends BaseGameController{
 
     @Override
     protected void setBindings() {
+
+        bindGaugeSize();
+        bindPowerUpsSize();
+        bindCharacterSize();
+
         a_main.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
             a_mainHeight = newValue.getHeight();
             a_mainWidth = newValue.getWidth();
 
             if (a_mainHeight > 0 && a_mainWidth > 0) {
-                bindGaugeSize();
                 bindGaugePosition();
 
-                bindPowerUpsSize();
                 bindPowerUpsPosition();
 
-                bindCharacterSize();
                 bindCharacterPosition();
 
                 bindDialogueProperties();

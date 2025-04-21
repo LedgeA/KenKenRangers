@@ -18,6 +18,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import algorangers.kenkenrangers.utils.*;;
+
 public class BaseGameController {
     
     @FXML
@@ -223,10 +225,7 @@ public class BaseGameController {
     }
 
     protected void bindCharacterSize() {
-        double i_characterWidthRatio = 230.0 / BASE_WIDTH;
-        double i_characterHeightRatio = 300.0 / BASE_HEIGHT;
-
-        changeEachSizing(i_character, i_characterWidthRatio, i_characterHeightRatio);
+        GameUtils.bindSize(i_character, a_main, 230, 300);
 
     }
 
@@ -243,19 +242,13 @@ public class BaseGameController {
     }
 
     protected void bindPowerUpsSize() {
-        double s_r_a_powerUpsWidthRatio = 80.0 / BASE_WIDTH;
-        double s_r_a_powerUpsHeightRatio = 230.0 / BASE_HEIGHT;
+        GameUtils.bindSize(s_powerUps, a_main, 80, 230);
+        GameUtils.bindSize(r_powerUps, a_main, 80, 230);
+        GameUtils.bindSize(a_powerUps, a_main, 80, 230);
 
-        double i_powerUpsWidthRatio = 70.0 / BASE_WIDTH;
-        double i_powerUpsHeightRatio = 70.0 / BASE_HEIGHT;
-
-        changeEachSizing(s_powerUps, s_r_a_powerUpsWidthRatio, s_r_a_powerUpsHeightRatio);
-        changeEachSizing(r_powerUps, s_r_a_powerUpsWidthRatio, s_r_a_powerUpsHeightRatio);
-        changeEachSizing(a_powerUps, s_r_a_powerUpsWidthRatio, s_r_a_powerUpsHeightRatio);
-
-        changeEachSizing(i_powerSurge, i_powerUpsWidthRatio, i_powerUpsHeightRatio);
-        changeEachSizing(i_invincibility, i_powerUpsWidthRatio, i_powerUpsHeightRatio);
-        changeEachSizing(i_cellReveal, i_powerUpsWidthRatio, i_powerUpsHeightRatio);
+        GameUtils.bindSize(i_powerSurge, a_main, 70, 70);
+        GameUtils.bindSize(i_invincibility, a_main, 70, 70);
+        GameUtils.bindSize(i_cellReveal, a_main, 70, 70);
     }
 
     protected void bindPowerUpsPosition() {
@@ -276,18 +269,11 @@ public class BaseGameController {
     }
 
     protected void bindGaugeSize() {
-        double s_gaugeWidthRatio = 200.0 / BASE_WIDTH;
-        double s_gaugeHeightRatio = 150.0 / BASE_HEIGHT;
-
-        double r_gaugeWidthRatio = 64.0 / BASE_WIDTH;
-
         double hpPercentage = k_controller.getHp() / 100.0;
-        double r_gaugeMeterHeightRatio = hpPercentage * 540.0 / BASE_HEIGHT;
-        double r_gaugeBaseHeightRatio = 540.0 / BASE_HEIGHT;
 
-        changeEachSizing(s_gauge, s_gaugeWidthRatio, s_gaugeHeightRatio);
-        changeEachSizing(r_gaugeBase, r_gaugeWidthRatio, r_gaugeBaseHeightRatio);
-        changeEachSizing(r_gaugeMeter, r_gaugeWidthRatio, r_gaugeMeterHeightRatio);
+        GameUtils.bindSize(s_gauge, a_main, 200, 150);
+        GameUtils.bindSize(r_gaugeBase, a_main, 64, 540);
+        GameUtils.bindSize(r_gaugeMeter, a_main, 64, 540 * hpPercentage);
     }
 
     protected void bindGaugePosition() {
@@ -310,27 +296,6 @@ public class BaseGameController {
     protected void changeEachPosition(TextFlow textFlow, double relX, double relY) {
         textFlow.setLayoutX(relX * a_mainWidth);
         textFlow.setLayoutY(relY * a_mainHeight);
-    }
-
-    protected void changeEachSizing(Rectangle rectangle, double widthRatio, double heightRatio) {
-        rectangle.setWidth(widthRatio * a_mainWidth);
-        rectangle.setHeight(heightRatio * a_mainHeight);
-
-    }
-    
-    protected void changeEachSizing(AnchorPane anchorPane, double widthRatio, double heightRatio) {
-        anchorPane.setPrefWidth(widthRatio * a_mainWidth);
-        anchorPane.setPrefHeight(heightRatio * a_mainHeight);
-    }
-
-    protected void changeEachSizing(StackPane stackPane, double widthRatio, double heightRatio) {
-        stackPane.setPrefWidth(widthRatio * a_mainWidth);
-        stackPane.setPrefHeight(heightRatio * a_mainHeight);
-    }
-
-    protected void changeEachSizing(ImageView imageView, double widthRatio, double heightRatio) {
-        imageView.setFitWidth(widthRatio * a_mainWidth);
-        imageView.setFitHeight(heightRatio * a_mainHeight);
     }
 
 }
