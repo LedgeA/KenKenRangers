@@ -299,7 +299,11 @@ public class KenkenController {
 
             setInputValue(button);
         }
-        
+
+        evaluateInputGrid();
+    }
+
+    protected void evaluateInputGrid() {
         for (int cageIndex = 0; cageIndex < k_cages.size(); cageIndex++) {
             Cage cage = k_cages.get(cageIndex);
 
@@ -313,9 +317,9 @@ public class KenkenController {
                 
                 k_cages.remove(cageIndex);
                 cageIndex--;
+                this.hp += 5;
             }
         }
-
     }
 
     private boolean inputIsValidNo(String input) {
@@ -391,6 +395,7 @@ public class KenkenController {
 
     public void consumeCellReveal() {
         revealCells();
+        evaluateInputGrid();
         this.cellReveal--;
     }
 
@@ -424,5 +429,9 @@ public class KenkenController {
 
     public int getMultiplier() {
         return this.multiplier;
+    }
+
+    public int getRemainingCageAmount() {
+        return this.k_cages.size();
     }
 }

@@ -16,9 +16,9 @@ public class TutorialController extends BaseGameController{
         "The numbers you use depend on the grid size:\n- For a 3×3 grid, use only\nnumbers 1 to 3.\n- For a 4×4 grid, use numbers 1 to 4\n... and so on!",
         "Take too long in solving the Kenken Puzzle and the enemy will beat you.",
         "To make things exciting, we've added special power-ups!",
-        "Invincibility makes you invincible for a set amount of\ntime.",
-        "Damage Multiplier doubles your damage for a set amount of\ntime.",
-        "3-Cell Reveal reveals 3 of your unsolved tiles.",
+        "Invincibility makes you invincible for a set amount of time.",
+        "Power Surge doubles the power of any super power casted within a set amount of time.",
+        "Cell Reveal reveals 2 of your unsolved tiles.",
         "Let's practice! Tap on a cell to enter a number.",
         "Use your skills, think strategically, and become a true KenKen master!",
         "Good luck, and may the numbers be ever in your favor!"
@@ -27,14 +27,14 @@ public class TutorialController extends BaseGameController{
     @Override
     @FXML
     protected void initialize() {
-        k_controller = new KenkenController(4, 100, 10);
+        k_controller = new KenkenController(4, 100, 10, 3, 3, 3);
         k_view = k_controller.getK_view();
 
         setBindings();
         setTextFlowContent();
         disableGridFocus(k_view);
         powerUpsHandler();
-        startTimer();
+        
 
         // Add k_view just below the top most component 
         a_main.getChildren().add(a_main.getChildren().size() - 1, k_view);
@@ -42,7 +42,7 @@ public class TutorialController extends BaseGameController{
 
     @Override
     protected void setBindings() {
-
+        
         bindGaugeSize();
         bindPowerUpsSize();
         bindCharacterSize();
@@ -73,13 +73,19 @@ public class TutorialController extends BaseGameController{
         a_main.setOnMouseClicked(event -> {
             DIALOGUE_COUNT++;
 
-            if (DIALOGUE_COUNT == 12) enableGridFocus(k_view);
+            if (DIALOGUE_COUNT == 12) {
+                startTimer();
+                enableGridFocus(k_view);
+            };
             if (DIALOGUE_COUNT >= dialogues.length) {
                 a_main.setOnMouseClicked(null);
+    
                 return;
             }
 
             t_dialogue.setText(dialogues[DIALOGUE_COUNT]);
+
+            System.out.println(k_controller.getPowerSurge());
         });
     }
 

@@ -1,24 +1,21 @@
 package algorangers.kenkenrangers.controllers;
 
-import java.io.IOException;
-
-import javafx.beans.binding.Bindings;
+import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 
 public class InitialMainMenuController {
     
     @FXML
     private AnchorPane a_main;
+
+    @FXML
+    private ImageView background;
 
     @FXML
     private Text t_kenken;
@@ -112,43 +109,15 @@ public class InitialMainMenuController {
     
     private void setOnClickListeners() {
         t_newGame.setOnMouseClicked(event -> {
-            navigate("tutorial.fxml");
+            GameUtils.navigate("tutorial.fxml", a_main);
         });
 
         t_continue.setOnMouseClicked(event -> {
-            navigate("main-menu.fxml");
+            GameUtils.navigate("main-menu.fxml", a_main);
             
         });
 
     }
 
-    private void navigate(String fxml) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/algorangers/kenkenrangers/view/" + fxml));
-
-            Stage stage = (Stage) a_main.getScene().getWindow();
-            Parent root = fxmlLoader.load();
-
-            StackPane wrapper = new StackPane();
-            wrapper.getChildren().add(root);
-
-            Scene scene = new Scene(wrapper, BASE_WIDTH, BASE_HEIGHT);
-
-            root.scaleXProperty().bind(Bindings.createDoubleBinding(() ->
-                    Math.min(scene.getWidth() / BASE_WIDTH, scene.getHeight() / BASE_HEIGHT),
-                    scene.widthProperty(), scene.heightProperty()));
-            root.scaleYProperty().bind(root.scaleXProperty());
-
-            stage.setTitle("KenKenRangers");
-            stage.setScene(scene);
-            stage.setMinWidth(BASE_WIDTH);
-            stage.setMinHeight(BASE_HEIGHT);
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     
 }

@@ -2,13 +2,21 @@ package algorangers.kenkenrangers.controllers;
 
 import javafx.util.Duration;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.util.function.Supplier;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -17,7 +25,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-
+import javafx.stage.Stage;
 import algorangers.kenkenrangers.utils.*;;
 
 public class BaseGameController {
@@ -58,6 +66,7 @@ public class BaseGameController {
 
     protected Timeline attackInterval;
     protected int multiplier = 1;
+    protected int counter = 0;
 
     protected final String[] dialogues = {
         "Hello Ranger! Welcome to KENKEN RANGERS",
@@ -90,12 +99,27 @@ public class BaseGameController {
         k_view = k_controller.getK_view();
 
         setBindings();
+        
 
         // Add k_view just below the top most component
         a_main.getChildren().add(a_main.getChildren().size() - 1, k_view);
     }
 
     protected void startTimer() {
+        Timeline timer = new Timeline();
+        timer.getKeyFrames().add(new KeyFrame(Duration.seconds(1), event -> {
+            counter++;
+
+            if (k_controller.getRemainingCageAmount() == 0) {
+                timer.stop();
+                navigate("game-over.fxml");
+                saveGameState();
+            }
+        }));
+        timer.setCycleCount(Timeline.INDEFINITE);
+        timer.play();
+        
+
         attackInterval = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
             if (!k_controller.getInvincibleState()) {
                 k_controller.decreaseHp(); 
@@ -104,7 +128,9 @@ public class BaseGameController {
             }
 
             if (k_controller.getHp() <= 0) {
-                attackInterval.stop();         
+                attackInterval.stop();
+                navigate("game-over.fxml");     
+                saveGameState();    
             }
         }));
         
@@ -296,6 +322,83 @@ public class BaseGameController {
     protected void changeEachPosition(TextFlow textFlow, double relX, double relY) {
         textFlow.setLayoutX(relX * a_mainWidth);
         textFlow.setLayoutY(relY * a_mainHeight);
+    }
+
+    protected void navigate(String fxml) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(
+                getClass().getResource("/algorangers/kenkenrangers/view/" + fxml));
+
+            Stage stage = (Stage) a_main.getScene().getWindow();
+            Parent root = fxmlLoader.load();
+
+            StackPane wrapper = new StackPane();
+            wrapper.getChildren().add(root);
+
+            Scene scene = new Scene(wrapper, BASE_WIDTH, BASE_HEIGHT);
+
+            root.scaleXProperty().bind(Bindings.createDoubleBinding(() ->
+                    Math.min(scene.getWidth() / BASE_WIDTH, scene.getHeight() / BASE_HEIGHT),
+                    scene.widthProperty(), scene.heightProperty()));
+            root.scaleYProperty().bind(root.scaleXProperty());
+
+            stage.setTitle("KenKenRangers");
+            stage.setScene(scene);
+            stage.setMinWidth(BASE_WIDTH);
+            stage.setMinHeight(BASE_HEIGHT);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void saveGameState() {
+        String sql = "UPDATE active_game SET " +
+                "dimensions = ?, " +
+                "dps = ?, " +
+                "power_ups = ?, " +
+                "time_finished = ?, " +
+                "power_surge_used = ?, " +
+                "invincibility_used = ?, " +
+                "cell_reveal_used = ?, " +
+                "remaining_power_ups = ?, " +
+                "stars = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:kenken.db");
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, 4);
+            pstmt.setInt(2, 10);
+            pstmt.setInt(3, 9);
+            pstmt.setInt(4, counter);
+            pstmt.setInt(5, k_controller.getPowerSurge());
+            pstmt.setInt(6, k_controller.getInvincibility());
+            pstmt.setInt(7, k_controller.getCellReveal());
+            pstmt.setInt(8, k_controller.getPowerSurge() + k_controller.getInvincibility() + k_controller.getCellReveal());
+            pstmt.setInt(9, computeStars());
+
+            System.out.println(k_controller.getPowerSurge());
+            int rowsUpdated = pstmt.executeUpdate();
+            System.out.println("Rows updated: " + rowsUpdated);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }        
+    }
+
+    protected int computeStars() {
+        int stars = 1;
+
+        if (k_controller.getPowerSurge() == 0 && k_controller.getInvincibility() == 0 && k_controller.getCellReveal() == 0) {
+            stars++;
+        }
+
+        if (counter <= 120) {
+            stars++;
+        }
+
+        return stars;
     }
 
 }

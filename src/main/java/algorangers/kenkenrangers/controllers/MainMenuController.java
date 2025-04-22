@@ -1,6 +1,7 @@
 package algorangers.kenkenrangers.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -10,6 +11,9 @@ public class MainMenuController {
     
     @FXML
     private AnchorPane a_main;
+
+    @FXML
+    private ImageView background;
 
     @FXML
     private Text t_kenken;

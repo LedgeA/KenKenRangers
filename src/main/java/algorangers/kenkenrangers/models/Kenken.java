@@ -15,7 +15,7 @@ public class Kenken {
 
     private final List<String> colors = new ArrayList<>(
         Arrays.asList(
-            "#EB6000", "#D9232E", "#FFA300", "#8F39D1", "#00BB3E", "#1993DC", "#FFC0CB", "#FFD700", "#DC143C", "#DC143C", "#DC143C", "#DC143C", "#DC143C"
+            "#EB6000", "#D9232E", "#FFA300", "#8F39D1", "#00BB3E", "#1993DC", "#FFC0CB", "#FFD700", "#DC143C"
         ));
 
     private final Random RANDOM = new Random();

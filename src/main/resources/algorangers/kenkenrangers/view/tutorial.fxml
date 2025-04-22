@@ -12,7 +12,10 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algorangers.kenkenrangers.controllers.TutorialController">
    <children>
-      <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="background" fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true">
+         <image>
+            <Image url="@../backgrounds/jungle.jpg" />
+         </image></ImageView>
       <AnchorPane fx:id="a_main" prefHeight="200.0" prefWidth="200.0">
          <children>
             <StackPane fx:id="s_powerUps" layoutX="933.0" layoutY="22.0" prefWidth="80.0">

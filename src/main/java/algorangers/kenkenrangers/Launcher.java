@@ -8,20 +8,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 
 public class Launcher extends Application {
 
-    private static final String URL = "jdbc:sqlite:kenken.db"; // or full path like "jdbc:sqlite:/home/ledge/data/kenken.db"
+    // private static final String URL = "jdbc:sqlite:kenken.db"; 
     private static final double BASE_WIDTH = 1280;
     private static final double BASE_HEIGHT = 720;
 
@@ -32,12 +25,6 @@ public class Launcher extends Application {
 
         StackPane wrapper = new StackPane();
         wrapper.getChildren().add(root);
-
-        // Rectangle rectangle = new Rectangle(200, 200);
-        // rectangle.setFill(Color.BLACK);
-        // rectangle.widthProperty().bind(wrapper.widthProperty().multiply(200.0 / 1280));
-        // rectangle.heightProperty().bind(wrapper.heightProperty().multiply(200.0 / 720));
-        // wrapper.getChildren().add(rectangle);
 
         Scene scene = new Scene(wrapper, BASE_WIDTH, BASE_HEIGHT);
 
@@ -59,15 +46,6 @@ public class Launcher extends Application {
 
         
     }
-
-    // public static Connection connect() {
-    //     try {
-    //         return DriverManager.getConnection(URL);
-    //     } catch (SQLException e) {
-    //         System.out.println("Connection failed: " + e.getMessage());
-    //         return null;
-    //     }
-    // }
 
     // public static void createTable() {
     //     String sql = "CREATE TABLE IF NOT EXISTS players ("
