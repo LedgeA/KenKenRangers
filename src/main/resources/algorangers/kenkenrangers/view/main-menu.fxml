@@ -2,7 +2,7 @@
 
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -14,7 +14,7 @@
             <Image url="@../backgrounds/bg1.png" />
          </image>
       </ImageView>
-      <AnchorPane fx:id="a_main" prefHeight="200.0" prefWidth="200.0">
+      <Pane fx:id="p_main" prefHeight="200.0" prefWidth="200.0">
          <children>
             <Text fx:id="t_kenken" fontSmoothingType="LCD" layoutX="454.0" layoutY="198.0" stroke="TRANSPARENT" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(gaussian, black, 10, 0, 0, 0),    dropshadow(gaussian, black, 20, 0, 0, 0),    dropshadow(gaussian, black, 30, 0, 0, 0); -fx-fill: linear-gradient(from 0% 0% to 0% 100%, #B02825, #FFD700);;" text="KenKen" textAlignment="CENTER">
                <font>
@@ -47,6 +47,6 @@
                </font>
             </Text>
          </children>
-      </AnchorPane>
+      </Pane>
    </children>
 </StackPane>

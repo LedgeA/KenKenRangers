@@ -100,7 +100,6 @@ public class BaseGameController {
 
         setBindings();
         
-
         // Add k_view just below the top most component
         a_main.getChildren().add(a_main.getChildren().size() - 1, k_view);
     }
