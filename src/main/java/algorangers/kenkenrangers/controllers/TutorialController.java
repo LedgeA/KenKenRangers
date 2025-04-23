@@ -1,11 +1,21 @@
 package algorangers.kenkenrangers.controllers;
 
+import algorangers.kenkenrangers.controllers.base.BaseGameController;
+import algorangers.kenkenrangers.controllers.base.KenkenController;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 public class TutorialController extends BaseGameController{
     
+    @FXML
+    private TextFlow tf_dialogue;
+
+    @FXML
+    private Text t_dialogue;
+
     protected final String[] dialogues = {
         "Hello Ranger! Welcome to KENKEN RANGERS",
         "Your mission is to fill the grid with numbers, just like Sudoku. But there's a twist!",
@@ -24,53 +34,25 @@ public class TutorialController extends BaseGameController{
         "Good luck, and may the numbers be ever in your favor!"
     };
 
-    @Override
     @FXML
     protected void initialize() {
-        k_controller = new KenkenController(4, 100, 10, 3, 3, 3);
+
+        k_controller = new KenkenController(DIMENSION, 100, dps, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
 
-        setBindings();
         setTextFlowContent();
         disableGridFocus(k_view);
         powerUpsHandler();
-        
 
         // Add k_view just below the top most component 
-        a_main.getChildren().add(a_main.getChildren().size() - 1, k_view);
+        p_main.getChildren().add(p_main.getChildren().size() - 1, k_view);
     }
 
-    @Override
-    protected void setBindings() {
-        
-        bindGaugeSize();
-        bindPowerUpsSize();
-        bindCharacterSize();
-
-        a_main.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
-            a_mainHeight = newValue.getHeight();
-            a_mainWidth = newValue.getWidth();
-
-            if (a_mainHeight > 0 && a_mainWidth > 0) {
-                bindGaugePosition();
-
-                bindPowerUpsPosition();
-
-                bindCharacterPosition();
-
-                bindDialogueProperties();
-
-                bindKenKenProperties();
-            }
-        });
-    }
-
-    @Override
     protected void setTextFlowContent() {
 
         t_dialogue.setText(dialogues[DIALOGUE_COUNT]);
 
-        a_main.setOnMouseClicked(event -> {
+        p_main.setOnMouseClicked(event -> {
             DIALOGUE_COUNT++;
 
             if (DIALOGUE_COUNT == 12) {
@@ -78,7 +60,7 @@ public class TutorialController extends BaseGameController{
                 enableGridFocus(k_view);
             };
             if (DIALOGUE_COUNT >= dialogues.length) {
-                a_main.setOnMouseClicked(null);
+                p_main.setOnMouseClicked(null);
     
                 return;
             }

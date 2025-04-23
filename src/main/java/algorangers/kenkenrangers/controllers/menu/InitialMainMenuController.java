@@ -1,12 +1,14 @@
-package algorangers.kenkenrangers.controllers;
+package algorangers.kenkenrangers.controllers.menu;
 
+import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-public class MainMenuController {
+
+public class InitialMainMenuController {
     
     @FXML
     private Pane p_main;
@@ -21,29 +23,21 @@ public class MainMenuController {
     private Text t_rangers;
 
     @FXML
-    private Text t_rangersSaga;
+    private Text t_newGame;
 
     @FXML
-    private Text t_bottomlessAbyss;
-
-    @FXML
-    private Text t_customTrial;
-
-    @FXML
-    private Text t_tutorial;
+    private Text t_continue;
 
     @FXML
     public void initialize() {
         setTextAppearance();
         setOnClickListeners();
+       
     }
 
     private void setTextAppearance() {
-        changeEachTextAppearance(t_rangersSaga);
-        changeEachTextAppearance(t_bottomlessAbyss);
-        changeEachTextAppearance(t_customTrial);
-        changeEachTextAppearance(t_tutorial);
-
+        changeEachTextAppearance(t_newGame);
+        changeEachTextAppearance(t_continue);
     }
 
     private void changeEachTextAppearance(Text text) {
@@ -54,25 +48,19 @@ public class MainMenuController {
         text.setOnMouseExited(event -> {
             text.setFill(Color.WHITE);
         });
-
     }
     
     private void setOnClickListeners() {
-        t_rangersSaga.setOnMouseClicked(event -> {
-            System.out.println("1");
+        t_newGame.setOnMouseClicked(event -> {
+            GameUtils.navigate("tutorial.fxml", p_main);
         });
 
-        t_bottomlessAbyss.setOnMouseClicked(event -> {
-            System.out.println("2");
-        });
-
-        t_customTrial.setOnMouseClicked(event -> {
-            System.out.println("3");
-        });
-
-        t_tutorial.setOnMouseClicked(event -> {
-            System.out.println("4");
+        t_continue.setOnMouseClicked(event -> {
+            GameUtils.navigate("main-menu.fxml", p_main);
+            
         });
 
     }
+
+    
 }

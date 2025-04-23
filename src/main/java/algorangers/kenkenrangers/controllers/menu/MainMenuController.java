@@ -1,14 +1,12 @@
-package algorangers.kenkenrangers.controllers;
+package algorangers.kenkenrangers.controllers.menu;
 
-import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-
-public class InitialMainMenuController {
+public class MainMenuController {
     
     @FXML
     private Pane p_main;
@@ -23,21 +21,29 @@ public class InitialMainMenuController {
     private Text t_rangers;
 
     @FXML
-    private Text t_newGame;
+    private Text t_rangersSaga;
 
     @FXML
-    private Text t_continue;
+    private Text t_bottomlessAbyss;
+
+    @FXML
+    private Text t_customTrial;
+
+    @FXML
+    private Text t_tutorial;
 
     @FXML
     public void initialize() {
         setTextAppearance();
         setOnClickListeners();
-       
     }
 
     private void setTextAppearance() {
-        changeEachTextAppearance(t_newGame);
-        changeEachTextAppearance(t_continue);
+        changeEachTextAppearance(t_rangersSaga);
+        changeEachTextAppearance(t_bottomlessAbyss);
+        changeEachTextAppearance(t_customTrial);
+        changeEachTextAppearance(t_tutorial);
+
     }
 
     private void changeEachTextAppearance(Text text) {
@@ -48,19 +54,25 @@ public class InitialMainMenuController {
         text.setOnMouseExited(event -> {
             text.setFill(Color.WHITE);
         });
+
     }
     
     private void setOnClickListeners() {
-        t_newGame.setOnMouseClicked(event -> {
-            GameUtils.navigate("tutorial.fxml", p_main);
+        t_rangersSaga.setOnMouseClicked(event -> {
+            System.out.println("1");
         });
 
-        t_continue.setOnMouseClicked(event -> {
-            GameUtils.navigate("main-menu.fxml", p_main);
-            
+        t_bottomlessAbyss.setOnMouseClicked(event -> {
+            System.out.println("2");
+        });
+
+        t_customTrial.setOnMouseClicked(event -> {
+            System.out.println("3");
+        });
+
+        t_tutorial.setOnMouseClicked(event -> {
+            System.out.println("4");
         });
 
     }
-
-    
 }

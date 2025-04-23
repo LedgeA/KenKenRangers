@@ -1,4 +1,4 @@
-package algorangers.kenkenrangers.controllers;
+package algorangers.kenkenrangers.controllers.base;
 
 import java.util.List;
 import java.util.Random;
@@ -8,7 +8,6 @@ import algorangers.kenkenrangers.models.*;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.InnerShadow;
@@ -33,7 +32,6 @@ public class KenkenController {
     private GridPane k_view;
     private Kenken k_model;
     private List<Cage> k_cages;
-    private double k_viewWidth, k_viewHeight;
 
     private int[][] inputGrid;
     private int[][] solutionGrid;
@@ -44,8 +42,6 @@ public class KenkenController {
     private int powerSurge, invincibility, cellReveal;
     private boolean invincible;
     private int multiplier = 1;
-
-    private int BASE_SIZE = 500;
     
     private Random rand = new Random();
 
@@ -59,15 +55,13 @@ public class KenkenController {
         this.invincibility = invincibility;
         this.cellReveal = cellReveal;
 
-        setInitialKenkenProperties();
-
         k_model = new Kenken(DIMENSION);
         this.solutionGrid = k_model.getGrid();
 
         k_cages = k_model.getCages();
         this.buttonReferences = new Button[DIMENSION][DIMENSION];
 
-        initialize();
+        setupGrid();
     }
 
     public KenkenController(int DIMENSION, int hp, int dps) {
@@ -77,35 +71,32 @@ public class KenkenController {
         this.hp = hp;
         this.dps = dps;
 
-        setInitialKenkenProperties();
-
         k_model = new Kenken(DIMENSION);
         this.solutionGrid = k_model.getGrid();
         
         k_cages = k_model.getCages();
         this.buttonReferences = new Button[DIMENSION][DIMENSION];
 
-        initialize();
+        setupGrid();
     }
 
     public KenkenController(int DIMENSION) {
         this.inputGrid = new int[DIMENSION][DIMENSION];
         this.DIMENSION = DIMENSION;
 
-        setInitialKenkenProperties();
-
         k_model = new Kenken(DIMENSION);
         this.solutionGrid = k_model.getGrid();
         
         k_cages = k_model.getCages();
         this.buttonReferences = new Button[DIMENSION][DIMENSION];
 
-        initialize();
+        setupGrid();
+
     }
 
-    private void setInitialKenkenProperties() {
+    private void setupGrid() {
         k_view = new GridPane();
-        k_view.setPrefSize(BASE_SIZE, BASE_SIZE);
+        k_view.setPrefSize(500, 500);
         k_view.setLayoutX(390);
         k_view.setLayoutY(91);
         k_view.setHgap(5);
@@ -122,58 +113,7 @@ public class KenkenController {
                 CornerRadii.EMPTY,  
                 Insets.EMPTY      
             )));
-
-        k_view.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
-            k_viewHeight = newValue.getHeight();
-            k_viewWidth = newValue.getWidth();
-
-            if (k_viewHeight > 0) {
-                bindSpaces();
-                bindCells();
-            }
-        });   
-    }
-
-    private void bindSpaces() {
-        double k_viewBorder = 5.0 / BASE_SIZE * k_viewHeight;
-        double k_viewGap = 5.0 / BASE_SIZE * k_viewWidth;
-
-        k_view.setBorder(new Border(new BorderStroke(
-                Color.BLACK,                
-                BorderStrokeStyle.SOLID,   
-                CornerRadii.EMPTY,          
-                new BorderWidths(k_viewBorder)   
-            )));
-
-        k_view.setHgap(k_viewGap);    
-        k_view.setVgap(k_viewGap);
-    }
-
-    private void bindCells() {
-        for (Node node : k_view.getChildren()) {
-            StackPane stackPane = (StackPane) node;
-            changeEachLayer(stackPane);
-        }
-    }
-
-    private void changeEachLayer(StackPane stackPane) {
-
-        if (stackPane.getChildren().size() > 1) {
-            Label label = (Label) stackPane.getChildren().get(1);
-            Font labelFont = label.getFont();
-            double labelFontSize = 40.0 / BASE_SIZE * k_viewHeight;
-            label.setFont(Font.font(labelFont.getFamily(), labelFontSize));
-        }
-
-        Button button = (Button) stackPane.getChildren().get(0);
-
-        Font buttonFont = button.getFont();
-        double buttonFontSize = 35.0 / BASE_SIZE * k_viewHeight;
-        button.setFont(Font.font(buttonFont.getFamily(), buttonFontSize));
-
-    }
-
-    private void initialize() {
+        
         setConstraints();
         addCells();
     }
@@ -292,7 +232,6 @@ public class KenkenController {
     }
 
     private void handleKeyPressed(Button button, KeyEvent event) {
-        System.err.print(event.getText());
 
         if (inputIsValidNo(event.getText())) {
             button.setText(event.getText());

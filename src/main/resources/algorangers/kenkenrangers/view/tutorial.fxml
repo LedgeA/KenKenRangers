@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
@@ -16,41 +16,44 @@
          <image>
             <Image url="@../backgrounds/jungle.jpg" />
          </image></ImageView>
-      <AnchorPane fx:id="a_main" prefHeight="200.0" prefWidth="200.0">
+      <Pane fx:id="p_main" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <StackPane fx:id="s_powerUps" layoutX="933.0" layoutY="22.0" prefWidth="80.0">
-               <children>
-                  <Rectangle fx:id="r_powerUps" arcHeight="15.0" arcWidth="15.0" fill="#18100e" height="230.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="80.0" />
-                  <AnchorPane fx:id="a_powerUps" prefHeight="230.0" prefWidth="80.0">
-                     <children>
-                        <ImageView fx:id="i_powerSurge" fitHeight="70.0" fitWidth="70.0" layoutX="5.0" layoutY="14.0" pickOnBounds="true">
-                           <image>
-                              <Image url="@../power-ups/double-damage.png" />
-                           </image></ImageView>
-                        <ImageView fx:id="i_invincibility" fitHeight="70.0" fitWidth="70.0" layoutX="5.0" layoutY="80.0" pickOnBounds="true">
-                           <image>
-                              <Image url="@../power-ups/invincibility.png" />
-                           </image></ImageView>
-                        <ImageView fx:id="i_cellReveal" fitHeight="70.0" fitWidth="70.0" layoutX="5.0" layoutY="150.0" pickOnBounds="true">
-                           <image>
-                              <Image url="@../power-ups/cell-reveal.png" />
-                           </image></ImageView>
-                     </children>
-                  </AnchorPane>
-               </children>
-            </StackPane>
-            <StackPane fx:id="s_gauge" alignment="TOP_CENTER" layoutY="71.0" prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <Rectangle fx:id="r_gaugeBase" arcHeight="70.0" arcWidth="150.0" fill="WHITE" height="540.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" width="64.0" />
-                  <Rectangle fx:id="r_gaugeMeter" arcHeight="70.0" arcWidth="150.0" height="540.0" stroke="#ffffff00" strokeType="INSIDE" strokeWidth="0.0" width="64.0" />
-               </children>
-            </StackPane>
-            <ImageView fx:id="i_character" fitHeight="300.0" fitWidth="230.0" layoutX="990.0" layoutY="380.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="i_character" fitHeight="300.0" fitWidth="230.0" layoutX="900.0" layoutY="380.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../sprites/ranger.png" />
                </image>
             </ImageView>
-            <TextFlow fx:id="tf_dialogue" layoutX="841.0" layoutY="380.0" style="-fx-border-radius: 20; -fx-border-color: #000000; -fx-border-width: 2;">
+            <StackPane fx:id="s_gauge" alignment="BOTTOM_CENTER" layoutY="71.0" prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <Rectangle fx:id="r_gaugeBase" arcHeight="70.0" arcWidth="150.0" fill="#ffffff00" height="540.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" width="64.0" />
+                  <Rectangle fx:id="r_gaugeMeter" arcHeight="70.0" arcWidth="150.0" fill="#5add67" height="540.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" width="64.0" />
+               </children>
+            </StackPane>
+            <StackPane fx:id="s_powerUps" layoutX="933.0" layoutY="22.0" prefWidth="80.0">
+               <children>
+                  <Rectangle fx:id="r_powerUps" arcHeight="15.0" arcWidth="15.0" fill="#18100e" height="230.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="80.0" />
+                  <Pane fx:id="p_powerUps" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="i_powerSurge" fitHeight="70.0" fitWidth="70.0" layoutX="5.0" layoutY="14.0" pickOnBounds="true">
+                           <image>
+                              <Image url="@../power-ups/double-damage.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="i_invincibility" fitHeight="70.0" fitWidth="70.0" layoutX="5.0" layoutY="80.0" pickOnBounds="true">
+                           <image>
+                              <Image url="@../power-ups/invincibility.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="i_cellReveal" fitHeight="70.0" fitWidth="70.0" layoutX="5.0" layoutY="150.0" pickOnBounds="true">
+                           <image>
+                              <Image url="@../power-ups/cell-reveal.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </Pane>
+               </children>
+            </StackPane>
+            <TextFlow fx:id="tf_dialogue" layoutX="800.0" layoutY="369.0" prefWidth="180.0" style="-fx-border-radius: 20; -fx-border-color: #000000; -fx-border-width: 2;">
                <children>
                   <Text fx:id="t_dialogue" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER">
                      <font>
@@ -63,6 +66,6 @@
                </padding>
             </TextFlow>
          </children>
-      </AnchorPane>
+      </Pane>
    </children>
 </StackPane>
