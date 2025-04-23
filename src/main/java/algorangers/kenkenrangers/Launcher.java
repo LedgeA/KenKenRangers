@@ -14,13 +14,12 @@ import javafx.stage.Stage;
 
 public class Launcher extends Application {
 
-    // private static final String URL = "jdbc:sqlite:kenken.db"; 
     private static final double BASE_WIDTH = 1280;
     private static final double BASE_HEIGHT = 720;
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("view/game-over.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("view/initial-main-menu.fxml"));
         Parent root = fxmlLoader.load();
 
         StackPane wrapper = new StackPane();
@@ -47,56 +46,7 @@ public class Launcher extends Application {
         
     }
 
-    // public static void createTable() {
-    //     String sql = "CREATE TABLE IF NOT EXISTS players ("
-    //                + " id INTEGER PRIMARY KEY AUTOINCREMENT,"
-    //                + " name TEXT NOT NULL,"
-    //                + " score INTEGER"
-    //                + ");";
-    
-    //     try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-    //         stmt.execute();
-    //         System.out.println("Table created.");
-    //     } catch (SQLException e) {
-    //         System.out.println(e.getMessage());
-    //     }
-    // }
-
-    // public static void insertPlayer(String name, int score) {
-    //     String sql = "INSERT INTO players(name, score) VALUES(?, ?)";
-    
-    //     try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-    //         stmt.setString(1, name);
-    //         stmt.setInt(2, score);
-    //         stmt.executeUpdate();
-    //         System.out.println("Player added.");
-    //     } catch (SQLException e) {
-    //         System.out.println(e.getMessage());
-    //     }
-    // }
-
-    
-    // public static void showAllPlayers() {
-    //     String sql = "SELECT * FROM players";
-    
-    //     try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-    //         ResultSet rs = stmt.executeQuery();
-    
-    //         while (rs.next()) {
-    //             System.out.println(rs.getInt("id") + " | " +
-    //                                rs.getString("name") + " | ");
-    //         }
-    //     } catch (SQLException e) {
-    //         System.out.println(e.getMessage());
-    //     }
-    // }
-    
-
     public static void main(String[] args) {
-        // createTable();
-        // insertPlayer("Led", 101);
-        // showAllPlayers();
-        
         launch();
     }
 }

@@ -53,11 +53,11 @@
                   </Pane>
                </children>
             </StackPane>
-            <TextFlow fx:id="tf_dialogue" layoutX="800.0" layoutY="369.0" prefWidth="180.0" style="-fx-border-radius: 20; -fx-border-color: #000000; -fx-border-width: 2;">
+            <TextFlow fx:id="tf_dialogue" layoutX="800.0" layoutY="369.0" prefWidth="200.0" style="-fx-border-color: #000000; -fx-border-width: 2; -fx-border-radius: 20;">
                <children>
                   <Text fx:id="t_dialogue" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER">
                      <font>
-                        <Font name="VT323 Regular" size="13.0" />
+                        <Font name="VT323 Regular" size="18.0" />
                      </font>
                   </Text>
                </children>

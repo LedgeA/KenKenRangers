@@ -1,6 +1,8 @@
 package algorangers.kenkenrangers.controllers.base;
 
 import javafx.util.Duration;
+
+import java.sql.SQLException;
 import java.util.function.Supplier;
 
 import javafx.animation.KeyFrame;
@@ -15,7 +17,7 @@ import javafx.scene.shape.Rectangle;
 import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.*;;
 
-public class BaseGameController {
+public abstract class BaseGameController {
     
     @FXML
     protected Pane p_main;
@@ -44,8 +46,8 @@ public class BaseGameController {
     protected int DIALOGUE_COUNT = 0;
 
     protected Timeline attackInterval;
-    protected int multiplier = 1;
-    protected int counter = 0;
+    protected int powerMultiplier = 1;
+    protected int timeCounter = 0;
     
     protected KenkenController k_controller;
 
@@ -56,19 +58,25 @@ public class BaseGameController {
     protected int hp = 100, dps = 10;
     protected int powerSurge = 3, invincibility = 3, cellReveal = 3;
 
+    protected String name;
+    protected int powerSurgeUsed, invincibilityUsed, cellRevealUsed;
+    protected int characterExists, stars;
+
     protected final int BASE_WIDTH = 1280, BASE_HEIGHT = 720;
+
+    protected abstract void retrieveGameData() throws SQLException;
 
     protected void startTimer() {
         Timeline timer = new Timeline();
         timer.getKeyFrames().add(new KeyFrame(Duration.seconds(1), event -> {
-            counter++;
+            timeCounter++;
 
             if (k_controller.getRemainingCageAmount() == 0) {
                 timer.stop();
 
-                DatabaseManager.updateEndGameSession(DIMENSION, powerSurge, invincibility, cellReveal, 
+                DatabaseManager.updateEndGameSession(name, DIMENSION, timeCounter, powerSurge, invincibility, cellReveal, 
                     k_controller.getPowerSurge(), k_controller.getInvincibility(), k_controller.getCellReveal(), computeStars());
-
+                
                 GameUtils.navigate("game-over.fxml", p_main);
             }
         }));
@@ -86,7 +94,7 @@ public class BaseGameController {
             if (k_controller.getHp() <= 0) {
                 attackInterval.stop();
                 
-                DatabaseManager.updateEndGameSession(DIMENSION, powerSurge, invincibility, cellReveal, 
+                DatabaseManager.updateEndGameSession(name, DIMENSION, timeCounter, powerSurge, invincibility, cellReveal, 
                     k_controller.getPowerSurge(), k_controller.getInvincibility(), k_controller.getCellReveal(), computeStars());
                     
                 GameUtils.navigate("game-over.fxml", p_main);   
@@ -144,11 +152,11 @@ public class BaseGameController {
     protected int computeStars() {
         int stars = 1;
 
-        if (k_controller.getPowerSurge() == 0 && k_controller.getInvincibility() == 0 && k_controller.getCellReveal() == 0) {
+        if (k_controller.getPowerSurge() == this.powerSurge && k_controller.getInvincibility() == this.invincibility && k_controller.getCellReveal() == this.cellReveal) {
             stars++;
         }
 
-        if (counter <= 120) {
+        if (timeCounter <= 120) {
             stars++;
         }
 

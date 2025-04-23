@@ -1,10 +1,19 @@
 package algorangers.kenkenrangers.controllers;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import algorangers.kenkenrangers.controllers.base.BaseGameController;
 import algorangers.kenkenrangers.controllers.base.KenkenController;
+import algorangers.kenkenrangers.database.DatabaseManager;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
@@ -15,7 +24,7 @@ public class TutorialController extends BaseGameController{
 
     @FXML
     private Text t_dialogue;
-
+    
     protected final String[] dialogues = {
         "Hello Ranger! Welcome to KENKEN RANGERS",
         "Your mission is to fill the grid with numbers, just like Sudoku. But there's a twist!",
@@ -23,7 +32,7 @@ public class TutorialController extends BaseGameController{
         "Your goal is to use the numbers inside the cage to match the target number using the given math operation.",
         "+ and × deals damage to the enemy. - and ÷ reduces the damage you receive.",
         "Numbers must NOT repeat in anyrow or column.",
-        "The numbers you use depend on the grid size:\n- For a 3×3 grid, use only\nnumbers 1 to 3.\n- For a 4×4 grid, use numbers 1 to 4\n... and so on!",
+        "The numbers you use depend on the grid size:\n- For a 3×3 grid, use only numbers 1 to 3.\n- For a 4×4 grid, use numbers 1 to 4\n... and so on!",
         "Take too long in solving the Kenken Puzzle and the enemy will beat you.",
         "To make things exciting, we've added special power-ups!",
         "Invincibility makes you invincible for a set amount of time.",
@@ -33,11 +42,12 @@ public class TutorialController extends BaseGameController{
         "Use your skills, think strategically, and become a true KenKen master!",
         "Good luck, and may the numbers be ever in your favor!"
     };
-
+    
     @FXML
-    protected void initialize() {
+    protected void initialize() throws SQLException {
+        retrieveGameData();
 
-        k_controller = new KenkenController(DIMENSION, 100, dps, powerSurge, invincibility, cellReveal);
+        k_controller = new KenkenController(DIMENSION, dps, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
 
         setTextFlowContent();
@@ -48,9 +58,35 @@ public class TutorialController extends BaseGameController{
         p_main.getChildren().add(p_main.getChildren().size() - 1, k_view);
     }
 
-    protected void setTextFlowContent() {
+    @Override
+    protected void retrieveGameData() throws SQLException {
+        ResultSet rs = DatabaseManager.retrieveGameSession();
+
+        while (rs.next()) {
+            this.name = rs.getString("player_name");
+            this.dps = rs.getInt("dps");
+
+            this.powerSurge = rs.getInt("powersurge_initial");
+            this.invincibility = rs.getInt("invincibility_initial");
+            this.cellReveal = rs.getInt("cellreveal_initial");
+
+            this.powerSurgeUsed = rs.getInt("powersurge_used");
+            this.invincibilityUsed = rs.getInt("invincibility_used");
+            this.cellRevealUsed = rs.getInt("cellreveal_used");
+
+            this.characterExists = rs.getInt("character_exists");
+            this.stars = rs.getInt("stars");
+            
+        }
+    }
+
+    private void setTextFlowContent() {
 
         t_dialogue.setText(dialogues[DIALOGUE_COUNT]);
+
+        Color backgroundColor = Color.web("#F3EAD1");
+        BackgroundFill backgroundFill = new BackgroundFill(backgroundColor, new CornerRadii(25), Insets.EMPTY);
+        tf_dialogue.setBackground(new Background(backgroundFill));
 
         p_main.setOnMouseClicked(event -> {
             DIALOGUE_COUNT++;

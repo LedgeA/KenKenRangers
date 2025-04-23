@@ -18,21 +18,20 @@ public class DatabaseManager {
         return connection;
     }
 
-    public static void updateInitialGameSession(int dimension, int hp, int dps, int init_ps, int init_i, int init_cr, int char_exists) {
+    public static void updateInitialGameSession(String name, int dimension, int dps, int init_ps, int init_i, int init_cr, int char_exists) {
         String sql = "UPDATE game_session SET " +
-            "name = ? " + 
+            "player_name = ?, " + 
             "dimension = ?, " +
-            "hp = ?, " +
             "dps = ?, " +
             "powersurge_initial = ?, " +
-            "invincibility__initial = ?, " +
+            "invincibility_initial = ?, " +
             "cellreveal_initial = ?, " +
             "character_exists = ?";
 
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
 
-            pstmt.setInt(1, dimension);
-            pstmt.setInt(2, hp);
+            pstmt.setString(1, name);
+            pstmt.setInt(2, dimension);
             pstmt.setInt(3, dps);
             pstmt.setInt(4, init_ps);
             pstmt.setInt(5, init_i);
@@ -47,28 +46,25 @@ public class DatabaseManager {
         }       
     }
 
-    public static void updateEndGameSession(int score, int init_ps, int init_i, int init_cr, int used_ps, int used_i, int used_cr, int stars) {
+    public static void updateEndGameSession(String name, int score, int time, int init_ps, int init_i, int init_cr, int used_ps, int used_i, int used_cr, int stars) {
         String sql = "UPDATE game_session SET " +
-            "name = ? " + 
+            "player_name = ? " + 
             "score = ?, " +
-            "powersurge_initial = ?, " +
-            "invincibility_initial = ?, " +
-            "cellreveal_initial = ?, " +
             "powersurge_used = ?, " +
             "invincibility_used = ?, " +
             "cellreveal_used = ?, " +
+            "time = ?, " + 
             "stars = ?";
 
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
 
-            pstmt.setInt(1, score);
-            pstmt.setInt(2, init_ps);
-            pstmt.setInt(3, init_i);
-            pstmt.setInt(4, init_cr);
-            pstmt.setInt(5, used_ps);
-            pstmt.setInt(6, used_i);
-            pstmt.setInt(7, used_cr);
-            pstmt.setInt(8, stars);
+            pstmt.setString(1, name);
+            pstmt.setInt(2, score);
+            pstmt.setInt(3, used_ps);
+            pstmt.setInt(4, used_i);
+            pstmt.setInt(5, used_cr);
+            pstmt.setInt(6, time);
+            pstmt.setInt(7, stars);
 
             int rowsUpdated = pstmt.executeUpdate();
             System.out.println("Rows updated: " + rowsUpdated);
@@ -78,18 +74,16 @@ public class DatabaseManager {
         }     
     }
 
-    public static ResultSet retrieveGameSession(String table_name) {
-        String sql = "SELECT * FROM " + table_name;
+    public static ResultSet retrieveGameSession() throws SQLException {
+        String sql = "SELECT * FROM game_session";
+        PreparedStatement pstmt = getConnection().prepareStatement(sql);
+        return pstmt.executeQuery();
+    }
 
-        try (PreparedStatement pstmt = getConnection().prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
-            
-            return rs;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public static ResultSet retrievePlayerData(String name) throws SQLException {
+        String sql = "SELECT * FROM players WHERE name = " + name;
+        PreparedStatement pstmt = getConnection().prepareStatement(sql);
+        return pstmt.executeQuery();
     }
 
 }

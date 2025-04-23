@@ -1,10 +1,9 @@
 package algorangers.kenkenrangers.controllers;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
+import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -55,14 +54,45 @@ public class GameOverController {
     @FXML
     private Circle c_menu;
 
-    private int powerSurgeUsed, invincibilityUsed, cellRevealUsed, remainingPowerUps;
-    private int powerUps, timeFinished, stars;
+    private String name;
+    private int DIMENSION, dps;
+    private int powerSurge, invincibility, cellReveal;
+    private int powerSurgeUsed, invincibilityUsed, cellRevealUsed;
+    private int timeFinished, stars;
 
     @FXML
-    private void initialize() {
+    private void initialize() throws SQLException {
         
-        retrieveGameState();
+        retrievePlayerData(name);
+        retrieveGameData();
         setMenuButton();
+    }
+
+    private void retrieveGameData() throws SQLException {
+        ResultSet rs = DatabaseManager.retrieveGameSession();
+
+        if (!rs.next()) {
+            System.err.println("No game session found.");
+            return; 
+        }
+
+        name = rs.getString("player_name");
+        DIMENSION = rs.getInt("dimension");
+        dps = rs.getInt("dps");
+        powerSurge = rs.getInt("powersurge_initial");
+        invincibility = rs.getInt("invincibility_initial");
+        cellReveal = rs.getInt("cellreveal_initial");
+        powerSurgeUsed = rs.getInt("powersurge_used");
+        invincibilityUsed = rs.getInt("invincibility_used");
+        cellRevealUsed = rs.getInt("cellreveal_used");
+        timeFinished = rs.getInt("time");
+        stars = rs.getInt("stars");
+
+        loadRecords();
+    }
+
+    private void retrievePlayerData(String name) {
+
     }
 
     private void setMenuButton() {
@@ -71,55 +101,18 @@ public class GameOverController {
         });
     }
 
-    private void retrieveGameState() {
-        String sql = "SELECT * FROM active_game";
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:kenken.db");
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
-
-            while (rs.next()) {
-                int dimensions = rs.getInt("dimensions");
-                int dps = rs.getInt("dps");
-                this.powerUps = rs.getInt("power_ups");
-                this.timeFinished = rs.getInt("time_finished");
-                this.powerSurgeUsed = rs.getInt("power_surge_used");
-                this.invincibilityUsed = rs.getInt("invincibility_used");
-                this.cellRevealUsed = rs.getInt("cell_reveal_used");
-                this.remainingPowerUps = rs.getInt("remaining_power_ups");
-                this.stars = rs.getInt("stars");
-
-                System.out.println("Dimensions: " + dimensions);
-                System.out.println("DPS: " + dps);
-                System.out.println("Power Ups: " + powerUps);
-                System.out.println("Time Finished: " + timeFinished);
-                System.out.println("Power Surge Used: " + powerSurgeUsed);
-                System.out.println("Invincibility Used: " + invincibilityUsed);
-                System.out.println("Cell Reveal Used: " + cellRevealUsed);
-                System.out.println("Remaining Power Ups: " + remainingPowerUps);
-                System.out.println("Stars: " + stars);
-                System.out.println("-----");
-            }
-
-
-            loadRecords();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void loadRecords() {
-        int min = this.timeFinished / 60;
-        int sec = this.timeFinished % 60;
+        int min = timeFinished / 60;
+        int sec = timeFinished % 60;
 
         String strMin = String.valueOf(min).length() < 2 ? "0" + String.valueOf(min) : String.valueOf(min);
         String strSec = String.valueOf(sec).length() < 2 ? "0" + String.valueOf(sec) : String.valueOf(sec);
         
         t_time.setText(strMin + ":" + strSec);
 
-        t_powerSurge.setText(String.valueOf(powerSurgeUsed));
-        t_invincibility.setText(String.valueOf(powerSurgeUsed));
-        t_cellReveal.setText(String.valueOf(powerSurgeUsed));
+        t_powerSurge.setText(String.valueOf(powerSurgeUsed + "/" + powerSurge));
+        t_invincibility.setText(String.valueOf(invincibilityUsed) + "/" + invincibility);
+        t_cellReveal.setText(String.valueOf(cellRevealUsed) + "/" + cellReveal);
 
         Image starImage = new Image(getClass().getResource("/algorangers/kenkenrangers/icons/star.png").toExternalForm());
 
@@ -134,7 +127,10 @@ public class GameOverController {
             h_stars.getChildren().add(imageView);
         }
 
-        int score = (120 - this.timeFinished) * 100 + (1000 * this.remainingPowerUps);
+        int initialPowerUps = powerSurge + invincibility + cellReveal;
+        int remainingPowerUps = initialPowerUps - (powerSurgeUsed + invincibilityUsed + cellRevealUsed);
+
+        int score = (120 - timeFinished) * 1000 * DIMENSION / dps + (1000 * remainingPowerUps);
         t_bestNum.setText("0");
         t_scoreNum.setText(String.valueOf(score));
 

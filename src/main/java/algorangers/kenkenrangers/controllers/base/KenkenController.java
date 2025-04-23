@@ -38,18 +38,17 @@ public class KenkenController {
     private Button[][] buttonReferences;
     private int DIMENSION;
 
-    private int hp, dps;
+    private int hp = 100, dps;
     private int powerSurge, invincibility, cellReveal;
     private boolean invincible;
     private int multiplier = 1;
     
     private Random rand = new Random();
 
-    public KenkenController(int DIMENSION, int hp, int dps, int powerSurge, int invincibility, int cellReveal) {
+    public KenkenController(int DIMENSION, int dps, int powerSurge, int invincibility, int cellReveal) {
         this.inputGrid = new int[DIMENSION][DIMENSION];
         this.DIMENSION = DIMENSION;
 
-        this.hp = hp;
         this.dps = dps;
         this.powerSurge = powerSurge;
         this.invincibility = invincibility;
@@ -64,11 +63,9 @@ public class KenkenController {
         setupGrid();
     }
 
-    public KenkenController(int DIMENSION, int hp, int dps) {
+    public KenkenController(int DIMENSION, int dps) {
         this.inputGrid = new int[DIMENSION][DIMENSION];
         this.DIMENSION = DIMENSION;
-
-        this.hp = hp;
         this.dps = dps;
 
         k_model = new Kenken(DIMENSION);
