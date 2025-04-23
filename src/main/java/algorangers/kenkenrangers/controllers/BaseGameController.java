@@ -1,8 +1,6 @@
 package algorangers.kenkenrangers.controllers;
 
 import javafx.util.Duration;
-
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,12 +9,8 @@ import java.util.function.Supplier;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -25,7 +19,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
 import algorangers.kenkenrangers.utils.*;;
 
 public class BaseGameController {
@@ -111,7 +104,7 @@ public class BaseGameController {
 
             if (k_controller.getRemainingCageAmount() == 0) {
                 timer.stop();
-                navigate("game-over.fxml");
+                GameUtils.navigate("game-over.fxml", a_main);
                 saveGameState();
             }
         }));
@@ -128,7 +121,7 @@ public class BaseGameController {
 
             if (k_controller.getHp() <= 0) {
                 attackInterval.stop();
-                navigate("game-over.fxml");     
+                GameUtils.navigate("game-over.fxml", a_main);     
                 saveGameState();    
             }
         }));
@@ -321,35 +314,6 @@ public class BaseGameController {
     protected void changeEachPosition(TextFlow textFlow, double relX, double relY) {
         textFlow.setLayoutX(relX * a_mainWidth);
         textFlow.setLayoutY(relY * a_mainHeight);
-    }
-
-    protected void navigate(String fxml) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/algorangers/kenkenrangers/view/" + fxml));
-
-            Stage stage = (Stage) a_main.getScene().getWindow();
-            Parent root = fxmlLoader.load();
-
-            StackPane wrapper = new StackPane();
-            wrapper.getChildren().add(root);
-
-            Scene scene = new Scene(wrapper, BASE_WIDTH, BASE_HEIGHT);
-
-            root.scaleXProperty().bind(Bindings.createDoubleBinding(() ->
-                    Math.min(scene.getWidth() / BASE_WIDTH, scene.getHeight() / BASE_HEIGHT),
-                    scene.widthProperty(), scene.heightProperty()));
-            root.scaleYProperty().bind(root.scaleXProperty());
-
-            stage.setTitle("KenKenRangers");
-            stage.setScene(scene);
-            stage.setMinWidth(BASE_WIDTH);
-            stage.setMinHeight(BASE_HEIGHT);
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     protected void saveGameState() {
