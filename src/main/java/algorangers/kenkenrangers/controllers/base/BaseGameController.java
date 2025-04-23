@@ -1,9 +1,6 @@
 package algorangers.kenkenrangers.controllers.base;
 
 import javafx.util.Duration;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.util.function.Supplier;
 
 import javafx.animation.KeyFrame;
@@ -15,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.*;;
 
 public class BaseGameController {
@@ -68,9 +66,9 @@ public class BaseGameController {
             if (k_controller.getRemainingCageAmount() == 0) {
                 timer.stop();
 
-                int powerUps = powerSurge + invincibility + cellReveal;
+                DatabaseManager.updateEndGameSession(DIMENSION, powerSurge, invincibility, cellReveal, 
+                    k_controller.getPowerSurge(), k_controller.getInvincibility(), k_controller.getCellReveal(), computeStars());
 
-                saveGameState(DIMENSION, dps, powerUps);
                 GameUtils.navigate("game-over.fxml", p_main);
             }
         }));
@@ -83,15 +81,15 @@ public class BaseGameController {
             if (!k_controller.getInvincibleState()) {
                 k_controller.decreaseHp(); 
                 updateGaugeMeter();            
-                System.out.println(k_controller.getHp());
             }
 
             if (k_controller.getHp() <= 0) {
                 attackInterval.stop();
-                GameUtils.navigate("game-over.fxml", p_main);   
                 
-                int powerUps = powerSurge + invincibility + cellReveal;
-                saveGameState(DIMENSION, dps, powerUps);   
+                DatabaseManager.updateEndGameSession(DIMENSION, powerSurge, invincibility, cellReveal, 
+                    k_controller.getPowerSurge(), k_controller.getInvincibility(), k_controller.getCellReveal(), computeStars());
+                    
+                GameUtils.navigate("game-over.fxml", p_main);   
             }
         }));
         
@@ -141,39 +139,6 @@ public class BaseGameController {
         }
 
         GameUtils.bindSize(r_gaugeMeter, p_main, 64, currentMeterWidth);
-    }
-
-    protected void saveGameState(int DIMENSION, int dps, int powerUps) {
-        String sql = "UPDATE active_game SET " +
-                "dimensions = ?, " +
-                "dps = ?, " +
-                "power_ups = ?, " +
-                "time_finished = ?, " +
-                "power_surge_used = ?, " +
-                "invincibility_used = ?, " +
-                "cell_reveal_used = ?, " +
-                "remaining_power_ups = ?, " +
-                "stars = ?";
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:kenken.db");
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setInt(1, DIMENSION);
-            pstmt.setInt(2, dps);
-            pstmt.setInt(3, powerUps);
-            pstmt.setInt(4, counter);
-            pstmt.setInt(5, k_controller.getPowerSurge());
-            pstmt.setInt(6, k_controller.getInvincibility());
-            pstmt.setInt(7, k_controller.getCellReveal());
-            pstmt.setInt(8, k_controller.getPowerSurge() + k_controller.getInvincibility() + k_controller.getCellReveal());
-            pstmt.setInt(9, computeStars());
-
-            int rowsUpdated = pstmt.executeUpdate();
-            System.out.println("Rows updated: " + rowsUpdated);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }        
     }
 
     protected int computeStars() {

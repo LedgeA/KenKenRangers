@@ -1,5 +1,6 @@
 package algorangers.kenkenrangers.controllers.menu;
 
+import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -71,7 +72,7 @@ public class MainMenuController {
         });
 
         t_tutorial.setOnMouseClicked(event -> {
-            System.out.println("4");
+            GameUtils.navigate("tutorial.fxml", p_main);
         });
 
     }

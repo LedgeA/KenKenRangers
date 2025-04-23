@@ -1,5 +1,6 @@
 package algorangers.kenkenrangers.controllers.menu;
 
+import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
@@ -33,6 +34,7 @@ public class InitialMainMenuController {
         setTextAppearance();
         setOnClickListeners();
        
+        DatabaseManager.updateInitialGameSession(4, 100, 10, 3, 3, 3, 1);
     }
 
     private void setTextAppearance() {
