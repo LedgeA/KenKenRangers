@@ -42,7 +42,7 @@ public class GameUtils {
     public static void navigate(String fxml, Pane p_main) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(
-                GameUtils.class.getResource("/algorangers/kenkenrangers/view/" + fxml));
+                GameUtils.class.getResource("/algorangers/kenkenrangers/views/" + fxml));
 
             Stage stage = (Stage) p_main.getScene().getWindow();
             Parent root = fxmlLoader.load();

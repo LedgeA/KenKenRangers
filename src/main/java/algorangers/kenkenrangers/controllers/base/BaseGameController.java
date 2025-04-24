@@ -74,8 +74,11 @@ public abstract class BaseGameController {
             if (k_controller.getRemainingCageAmount() == 0) {
                 timer.stop();
 
-                DatabaseManager.updateEndGameSession(name, DIMENSION, timeCounter, powerSurge, invincibility, cellReveal, 
-                    k_controller.getPowerSurge(), k_controller.getInvincibility(), k_controller.getCellReveal(), computeStars());
+                DatabaseManager.updateEndGameSession(
+                    name, k_controller.getPowerSurge(), 
+                    k_controller.getInvincibility(), 
+                    k_controller.getCellReveal(), 
+                    timeCounter, computeStars());
                 
                 GameUtils.navigate("game-over.fxml", p_main);
             }
@@ -94,8 +97,11 @@ public abstract class BaseGameController {
             if (k_controller.getHp() <= 0) {
                 attackInterval.stop();
                 
-                DatabaseManager.updateEndGameSession(name, DIMENSION, timeCounter, powerSurge, invincibility, cellReveal, 
-                    k_controller.getPowerSurge(), k_controller.getInvincibility(), k_controller.getCellReveal(), computeStars());
+                DatabaseManager.updateEndGameSession(
+                    name, k_controller.getPowerSurge(), 
+                    k_controller.getInvincibility(), 
+                    k_controller.getCellReveal(), 
+                    0, computeStars());
                     
                 GameUtils.navigate("game-over.fxml", p_main);   
             }

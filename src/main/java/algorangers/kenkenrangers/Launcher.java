@@ -19,7 +19,7 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("view/initial-main-menu.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("views/initial-main-menu.fxml"));
         Parent root = fxmlLoader.load();
 
         StackPane wrapper = new StackPane();

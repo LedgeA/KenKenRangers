@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class TutorialController extends BaseGameController{
+public class CustomTrialController extends BaseGameController {
     
     @FXML
     private TextFlow tf_dialogue;

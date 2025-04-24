@@ -1,4 +1,4 @@
-package algorangers.kenkenrangers.controllers;
+package algorangers.kenkenrangers.controllers.rangers_saga;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class TutorialController extends BaseGameController{
+public class ChapterTwoController extends BaseGameController {
     
     @FXML
     private TextFlow tf_dialogue;

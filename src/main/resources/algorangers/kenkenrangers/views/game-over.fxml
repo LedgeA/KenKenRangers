@@ -18,7 +18,7 @@
          <image>
             <Image url="@../backgrounds/bg1.png" />
          </image></ImageView>
-      <Pane prefHeight="200.0" prefWidth="200.0">
+      <Pane fx:id="p_main" prefHeight="200.0" prefWidth="200.0">
          <children>
             <Rectangle fx:id="r_gameOver" arcHeight="100.0" arcWidth="100.0" fill="#f5f5f5" height="93.0" layoutX="352.0" layoutY="129.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" width="588.0" />
             <Text fx:id="t_time" fill="WHITE" layoutX="466.0" layoutY="102.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" style="-fx-fill: linear-gradient(from 0% 0% to 0% 100%, #B02825, #FFD700); -fx-effect: dropshadow(gaussian, black, 10, 0, 0, 0),    dropshadow(gaussian, black, 20, 0, 0, 0),    dropshadow(gaussian, black, 30, 0, 0, 0);" text="00:00">

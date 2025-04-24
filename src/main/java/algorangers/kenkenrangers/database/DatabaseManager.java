@@ -46,10 +46,9 @@ public class DatabaseManager {
         }       
     }
 
-    public static void updateEndGameSession(String name, int score, int time, int init_ps, int init_i, int init_cr, int used_ps, int used_i, int used_cr, int stars) {
+    public static void updateEndGameSession(String name, int used_ps, int used_i, int used_cr, int time, int stars) {
         String sql = "UPDATE game_session SET " +
-            "player_name = ? " + 
-            "score = ?, " +
+            "player_name = ?, " + 
             "powersurge_used = ?, " +
             "invincibility_used = ?, " +
             "cellreveal_used = ?, " +
@@ -59,12 +58,11 @@ public class DatabaseManager {
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
 
             pstmt.setString(1, name);
-            pstmt.setInt(2, score);
-            pstmt.setInt(3, used_ps);
-            pstmt.setInt(4, used_i);
-            pstmt.setInt(5, used_cr);
-            pstmt.setInt(6, time);
-            pstmt.setInt(7, stars);
+            pstmt.setInt(2, used_ps);
+            pstmt.setInt(3, used_i);
+            pstmt.setInt(4, used_cr);
+            pstmt.setInt(5, time);
+            pstmt.setInt(6, stars);
 
             int rowsUpdated = pstmt.executeUpdate();
             System.out.println("Rows updated: " + rowsUpdated);
