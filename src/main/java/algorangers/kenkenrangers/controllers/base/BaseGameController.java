@@ -15,7 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import algorangers.kenkenrangers.database.DatabaseManager;
-import algorangers.kenkenrangers.utils.*;;
+import algorangers.kenkenrangers.utils.*;
 
 public abstract class BaseGameController {
     

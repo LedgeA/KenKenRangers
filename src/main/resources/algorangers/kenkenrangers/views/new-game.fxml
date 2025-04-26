@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algorangers.kenkenrangers.controllers.menu.NewGameController">
+   <children>
+      <ImageView fx:id="background" fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true">
+         <image>
+            <Image url="@../backgrounds/bg1.png" />
+         </image>
+      </ImageView>
+      <Pane fx:id="p_main" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Text fx:id="t_kenken" layoutX="448.0" layoutY="198.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: linear-gradient(from 0% 0% to 0% 100%, #B02825, #FFD700); -fx-effect: dropshadow(gaussian, black, 10, 0, 0, 0),    dropshadow(gaussian, black, 20, 0, 0, 0),    dropshadow(gaussian, black, 30, 0, 0, 0);" text="KenKen" textAlignment="CENTER">
+               <font>
+                  <Font name="Press Start 2P Regular" size="64.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_rangers" layoutX="416.0" layoutY="277.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: linear-gradient(from 0% 0% to 0% 100%, #B02825, #FFD700); -fx-effect: dropshadow(gaussian, black, 10, 0, 0, 0),    dropshadow(gaussian, black, 20, 0, 0, 0),    dropshadow(gaussian, black, 30, 0, 0, 0);" text="Rangers" textAlignment="CENTER">
+               <font>
+                  <Font name="Press Start 2P Regular" size="64.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_newGame" fill="WHITE" fontSmoothingType="LCD" layoutX="460.0" layoutY="378.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="New Player">
+               <font>
+                  <Font name="Press Start 2P Regular" size="36.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_cancel" fill="WHITE" fontSmoothingType="LCD" layoutX="550.0" layoutY="591.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Cancel">
+               <font>
+                  <Font name="Press Start 2P Regular" size="30.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_proceed" fill="WHITE" fontSmoothingType="LCD" layoutX="535.0" layoutY="539.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Proceed">
+               <font>
+                  <Font name="Press Start 2P Regular" size="30.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="75.0" fitWidth="409.0" layoutX="437.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/field.png" />
+               </image>
+            </ImageView>
+            <TextField fx:id="tf_name" layoutX="465.0" layoutY="413.0" prefHeight="24.0" prefWidth="353.0" promptText="insert name" style="-fx-background-color: #C0C0C0; -fx-prompt-text-fill: #000000;">
+               <font>
+                  <Font name="Press Start 2P Regular" size="13.0" />
+               </font>
+            </TextField>
+         </children>
+      </Pane>
+   </children>
+</StackPane>

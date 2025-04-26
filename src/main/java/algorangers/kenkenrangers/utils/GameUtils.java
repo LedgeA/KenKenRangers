@@ -11,8 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -30,13 +30,15 @@ public class GameUtils {
         }
     }
 
-    public static void bindFontSize(Text text, Region region, double baseFontSize) {
-        DoubleBinding fontSizeBinding = region.heightProperty().multiply(baseFontSize / BASE_HEIGHT);
-
-        fontSizeBinding.addListener((obs, oldVal, newVal) -> {
-            Font font = text.getFont();
-            text.setFont(Font.font(font.getFamily(), newVal.doubleValue()));
+    public static void setMenuTextAppearance(Text text) {
+        text.setOnMouseEntered(event -> {
+            text.setFill(Color.YELLOW);
         });
+
+        text.setOnMouseExited(event -> {
+            text.setFill(Color.WHITE);
+        });
+        
     }
 
     public static void navigate(String fxml, Pane p_main) {
