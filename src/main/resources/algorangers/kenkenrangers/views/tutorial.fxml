@@ -5,12 +5,13 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algorangers.kenkenrangers.controllers.TutorialController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algorangers.kenkenrangers.controllers.game_modes.TutorialController">
    <children>
       <ImageView fx:id="background" fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true">
          <image>
@@ -32,25 +33,65 @@
             <StackPane fx:id="s_powerUps" layoutX="933.0" layoutY="22.0" prefWidth="80.0">
                <children>
                   <Rectangle fx:id="r_powerUps" arcHeight="15.0" arcWidth="15.0" fill="#18100e" height="230.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="80.0" />
-                  <Pane fx:id="p_powerUps" prefHeight="200.0" prefWidth="200.0">
+                  <Pane fx:id="p_powerUps" prefHeight="200.0" prefWidth="200.0" />
+                  <VBox alignment="CENTER" fillWidth="false" maxHeight="230.0" maxWidth="80.0" prefHeight="230.0" prefWidth="80.0">
                      <children>
-                        <ImageView fx:id="i_powerSurge" fitHeight="70.0" fitWidth="70.0" layoutX="5.0" layoutY="14.0" pickOnBounds="true">
-                           <image>
-                              <Image url="@../power-ups/double-damage.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="i_invincibility" fitHeight="70.0" fitWidth="70.0" layoutX="5.0" layoutY="80.0" pickOnBounds="true">
-                           <image>
-                              <Image url="@../power-ups/invincibility.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="i_cellReveal" fitHeight="70.0" fitWidth="70.0" layoutX="5.0" layoutY="150.0" pickOnBounds="true">
-                           <image>
-                              <Image url="@../power-ups/cell-reveal.png" />
-                           </image>
-                        </ImageView>
+                        <StackPane fx:id="s_powerSurge" prefHeight="70.0" prefWidth="70.0">
+                           <children>
+                              <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../power-ups/double-damage.png" />
+                                 </image>
+                              </ImageView>
+                              <Pane prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <Text fx:id="t_powerSurge" fill="WHITE" layoutX="50.0" layoutY="62.0" stroke="#000000" strokeType="OUTSIDE" strokeWidth="2.0" text="3">
+                                       <font>
+                                          <Font name="Press Start 2P Regular" size="13.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </Pane>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="s_invincibility" prefHeight="70.0" prefWidth="70.0">
+                           <children>
+                              <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../power-ups/invincibility.png" />
+                                 </image>
+                              </ImageView>
+                              <Pane prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <Text fx:id="t_invicibility" fill="WHITE" layoutX="50.0" layoutY="62.0" stroke="#000000" strokeType="OUTSIDE" strokeWidth="2.0" text="3">
+                                       <font>
+                                          <Font name="Press Start 2P Regular" size="13.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </Pane>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="s_cellReveal" prefHeight="70.0" prefWidth="70.0">
+                           <children>
+                              <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../power-ups/cell-reveal.png" />
+                                 </image>
+                              </ImageView>
+                              <Pane prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <Text fx:id="t_cellReveal" fill="WHITE" layoutX="50.0" layoutY="62.0" stroke="#000000" strokeType="OUTSIDE" strokeWidth="2.0" text="3">
+                                       <font>
+                                          <Font name="Press Start 2P Regular" size="13.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </Pane>
+                           </children>
+                        </StackPane>
                      </children>
-                  </Pane>
+                  </VBox>
                </children>
             </StackPane>
             <TextFlow fx:id="tf_dialogue" layoutX="800.0" layoutY="369.0" prefWidth="200.0" style="-fx-border-color: #000000; -fx-border-width: 2; -fx-border-radius: 20;">
@@ -65,6 +106,32 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </TextFlow>
+            <Text fx:id="t_time" layoutX="460.0" layoutY="137.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="4.0" style="-fx-fill: linear-gradient(from 0% 0% to 0% 100%, #B02825, #FFD700);" text="00:00">
+               <font>
+                  <Font name="Press Start 2P Regular" size="72.0" />
+               </font>
+            </Text>
+            <StackPane layoutX="212.0" layoutY="275.0" prefHeight="428.0" prefWidth="428.0" />
+            <ImageView fx:id="i_board" fitHeight="389.0" fitWidth="428.0" layoutX="447.0" layoutY="185.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/board.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="i_pause" fitHeight="111.0" fitWidth="449.0" layoutX="426.0" layoutY="147.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/pause.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="i_resume" fitHeight="111.0" fitWidth="400.0" layoutX="451.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/resume.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="i_quit" fitHeight="111.0" fitWidth="400.0" layoutX="451.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/quit.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>

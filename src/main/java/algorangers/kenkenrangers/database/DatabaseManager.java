@@ -73,7 +73,7 @@ public class DatabaseManager {
     }
 
     public static void updateGameSession(String name) {
-        String sql = "UPDATE players SET name = ?";
+        String sql = "UPDATE game_session SET name = ?";
 
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
 
@@ -93,7 +93,7 @@ public class DatabaseManager {
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
 
             pstmt.setString(1, name);
-            
+
             pstmt.executeUpdate();
             System.out.println("Player inserted successfully!");
 
@@ -117,9 +117,11 @@ public class DatabaseManager {
     }
 
     public static ResultSet retrievePlayerData(String name) throws SQLException {
-        String sql = "SELECT * FROM players WHERE name = " + name;
+        String sql = "SELECT * FROM players WHERE name = ?";
         PreparedStatement pstmt = getConnection().prepareStatement(sql);
 
+        pstmt.setString(1, name);
+        
         return pstmt.executeQuery();
     }
 

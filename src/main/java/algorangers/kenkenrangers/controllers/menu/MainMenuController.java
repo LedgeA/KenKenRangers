@@ -38,7 +38,7 @@ public class MainMenuController {
     
     private void setOnClickListeners() {
         t_rangersSaga.setOnMouseClicked(event -> {
-            System.out.println("1");
+            GameUtils.navigate("select-chapter.fxml", p_main);
         });
 
         t_bottomlessAbyss.setOnMouseClicked(event -> {

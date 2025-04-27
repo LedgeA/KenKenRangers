@@ -8,11 +8,8 @@ import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 
@@ -25,25 +22,10 @@ public class GameOverController {
     private Text t_time;
 
     @FXML
-    private Text t_gameOver;
-
-    @FXML
-    private Rectangle r_gameOver;
-
-    @FXML
-    private Rectangle r_board;
-
-    @FXML
     private HBox h_stars;
 
     @FXML
-    private BorderPane b_score, b_best;
-
-    @FXML
-    private Text t_score, t_scoreNum;
-
-    @FXML
-    private Text t_best, t_bestNum;
+    private Text t_bestNum, t_scoreNum;
 
     @FXML
     private ImageView i_powerSurge, i_invincibility, i_cellReveal;
@@ -52,7 +34,7 @@ public class GameOverController {
     private Text t_powerSurge, t_invincibility, t_cellReveal;
 
     @FXML
-    private Circle c_menu;
+    private ImageView i_menu;
 
     private String name;
     private int DIMENSION, dps;
@@ -76,7 +58,7 @@ public class GameOverController {
             return; 
         }
 
-        name = rs.getString("player_name");
+        name = rs.getString("name");
         DIMENSION = rs.getInt("dimension");
         dps = rs.getInt("dps");
         powerSurge = rs.getInt("powersurge_initial");
@@ -96,7 +78,7 @@ public class GameOverController {
     }
 
     private void setMenuButton() {
-        c_menu.setOnMouseClicked(event -> {
+        i_menu.setOnMouseClicked(event -> {
             GameUtils.navigate("main-menu.fxml", p_main);
         });
     }

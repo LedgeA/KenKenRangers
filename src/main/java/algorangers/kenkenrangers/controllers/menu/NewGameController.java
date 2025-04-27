@@ -33,10 +33,18 @@ public class NewGameController {
     }
 
     private void setOnClickListeners() {
+        tf_name.setOnKeyPressed(event -> {
+            if (event.getCode().toString().equals("ENTER")) {
+                DatabaseManager.createNewPlayer(tf_name.getText().trim());
+                DatabaseManager.updateGameSession(tf_name.getText());
+                GameUtils.navigate("tutorial.fxml", p_main);
+            }
+        });
+
         t_proceed.setOnMouseClicked(event -> {
             DatabaseManager.createNewPlayer(tf_name.getText().trim());
             DatabaseManager.updateGameSession(tf_name.getText());
-            GameUtils.navigate("main-menu.fxml", p_main);
+            GameUtils.navigate("tutorial.fxml", p_main);
         });
 
         t_cancel.setOnMouseClicked(event -> {
