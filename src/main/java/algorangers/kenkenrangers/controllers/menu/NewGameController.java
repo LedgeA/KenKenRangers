@@ -4,6 +4,7 @@ import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -34,11 +35,12 @@ public class NewGameController {
 
     private void setOnClickListeners() {
         tf_name.setOnKeyPressed(event -> {
-            if (event.getCode().toString().equals("ENTER")) {
-                DatabaseManager.createNewPlayer(tf_name.getText().trim());
-                DatabaseManager.updateGameSession(tf_name.getText());
-                GameUtils.navigate("tutorial.fxml", p_main);
-            }
+            if (event.getCode() != KeyCode.ENTER) return;
+            
+            DatabaseManager.createNewPlayer(tf_name.getText().trim());
+            DatabaseManager.updateGameSession(tf_name.getText());
+            GameUtils.navigate("tutorial.fxml", p_main);
+            
         });
 
         t_proceed.setOnMouseClicked(event -> {

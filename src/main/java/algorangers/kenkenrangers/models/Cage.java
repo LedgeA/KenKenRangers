@@ -19,8 +19,8 @@ public class Cage {
     public boolean areCageEntriesAreValid(int[][] solutionGrid, int[][] inputGrid) {
         for (int i = 0; i < cells.size(); i++) {
 
-            int row = this.cells.get(i).getRow();
-            int col = this.cells.get(i).getColumn();
+            int row = this.cells.get(i).row();
+            int col = this.cells.get(i).col();
 
             if (solutionGrid[row][col] != inputGrid[row][col]) {
                 return false;
@@ -46,19 +46,5 @@ public class Cage {
         return this.operation;
     }
 
-    private String cellsToString() {
-        String cells = "[";
-
-        for (Cell cell : this.cells) {
-            cells += "[" + cell.getRow() + ", " + cell.getColumn() + "],";
-        }
-
-        return cells + "] ";
-    }
-    
-    @Override
-    public String toString() {
-        return "Cage: " + cellsToString() + " Target: " + this.target + " Operation: " + this.operation;
-    }
 }
 

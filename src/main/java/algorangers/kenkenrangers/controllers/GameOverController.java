@@ -28,9 +28,6 @@ public class GameOverController {
     private Text t_bestNum, t_scoreNum;
 
     @FXML
-    private ImageView i_powerSurge, i_invincibility, i_cellReveal;
-
-    @FXML
     private Text t_powerSurge, t_invincibility, t_cellReveal;
 
     @FXML
@@ -84,13 +81,7 @@ public class GameOverController {
     }
 
     private void loadRecords() {
-        int min = timeFinished / 60;
-        int sec = timeFinished % 60;
-
-        String strMin = String.valueOf(min).length() < 2 ? "0" + String.valueOf(min) : String.valueOf(min);
-        String strSec = String.valueOf(sec).length() < 2 ? "0" + String.valueOf(sec) : String.valueOf(sec);
-        
-        t_time.setText(strMin + ":" + strSec);
+        t_time.setText(GameUtils.timeToString(timeFinished));
 
         t_powerSurge.setText(String.valueOf(powerSurgeUsed + "/" + powerSurge));
         t_invincibility.setText(String.valueOf(invincibilityUsed) + "/" + invincibility);

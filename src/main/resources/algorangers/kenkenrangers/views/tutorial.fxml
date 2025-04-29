@@ -26,14 +26,13 @@
             </ImageView>
             <StackPane fx:id="s_gauge" alignment="BOTTOM_CENTER" layoutY="71.0" prefHeight="150.0" prefWidth="200.0">
                <children>
-                  <Rectangle fx:id="r_gaugeBase" arcHeight="70.0" arcWidth="150.0" fill="#ffffff00" height="540.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" width="64.0" />
-                  <Rectangle fx:id="r_gaugeMeter" arcHeight="70.0" arcWidth="150.0" fill="#5add67" height="540.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" width="64.0" />
+                  <Rectangle fx:id="r_gaugeBase" arcHeight="25.0" arcWidth="20.0" fill="#5add67" height="540.0" stroke="#ededed09" strokeType="INSIDE" strokeWidth="0.0" style="-fx-fill: #000; -fx-effect: dropshadow(gaussian, black, 10, 0, 0, 0), dropshadow(gaussian, black, 20, 0, 0, 0), dropshadow(gaussian, black, 30, 0, 0, 0); -fx-stroke: #000; -fx-stroke-width: 3;" width="50.0" />
+                  <Rectangle fx:id="r_gaugeMeter" arcHeight="25.0" arcWidth="20.0" fill="#5add67" height="540.0" stroke="#ededed09" strokeType="INSIDE" strokeWidth="0.0" style="-fx-fill: linear-gradient(from 0% 0% to 0% 100%, #B02825, #FFD700); -fx-stroke: #000; -fx-stroke-width: 3;" width="50.0" />
                </children>
             </StackPane>
             <StackPane fx:id="s_powerUps" layoutX="933.0" layoutY="22.0" prefWidth="80.0">
                <children>
                   <Rectangle fx:id="r_powerUps" arcHeight="15.0" arcWidth="15.0" fill="#18100e" height="230.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="80.0" />
-                  <Pane fx:id="p_powerUps" prefHeight="200.0" prefWidth="200.0" />
                   <VBox alignment="CENTER" fillWidth="false" maxHeight="230.0" maxWidth="80.0" prefHeight="230.0" prefWidth="80.0">
                      <children>
                         <StackPane fx:id="s_powerSurge" prefHeight="70.0" prefWidth="70.0">
@@ -94,7 +93,7 @@
                   </VBox>
                </children>
             </StackPane>
-            <TextFlow fx:id="tf_dialogue" layoutX="800.0" layoutY="369.0" prefWidth="200.0" style="-fx-border-color: #000000; -fx-border-width: 2; -fx-border-radius: 20;">
+            <TextFlow fx:id="tf_dialogue" layoutX="800.0" layoutY="369.0" prefWidth="200.0" style="-fx-border-color: #000000; -fx-border-width: 2; -fx-border-radius: 20;" visible="false">
                <children>
                   <Text fx:id="t_dialogue" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER">
                      <font>
@@ -106,32 +105,35 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </TextFlow>
-            <Text fx:id="t_time" layoutX="460.0" layoutY="137.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="4.0" style="-fx-fill: linear-gradient(from 0% 0% to 0% 100%, #B02825, #FFD700);" text="00:00">
-               <font>
-                  <Font name="Press Start 2P Regular" size="72.0" />
-               </font>
-            </Text>
-            <StackPane layoutX="212.0" layoutY="275.0" prefHeight="428.0" prefWidth="428.0" />
-            <ImageView fx:id="i_board" fitHeight="389.0" fitWidth="428.0" layoutX="447.0" layoutY="185.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../icons/board.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="i_pause" fitHeight="111.0" fitWidth="449.0" layoutX="426.0" layoutY="147.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../icons/pause.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="i_resume" fitHeight="111.0" fitWidth="400.0" layoutX="451.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../icons/resume.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="i_quit" fitHeight="111.0" fitWidth="400.0" layoutX="451.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../icons/quit.png" />
-               </image>
-            </ImageView>
+            <Pane fx:id="p_pause" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: rgba(0, 0, 0, 0.8);" visible="false">
+               <children>
+                  <ImageView fitHeight="389.0" fitWidth="428.0" layoutX="447.0" layoutY="185.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/board.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="i_quit" fitHeight="111.0" fitWidth="400.0" layoutX="451.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/quit.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="i_resume" fitHeight="111.0" fitWidth="400.0" layoutX="451.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/resume.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="111.0" fitWidth="449.0" layoutX="426.0" layoutY="147.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/pause.png" />
+                     </image>
+                  </ImageView>
+                  <Text fx:id="t_time" layoutX="460.0" layoutY="137.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="4.0" style="-fx-fill: linear-gradient(from 0% 0% to 0% 100%, #B02825, #FFD700);" text="00:00">
+                     <font>
+                        <Font name="Press Start 2P Regular" size="72.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Pane>
          </children>
       </Pane>
    </children>

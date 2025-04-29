@@ -1,24 +1,19 @@
 package algorangers.kenkenrangers.models;
 
 public class Cell {
-  private int row, col, cageIndex;
+  private int row, col;
   
-  public Cell(int row, int col, int cageIndex) {
+  public Cell(int row, int col) {
     this.row = row;
     this.col = col;
-    this.cageIndex = cageIndex;
   }
 
-  public int getRow() {
+  public int row() {
     return this.row;
   }
   
-  public int getColumn() {
+  public int col() {
     return this.col;
-  }
-
-  public int cageIndex() {
-    return this.cageIndex;
   }
   
 }

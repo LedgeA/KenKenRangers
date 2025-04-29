@@ -2,14 +2,10 @@ package algorangers.kenkenrangers.controllers.game_modes;
 
 import java.sql.SQLException;
 
-import algorangers.kenkenrangers.controllers.base.BaseStoryController;
+import algorangers.kenkenrangers.controllers.base.BaseGameController;
 import algorangers.kenkenrangers.controllers.base.KenkenController;
-import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -17,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class TutorialController extends BaseStoryController{
+public class TutorialController extends BaseGameController {
     
     @FXML
     private TextFlow tf_dialogue;
@@ -25,7 +21,8 @@ public class TutorialController extends BaseStoryController{
     @FXML
     private Text t_dialogue;
     
-    protected String[] dialogues;
+    protected int DIALOGUE_COUNT;
+    protected String[] dialogue;
     
     @FXML
     protected void initialize() throws SQLException {
@@ -33,38 +30,24 @@ public class TutorialController extends BaseStoryController{
         k_controller = new KenkenController(DIMENSION, dps, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
 
+        // Setup Tutorial Dialogue
         insertDialogues();
         setTextFlowContent();
-        disableGridFocus(k_view);
-        powerUpsHandler();
-        hidePause();
+        modifyGridFocus(k_view, false);
 
+        // enable powerups
+        powerUpsHandler();
+
+        // Setup Pause Menu Visiblity
+        setUpPause();
+    
+        // Add k_view at the below tf_dialogue
         int pos = p_main.getChildren().indexOf(tf_dialogue);
-        // Add k_view just below the top most component 
         p_main.getChildren().add(pos, k_view);
     }
 
-    protected void setUpPause() {
-        i_resume.setOnMouseClicked(event -> {
-            timer.play();
-            hidePause();
-        });
-
-        i_quit.setOnMouseClicked(event -> {
-            GameUtils.navigate("main-menu.fxml", p_main);
-        });
-    }
-
-    protected void hidePause() {
-        t_time.setVisible(false);
-        i_pause.setVisible(false);
-        i_board.setVisible(false);
-        i_resume.setVisible(false);
-        i_quit.setVisible(false);
-    }
-
     protected void insertDialogues() {
-        dialogues = new String[] {
+        dialogue = new String[] {
             "Hello Ranger! Welcome to KENKEN RANGERS",
             "Your mission is to fill the grid with numbers, just like Sudoku. But there's a twist!",
             "The grid is divided into color-coded cages.",
@@ -85,56 +68,34 @@ public class TutorialController extends BaseStoryController{
 
     private void setTextFlowContent() {
 
-        t_dialogue.setText(dialogues[DIALOGUE_COUNT]);
-
+        tf_dialogue.setVisible(true);
+        t_dialogue.setText(dialogue[DIALOGUE_COUNT]);
+        
+        // background fill for tf_dialogue
         Color backgroundColor = Color.web("#F3EAD1", 0.8);
         BackgroundFill backgroundFill = new BackgroundFill(backgroundColor, new CornerRadii(25), Insets.EMPTY);
         tf_dialogue.setBackground(new Background(backgroundFill));
-
-        p_main.sceneProperty().addListener((observable, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.setOnKeyPressed(event -> {
-                    
-                });
-            }
-        });
         
         p_main.setOnMouseClicked(event -> {
-            DIALOGUE_COUNT++;
+            if (!paused) DIALOGUE_COUNT++;
 
             if (DIALOGUE_COUNT == 12) {
+                // Start Timelines and enable buttons
                 startTimer();
-                enableGridFocus(k_view);
+                startAttackInterval();
+                modifyGridFocus(k_view, true);
             };
-            if (DIALOGUE_COUNT >= dialogues.length) {
+
+            if (DIALOGUE_COUNT >= dialogue.length) {
+                // remove onclick property and hide dialogue
                 p_main.setOnMouseClicked(null);
                 tf_dialogue.setVisible(false);
                 return;
             }
 
-            t_dialogue.setText(dialogues[DIALOGUE_COUNT]);
+            t_dialogue.setText(dialogue[DIALOGUE_COUNT]);
 
         });
-    }
-
-    private void disableGridFocus(Parent parent) {
-        for (Node child : parent.getChildrenUnmodifiable()) {
-            child.setFocusTraversable(false);
-
-            if (child instanceof Parent) {
-                disableGridFocus((Parent) child);
-            }
-        }
-    }
-
-    private void enableGridFocus(Parent parent) {
-        for (Node child : parent.getChildrenUnmodifiable()) {
-            child.setFocusTraversable(true);
-
-            if (child instanceof Parent) {
-                enableGridFocus((Parent) child);
-            }
-        }
     }
 
 }

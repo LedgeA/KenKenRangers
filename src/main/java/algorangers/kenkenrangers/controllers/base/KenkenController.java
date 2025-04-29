@@ -1,17 +1,16 @@
 package algorangers.kenkenrangers.controllers.base;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import algorangers.kenkenrangers.models.*;
 
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.InnerShadow;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
@@ -35,7 +34,7 @@ public class KenkenController {
 
     private int[][] inputGrid;
     private int[][] solutionGrid;
-    private Button[][] buttonReferences;
+    private Button[][] buttonRefs;
     private int DIMENSION;
 
     private int hp = 100, dps;
@@ -58,7 +57,7 @@ public class KenkenController {
         this.solutionGrid = k_model.getGrid();
 
         k_cages = k_model.getCages();
-        this.buttonReferences = new Button[DIMENSION][DIMENSION];
+        this.buttonRefs = new Button[DIMENSION][DIMENSION];
 
         setupGrid();
     }
@@ -72,7 +71,7 @@ public class KenkenController {
         this.solutionGrid = k_model.getGrid();
         
         k_cages = k_model.getCages();
-        this.buttonReferences = new Button[DIMENSION][DIMENSION];
+        this.buttonRefs = new Button[DIMENSION][DIMENSION];
 
         setupGrid();
     }
@@ -85,7 +84,7 @@ public class KenkenController {
         this.solutionGrid = k_model.getGrid();
         
         k_cages = k_model.getCages();
-        this.buttonReferences = new Button[DIMENSION][DIMENSION];
+        this.buttonRefs = new Button[DIMENSION][DIMENSION];
 
         setupGrid();
 
@@ -130,56 +129,48 @@ public class KenkenController {
     }
 
     private void addCells() {
-        InnerShadow innerShadow = new InnerShadow();
-        innerShadow.setOffsetX(0);
-        innerShadow.setOffsetY(0);
-        innerShadow.setRadius(20);   
-        innerShadow.setChoke(0.2); 
-        innerShadow.setColor(Color.BLACK);
+        InnerShadow shadowFx = shadowFx();
 
-        int cageSize = k_cages.size();
-
-        for (int cageIndex = 0; cageIndex < cageSize; cageIndex++) {
-
-            Cage cage = k_cages.get(cageIndex);
-            List<Cell> cells = cage.getCells();
-            int cellSize = cells.size();
+        for (Cage cage : k_cages) {
             String color = cage.getColor();
-
-            addCell(cage, cells.get(0), innerShadow, color);
-
-            for (int cellIndex = 1; cellIndex < cellSize; cellIndex++) {
-                addCell(cells.get(cellIndex), innerShadow, color);
-            }
+            List<Cell> cells = cage.getCells();
+    
+            Iterator<Cell> iterator = cells.iterator();
+            addCell(cage, iterator.next(), shadowFx, color);
+            
+            while (iterator.hasNext()) addCell(null, iterator.next(), shadowFx, color);
+            
         }
     }
 
-    private void addCell(Cage cage, Cell cell, InnerShadow innerShadow, String color) {
-        int target = cage.getTarget();
-        char operation = cage.getOperation();
+    private InnerShadow shadowFx() {
+        InnerShadow shadowFx = new InnerShadow();
+        shadowFx.setOffsetX(0);
+        shadowFx.setOffsetY(0);
+        shadowFx.setRadius(20);   
+        shadowFx.setChoke(0.2); 
+        shadowFx.setColor(Color.BLACK);
 
-        int row = cell.getRow();
-        int col = cell.getColumn();
-
-        StackPane stackPane = new StackPane();
-        Button button = createButton(innerShadow, color);
-        Label label = createLabel(target, operation);
-
-        stackPane.getChildren().addAll(button, label);
-        k_view.add(stackPane, col, row);
-        this.buttonReferences[row][col] = button;
+        return shadowFx;
     }
 
-    private void addCell(Cell cell, InnerShadow innerShadow, String color) {
-        int row = cell.getRow();
-        int col = cell.getColumn();
-
+    private void addCell(Cage cage, Cell cell, InnerShadow innerShadow, String color) {
+        int row = cell.row();
+        int col = cell.col();
+    
         StackPane stackPane = new StackPane();
         Button button = createButton(innerShadow, color);
-
         stackPane.getChildren().add(button);
+    
+        if (cage != null) {
+            int target = cage.getTarget();
+            char operation = cage.getOperation();
+            Label label = createLabel(target, operation);
+            stackPane.getChildren().add(label);
+        }
+    
         k_view.add(stackPane, col, row);
-        this.buttonReferences[row][col] = button;
+        this.buttonRefs[row][col] = button;
     }
 
     private Label createLabel(int target, char operation) {
@@ -214,51 +205,50 @@ public class KenkenController {
                 new BackgroundFill(
                 Color.web(color), CornerRadii.EMPTY, Insets.EMPTY)));
                 
-        button.focusedProperty().addListener((obs, oldVal, newVal) -> buttonOnFocus(button, innerShadow, obs, oldVal, newVal));
-        button.setOnKeyPressed(event -> handleKeyPressed(button, event));
+        button.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            button.setEffect(newVal ? innerShadow : null);
+        });
+
+        button.setOnKeyPressed(event -> {
+            if (!inputIsValid(event.getText())) return;
+            
+            button.setText(event.getText());
+            updateButton(button);
+            evaluateAllInputs();
+        });
 
         return button;
     }
 
-    private void buttonOnFocus(Button button, InnerShadow innerShadow, ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) {
-        if (newVal) {
-            button.setEffect(innerShadow);
-        } else {
-            button.setEffect(null);
-        }
-    }
+    protected void evaluateAllInputs() {
+        Iterator<Cage> iterator = k_cages.iterator();
 
-    private void handleKeyPressed(Button button, KeyEvent event) {
-
-        if (inputIsValidNo(event.getText())) {
-            button.setText(event.getText());
-
-            setInputValue(button);
-        }
-
-        evaluateInputGrid();
-    }
-
-    protected void evaluateInputGrid() {
-        for (int cageIndex = 0; cageIndex < k_cages.size(); cageIndex++) {
-            Cage cage = k_cages.get(cageIndex);
-
+        while (iterator.hasNext()) {
+            Cage cage = iterator.next();
+    
             if (cage.areCageEntriesAreValid(solutionGrid, inputGrid)) {
                 List<Cell> cells = cage.getCells();
-                int cellSize = cells.size();
-                
-                for (int cellIndex = 0; cellIndex < cellSize; cellIndex++) {
-                    disableCageCells(cells.get(cellIndex));
-                }
-                
-                k_cages.remove(cageIndex);
-                cageIndex--;
+                disableCells(cells);
+    
+                iterator.remove(); 
                 this.hp += 5;
             }
         }
     }
 
-    private boolean inputIsValidNo(String input) {
+    private void disableCells(List<Cell> cells) {
+        int cellSize = cells.size();
+
+        for (int cellIndex = 0; cellIndex < cellSize; cellIndex++) {
+            Cell cell = cells.get(cellIndex);
+            int row = cell.row();
+            int col = cell.col();
+
+            buttonRefs[row][col].setDisable(true);
+        }
+    }
+
+    private boolean inputIsValid(String input) {
         try {
             int num = Integer.parseInt(input);
             return num > 0 && num <= DIMENSION;
@@ -267,27 +257,16 @@ public class KenkenController {
         }
     }
 
-    private void setInputValue(Button button) {
+    private void updateButton(Button button) {
         for (int row = 0; row < DIMENSION; row++) {
             for (int col = 0; col < DIMENSION; col++) {
-                if (buttonReferences[row][col] == button) {
+                if (buttonRefs[row][col] == button) {
                     inputGrid[row][col] = Integer.parseInt(button.getText());
 
                     return;
                 }
             }
         }
-    }
-
-    public GridPane getK_view() {
-        return k_view;
-    }
-
-    private void disableCageCells(Cell cell) {
-        int row = cell.getRow();
-        int col = cell.getColumn();
-
-        buttonReferences[row][col].setDisable(true);
     }
 
     private void revealCells() {
@@ -297,18 +276,25 @@ public class KenkenController {
         while (cellCount > counter) {
             int row = rand.nextInt(DIMENSION);
             int col = rand.nextInt(DIMENSION);
-            Button button = buttonReferences[row][col];
+            Button button = buttonRefs[row][col];
 
-            if (!button.isDisabled()) {
-                int value = solutionGrid[row][col];
-                inputGrid[row][col] = value;
+            if (button.isDisabled()) return;
+            int value = solutionGrid[row][col];
+            inputGrid[row][col] = value;
 
-                button.setText(String.valueOf(value));
-                button.setDisable(true);
-                counter++;
-            }
+            button.setText(String.valueOf(value));
+            button.setDisable(true);
+            counter++;
         }
 
+    }
+
+    public GridPane getK_view() {
+        return k_view;
+    }
+
+    public int getRemainingCageAmount() {
+        return this.k_cages.size();
     }
 
     public void increaseHp() {
@@ -331,7 +317,7 @@ public class KenkenController {
 
     public void consumeCellReveal() {
         revealCells();
-        evaluateInputGrid();
+        evaluateAllInputs();
         this.cellReveal--;
     }
 
@@ -365,9 +351,5 @@ public class KenkenController {
 
     public int getMultiplier() {
         return this.multiplier;
-    }
-
-    public int getRemainingCageAmount() {
-        return this.k_cages.size();
     }
 }

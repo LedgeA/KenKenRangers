@@ -19,16 +19,6 @@ public class GameUtils {
 
     private static final int BASE_WIDTH = 1280, BASE_HEIGHT = 720;
 
-    public static void bindSize(Node node, Region region, double nodeBaseWidth, double nodeBaseHeight) {
-        if (node instanceof Rectangle rectangleRef) {
-            rectangleRef.widthProperty().bind(region.widthProperty().multiply(nodeBaseWidth / BASE_WIDTH));
-            rectangleRef.heightProperty().bind(region.heightProperty().multiply(nodeBaseHeight / BASE_HEIGHT));
-            
-        } else {
-            System.out.println("| OUT OF SCOPE | Node is instance of: " + node.getClass().getSimpleName());
-        }
-    }
-
     public static void setMenuTextAppearance(Text text) {
         text.setOnMouseEntered(event -> {
             text.setFill(Color.YELLOW);
@@ -38,6 +28,14 @@ public class GameUtils {
             text.setFill(Color.WHITE);
         });
         
+    }
+
+    public static String timeToString(int time) {
+        int min = time / 60;
+        int sec = time % 60;
+
+        return (min < 10 ? "0" : "") + String.valueOf(min) + ":"
+             + (sec < 10 ? "0" : "") + String.valueOf(sec);
     }
 
     public static void navigate(String fxml, Pane p_main) {
