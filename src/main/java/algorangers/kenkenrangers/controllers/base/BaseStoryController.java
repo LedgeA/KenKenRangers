@@ -1,11 +1,15 @@
 package algorangers.kenkenrangers.controllers.base;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 
 public abstract class BaseStoryController extends BaseGameController {
     
@@ -20,12 +24,15 @@ public abstract class BaseStoryController extends BaseGameController {
 
     @FXML
     protected StackPane s_finish;
+
+    protected Timeline gameResultChecker;
     
     protected int CONVERSE_COUNT = 0;
     protected String[] dialogue;
 
     protected int lastIntroDialogue, lastOutroDialogue;
 
+    protected abstract void insertDialogues();
     protected abstract void introDialogue(String text);
     protected abstract void winningDialogue(String text);
     protected abstract void losingDialogue(String text);
@@ -47,13 +54,13 @@ public abstract class BaseStoryController extends BaseGameController {
         modifyGridFocus(k_view, false);
         s_finish.setVisible(true);
 
-        if (!gameLost) {
+        if (gameWon) {
             winningDialogue(text);
         } else {
             losingDialogue(text);
         }
 
-        if (CONVERSE_COUNT == lastOutroDialogue) s_finish.setVisible(true);
+        if (CONVERSE_COUNT == lastOutroDialogue) return;
 
         CONVERSE_COUNT++;
     }
@@ -81,6 +88,27 @@ public abstract class BaseStoryController extends BaseGameController {
     protected void switchRanger(boolean isPlayer) {
         i_player.setVisible(isPlayer);
         i_senior.setVisible(!isPlayer);
+    }
+
+    protected void addGameResultChecker() {
+        gameResultChecker = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if (gameOver) {
+                if (!gameWon) CONVERSE_COUNT = 5;
+                
+                updateDialogue();
+                gameResultChecker.stop();
+                gameResultChecker = null;
+            }
+        }));
+
+        gameResultChecker.setCycleCount(Animation.INDEFINITE);
+        gameResultChecker.play();
+    }
+
+    protected void setupFinishButton() {
+        s_finish.setOnMouseClicked(event -> {
+            gameEnd(gameWon);
+        });
     }
 
 }

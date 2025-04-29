@@ -1,53 +1,35 @@
 package algorangers.kenkenrangers.controllers.game_modes.rangers_saga;
 
 import java.sql.SQLException;
-
-import algorangers.kenkenrangers.controllers.base.BaseGameController;
+import algorangers.kenkenrangers.controllers.base.BaseStoryController;
 import algorangers.kenkenrangers.controllers.base.KenkenController;
 import algorangers.kenkenrangers.utils.AnimationUtils;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
-public class ChapterOneController extends BaseGameController {
+public class ChapterOneController extends BaseStoryController {
     
-    @FXML
-    private TextFlow tf_player, tf_villain;
-
-    @FXML
-    private Text t_monologue, t_player, t_villain;
-
-    @FXML
-    private ImageView i_senior, i_player;
-
     @FXML
     private Pane p_monologue;
 
     @FXML
-    private StackPane s_finish;
+    private Text t_monologue;
 
-    @FXML 
-    private Text t_sTime;
-
-    private Timeline gameResultChecker;
-    
-    private int MONOLOGUE_COUNT = 0, CONVERSE_COUNT = 0;
-    private String[] dialogue;
+    private int MONOLOGUE_COUNT;
     private String[] backstoryMonologue;
     
     @FXML
     protected void initialize() throws SQLException {
 
-        k_controller = new KenkenController(DIMENSION, dps, powerSurge, invincibility, cellReveal);
+        k_controller = new KenkenController(DIMENSION, 100, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
+
+        lastIntroDialogue = 2;
+        lastOutroDialogue = 9;
 
         // Setup Story Dialogue
         insertDialogues();
@@ -59,14 +41,15 @@ public class ChapterOneController extends BaseGameController {
 
         // Setup Pause Menu Visiblity
         setUpPause();
+        setupFinishButton();
 
         // Add k_view just below tf_dialogue
         int pos = p_main.getChildren().indexOf(tf_villain);
         p_main.getChildren().add(pos, k_view);
     }
 
-    private void insertDialogues() {
-        // Lost Dialogue starts at index 5
+    @Override
+    protected void insertDialogues() {
         dialogue = new String[] {
             "Your tests were off the charts. This beacon’s yours. Prove you're more than just talk.",
             "I won’t let humanity fall. Let’s see what these goblins are made of.",
@@ -132,22 +115,8 @@ public class ChapterOneController extends BaseGameController {
         }, t_monologue);
     }
 
-    private void setUpDialogue() {
-        tf_player.setVisible(true);
-        t_player.setText(dialogue[CONVERSE_COUNT]);
-
-        Background background = getTextFill();
-
-        tf_player.setBackground(background);
-        tf_villain.setBackground(background);
-        
-        p_main.setOnMouseClicked(event -> {
-            if (paused) return;
-            updateDialogue(2, 9);
-        });
-    }
-
-    private void introDialogue(String text) {
+    @Override
+    protected void introDialogue(String text) {
         switch(CONVERSE_COUNT) {
             case 1 -> {
                 switchRanger(true);
@@ -160,12 +129,13 @@ public class ChapterOneController extends BaseGameController {
                 modifyGridFocus(k_view, true);
                 startTimer();
                 startAttackInterval();
-                addGameOverChecker();
+                addGameResultChecker();
             }
         }
     }
 
-    private void winningDialogue(String text) {
+    @Override
+    protected void winningDialogue(String text) {
         switch (CONVERSE_COUNT) {
             case 3 -> {
                 switchRanger(false);
@@ -180,7 +150,8 @@ public class ChapterOneController extends BaseGameController {
         }
     }
 
-    private void losingDialogue(String text) {
+    @Override
+    protected void losingDialogue(String text) {
         switch (CONVERSE_COUNT) {
             case 5, 6 -> {
                 switchDialogue(false);
@@ -191,57 +162,6 @@ public class ChapterOneController extends BaseGameController {
                 t_player.setText(text);
             }
         }
-    }
-
-    private void updateDialogue(int gameStart, int gameEnd) {
-        String text = dialogue[CONVERSE_COUNT];
-        System.out.println(CONVERSE_COUNT);
-
-        if (CONVERSE_COUNT <= gameStart) {
-            introDialogue(text);
-            CONVERSE_COUNT++;
-            return;
-        }
-        
-        tf_player.setVisible(false);
-        tf_villain.setVisible(false);
-
-        if (!gameOver) return;
-        modifyGridFocus(k_view, false);
-        s_finish.setVisible(true);
-
-        if (!gameLost) {
-            winningDialogue(text);
-        } else {
-            losingDialogue(text);
-        }
-
-        if (CONVERSE_COUNT == gameEnd) s_finish.setVisible(true);
-
-        CONVERSE_COUNT++;
-    }
-
-    private void addGameOverChecker() {
-        gameResultChecker = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            if (gameOver) {
-                updateDialogue();
-                gameResultChecker.stop();
-                gameResultChecker = null;
-            }
-        }));
-
-        gameResultChecker.setCycleCount(Animation.INDEFINITE);
-        gameResultChecker.play();
-    }
-    
-    private void switchDialogue(boolean isPlayer) {
-        tf_player.setVisible(isPlayer);
-        tf_villain.setVisible(!isPlayer);
-    }
-
-    private void switchRanger(boolean isPlayer) {
-        i_player.setVisible(isPlayer);
-        i_senior.setVisible(!isPlayer);
     }
 
 }

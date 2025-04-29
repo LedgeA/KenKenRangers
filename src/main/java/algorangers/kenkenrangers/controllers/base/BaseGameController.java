@@ -75,7 +75,7 @@ public class BaseGameController {
     protected int characterExists, stars;
 
     protected boolean paused = false;
-    protected boolean gameOver = false, gameLost = false;
+    protected boolean gameOver = false, gameWon = true;
 
     protected final int BASE_WIDTH = 1280, BASE_HEIGHT = 720;
 
@@ -151,7 +151,7 @@ public class BaseGameController {
 
             // if hp runs out, end the game
             if (k_controller.getHp() <= 0) {
-                gameLost = true;
+                gameWon = false;
                 gameOver = true;
                 
                 timer.stop();
