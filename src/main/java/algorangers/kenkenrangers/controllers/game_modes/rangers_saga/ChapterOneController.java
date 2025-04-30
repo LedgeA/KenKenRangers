@@ -1,9 +1,12 @@
 package algorangers.kenkenrangers.controllers.game_modes.rangers_saga;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import algorangers.kenkenrangers.controllers.base.BaseStoryController;
 import algorangers.kenkenrangers.controllers.base.KenkenController;
+import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.AnimationUtils;
+import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -27,14 +30,14 @@ public class ChapterOneController extends BaseStoryController {
 
         k_controller = new KenkenController(DIMENSION, 100, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
-
-        lastIntroDialogue = 2;
-        lastOutroDialogue = 9;
+        
+        outroDialogueStart = 3;
+        outroDialogueEnd = 9;
 
         // Setup Story Dialogue
         insertDialogues();
-        modifyGridFocus(k_view, false);
         startMonologue();
+        GameUtils.setAllUnfocusable(k_view, false);
 
         // enable powerups
         powerUpsHandler();
@@ -126,7 +129,7 @@ public class ChapterOneController extends BaseStoryController {
                 switchDialogue(false);
                 t_villain.setText(text);
                 
-                modifyGridFocus(k_view, true);
+                GameUtils.setAllUnfocusable(k_view, true);
                 startTimer();
                 startAttackInterval();
                 addGameResultChecker();

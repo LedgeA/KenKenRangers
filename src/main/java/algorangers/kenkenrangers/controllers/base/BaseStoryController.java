@@ -1,5 +1,9 @@
 package algorangers.kenkenrangers.controllers.base;
 
+import java.sql.SQLException;
+
+import algorangers.kenkenrangers.database.DatabaseManager;
+import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -30,7 +34,8 @@ public abstract class BaseStoryController extends BaseGameController {
     protected int CONVERSE_COUNT = 0;
     protected String[] dialogue;
 
-    protected int lastIntroDialogue, lastOutroDialogue;
+    protected String name;
+    protected int outroDialogueStart, outroDialogueEnd;
 
     protected abstract void insertDialogues();
     protected abstract void introDialogue(String text);
@@ -41,7 +46,7 @@ public abstract class BaseStoryController extends BaseGameController {
         String text = dialogue[CONVERSE_COUNT];
         System.out.println(CONVERSE_COUNT);
 
-        if (CONVERSE_COUNT <= lastIntroDialogue) {
+        if (CONVERSE_COUNT <= outroDialogueStart) {
             introDialogue(text);
             CONVERSE_COUNT++;
             return;
@@ -51,7 +56,7 @@ public abstract class BaseStoryController extends BaseGameController {
         tf_villain.setVisible(false);
 
         if (!gameOver) return;
-        modifyGridFocus(k_view, false);
+        GameUtils.setAllUnfocusable(k_view, false);
         s_finish.setVisible(true);
 
         if (gameWon) {
@@ -60,7 +65,7 @@ public abstract class BaseStoryController extends BaseGameController {
             losingDialogue(text);
         }
 
-        if (CONVERSE_COUNT == lastOutroDialogue) return;
+        if (CONVERSE_COUNT == outroDialogueEnd) return;
 
         CONVERSE_COUNT++;
     }
@@ -107,8 +112,32 @@ public abstract class BaseStoryController extends BaseGameController {
 
     protected void setupFinishButton() {
         s_finish.setOnMouseClicked(event -> {
-            gameEnd(gameWon);
+            try {
+                gameEnd(gameWon);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         });
     }
 
+    @Override
+    protected void gameEnd(boolean cleared) throws SQLException {
+        timer.stop();
+        attackInterval.stop();
+
+        DatabaseManager.updateInitialGameSession(
+            DIMENSION, 
+            dps, 
+            powerSurge, 
+            invincibility, 
+            cellReveal);
+
+        DatabaseManager.updateEndGameSession(
+            k_controller.getPowerSurge(), 
+            k_controller.getInvincibility(), 
+            k_controller.getCellReveal(), 
+            timeCount, 
+            score, 
+            computeStars());
+    }
 }

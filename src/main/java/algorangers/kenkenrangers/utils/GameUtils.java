@@ -8,10 +8,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -36,6 +34,16 @@ public class GameUtils {
 
         return (min < 10 ? "0" : "") + String.valueOf(min) + ":"
              + (sec < 10 ? "0" : "") + String.valueOf(sec);
+    }
+
+    public static void setAllUnfocusable(Parent parent, boolean isFocusable) {
+        for (Node child : parent.getChildrenUnmodifiable()) {
+            child.setFocusTraversable(isFocusable);
+
+            if (child instanceof Parent) {
+                setAllUnfocusable((Parent) child, isFocusable);
+            }
+        }
     }
 
     public static void navigate(String fxml, Pane p_main) {

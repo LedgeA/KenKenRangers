@@ -34,15 +34,15 @@ public class GameOverController {
     private ImageView i_menu;
 
     private String name;
-    private int DIMENSION, dps;
     private int powerSurge, invincibility, cellReveal;
     private int powerSurgeUsed, invincibilityUsed, cellRevealUsed;
-    private int timeFinished, stars;
+    private int timeFinished, score, stars;
+
+    private int bestScore = 0;
 
     @FXML
     private void initialize() throws SQLException {
         
-        retrievePlayerData(name);
         retrieveGameData();
         setMenuButton();
     }
@@ -50,28 +50,22 @@ public class GameOverController {
     private void retrieveGameData() throws SQLException {
         ResultSet rs = DatabaseManager.retrieveGameSession();
 
-        if (!rs.next()) {
-            System.err.println("No game session found.");
-            return; 
-        }
+        if (!rs.next()) return; 
 
         name = rs.getString("name");
-        DIMENSION = rs.getInt("dimension");
-        dps = rs.getInt("dps");
         powerSurge = rs.getInt("powersurge_initial");
         invincibility = rs.getInt("invincibility_initial");
         cellReveal = rs.getInt("cellreveal_initial");
         powerSurgeUsed = rs.getInt("powersurge_used");
         invincibilityUsed = rs.getInt("invincibility_used");
         cellRevealUsed = rs.getInt("cellreveal_used");
+        score = rs.getInt("score");
         timeFinished = rs.getInt("time");
         stars = rs.getInt("stars");
 
+        bestScore = DatabaseManager.retrieveHighScore(name, "bottomless_abyss");
+        
         loadRecords();
-    }
-
-    private void retrievePlayerData(String name) {
-
     }
 
     private void setMenuButton() {
@@ -99,13 +93,8 @@ public class GameOverController {
 
             h_stars.getChildren().add(imageView);
         }
-
-        int initialPowerUps = powerSurge + invincibility + cellReveal;
-        int remainingPowerUps = initialPowerUps - (powerSurgeUsed + invincibilityUsed + cellRevealUsed);
-
-        int score = (120 - timeFinished) * 1000 * DIMENSION / dps + (1000 * remainingPowerUps);
-        t_bestNum.setText("0");
-        t_scoreNum.setText(String.valueOf(score));
+        
+        t_scoreNum.setText(score > bestScore ? String.valueOf(score) : String.valueOf(bestScore));
 
     }
 

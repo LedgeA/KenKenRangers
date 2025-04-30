@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import algorangers.kenkenrangers.controllers.base.BaseGameController;
 import algorangers.kenkenrangers.controllers.base.KenkenController;
+import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
@@ -33,7 +34,7 @@ public class TutorialController extends BaseGameController {
         // Setup Tutorial Dialogue
         insertDialogues();
         setTextFlowContent();
-        modifyGridFocus(k_view, false);
+        GameUtils.setAllUnfocusable(k_view, false);
 
         // enable powerups
         powerUpsHandler();
@@ -83,7 +84,7 @@ public class TutorialController extends BaseGameController {
                 // Start Timelines and enable buttons
                 startTimer();
                 startAttackInterval();
-                modifyGridFocus(k_view, true);
+                GameUtils.setAllUnfocusable(k_view, true);
             };
 
             if (DIALOGUE_COUNT >= dialogue.length) {
@@ -96,6 +97,11 @@ public class TutorialController extends BaseGameController {
             t_dialogue.setText(dialogue[DIALOGUE_COUNT]);
 
         });
+    }
+
+    @Override
+    protected void gameEnd(boolean cleared) {
+
     }
 
 }

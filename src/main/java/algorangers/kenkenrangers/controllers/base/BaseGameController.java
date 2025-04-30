@@ -2,6 +2,7 @@ package algorangers.kenkenrangers.controllers.base;
 
 import javafx.util.Duration;
 
+import java.sql.SQLException;
 import java.util.function.Supplier;
 
 import javafx.animation.KeyFrame;
@@ -9,8 +10,6 @@ import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -23,10 +22,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.*;
 
-public class BaseGameController {
+public abstract class BaseGameController {
     
     @FXML
     protected Pane p_main;
@@ -70,14 +68,14 @@ public class BaseGameController {
     protected int hp = 100, dps = 10;
     protected int powerSurge = 3, invincibility = 3, cellReveal = 3;
 
-    protected String name;
-    protected int powerSurgeUsed, invincibilityUsed, cellRevealUsed;
-    protected int characterExists, stars;
 
     protected boolean paused = false;
     protected boolean gameOver = false, gameWon = true;
 
     protected final int BASE_WIDTH = 1280, BASE_HEIGHT = 720;
+
+    protected abstract void gameEnd(boolean cleared) throws SQLException;
+    protected int score;
 
     protected void setUpPause() {
         p_main.sceneProperty().addListener((observable, oldScene, newScene) -> {
@@ -118,8 +116,6 @@ public class BaseGameController {
     }
 
     protected void startTimer() {
-        
-        // Game Duration Counter and Clear Verifier
         timer = new Timeline();
         timer.getKeyFrames().add(new KeyFrame(Duration.seconds(1), event -> {
             timeCount++;
@@ -162,22 +158,6 @@ public class BaseGameController {
         attackInterval.setCycleCount(Timeline.INDEFINITE); 
         attackInterval.play();
     }
-
-    protected void gameEnd(boolean cleared) {
-        timer.stop();
-
-        if (attackInterval != null) attackInterval.stop();
-        
-        DatabaseManager.updateEndGameSession(
-            name, 
-            k_controller.getPowerSurge(), 
-            k_controller.getInvincibility(), 
-            k_controller.getCellReveal(), 
-            cleared ? timeCount : 0, // if the game is cleared, set timeCount as time, else set 0 as time
-            computeStars());
-            
-        GameUtils.navigate("game-over.fxml", p_main); 
-    }
     
     protected void powerUpsHandler() {
         setupPowerUp(s_powerSurge, k_controller::consumePowerSurge, k_controller::getPowerSurge);
@@ -187,17 +167,14 @@ public class BaseGameController {
 
     private void setupPowerUp(StackPane powerUp, Runnable consume, Supplier<Integer> remainingCount) {
         powerUp.setOnMouseClicked(event -> {
-            consume.run(); // consume charge of power up
-            powerUp.setDisable(true); // temporarily disable button
+            consume.run();
+            powerUp.setDisable(true);
 
-            // retrieve power up text
             Pane pane = (Pane) powerUp.getChildren().get(1);
             Text text = (Text) pane.getChildren().get(0);
 
-            // set text to the remaning power up count
             text.setText(String.valueOf(remainingCount.get()));
 
-            // disable power up if it is exhausted, else put on cooldown
             if (remainingCount.get() == 0) {
                 powerUp.setOnMouseClicked(null);
                 return;
@@ -208,27 +185,21 @@ public class BaseGameController {
     }
 
     private void setCooldown(StackPane powerUp) {
-
-        // set duration of cooldown to duration times the current multiplier value (modifiable by powerSurge)
         PauseTransition cooldown = new PauseTransition(Duration.seconds(5 * k_controller.getMultiplier()));
         cooldown.setOnFinished(e -> {
-            // re-enable power up
             powerUp.setDisable(false);
 
-            // set powerup status to false
             if (powerUp == s_invincibility) k_controller.invincibilityWearOff();
             if (powerUp == s_powerSurge) k_controller.multiplierWearOff();
         });
         
-        cooldown.play(); // run cooldown
+        cooldown.play();
     }
 
     protected void updateGaugeMeter() {
-        // get pixel height appropriate for current hp
         double hpPercentage = k_controller.getHp() / 100.0;
         double currentMeterHeight = 540 * hpPercentage;
 
-        // limit meter height if it is too big or too small
         if (currentMeterHeight < 25) {
             currentMeterHeight = 25;
         } else if (currentMeterHeight > 540) {
@@ -240,33 +211,25 @@ public class BaseGameController {
     }
 
     protected int computeStars() {
-        int stars = 1; // default star count
+        if (timeCount == 0) return 0;
 
-        // if a power up is used, add a star
-        if (k_controller.getPowerSurge() == this.powerSurge && k_controller.getInvincibility() == this.invincibility && k_controller.getCellReveal() == this.cellReveal) {
+        int stars = 1; 
+        
+        if (arePowerupsUnused()) {
             stars++;
         }
 
-        // if kenken is finished in less than 2 minutes, add a star
         if (timeCount <= 120) {
             stars++;
-        }
-
-        if (timeCount == 0) {
-            return 0;
         }
 
         return stars;
     }
 
-    protected void modifyGridFocus(Parent parent, boolean isFocusable) {
-        for (Node child : parent.getChildrenUnmodifiable()) {
-            child.setFocusTraversable(isFocusable);
-
-            if (child instanceof Parent) {
-                modifyGridFocus((Parent) child, isFocusable);
-            }
-        }
+    private boolean arePowerupsUnused() {
+        return k_controller.getPowerSurge() == powerSurge &&
+               k_controller.getInvincibility() == invincibility &&
+               k_controller.getCellReveal() == cellReveal;
     }
 
     protected Background getTextFill() {
