@@ -27,8 +27,9 @@ public class BottomlessAbyssController extends BaseGameController {
     protected void initialize() throws SQLException {
         gameMode = "bottomless_abyss";
         generateRandomEnvironment();
+        updateDifficulty();
 
-        k_controller = new KenkenController(DIMENSION, 10, powerSurge, invincibility, cellReveal);
+        k_controller = new KenkenController(DIMENSION, dps, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
         startTimer();
@@ -124,7 +125,7 @@ public class BottomlessAbyssController extends BaseGameController {
 
     private void generateRandomEnvironment() {
         Random rand = new Random();
-        
+
         int randomVillain = rand.nextInt(6);
         int randomBg = rand.nextInt(6);
 
@@ -134,5 +135,16 @@ public class BottomlessAbyssController extends BaseGameController {
         i_character.setImage(new Image(getClass().getResource(villainPath).toExternalForm()));
         background.setImage(new Image(getClass().getResource(backgroundPath).toExternalForm()));
 
+    }
+
+    private void updateDifficulty() throws SQLException {
+        ResultSet rs = DatabaseManager.retrieveGameSession();
+
+        if (!rs.next()) return;
+        
+        DIMENSION = rs.getInt("dimension") + 1;
+        dps += rs.getInt("dps");
+
+        if (DIMENSION < 3) DIMENSION = 3;
     }
 }

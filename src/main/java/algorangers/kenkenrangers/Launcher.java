@@ -1,7 +1,9 @@
 package algorangers.kenkenrangers;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import algorangers.kenkenrangers.database.DatabaseManager;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
@@ -37,13 +39,14 @@ public class Launcher extends Application {
         stage.setMinWidth(BASE_WIDTH);
         stage.setMinHeight(BASE_HEIGHT);
         stage.setOnCloseRequest(event -> {
-            System.out.println("Closing app...");
-    
+            try {
+                DatabaseManager.resetGameSession();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         });
 
         stage.show();
-
-        
     }
 
     public static void main(String[] args) {

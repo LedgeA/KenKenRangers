@@ -71,7 +71,7 @@ public class GameOverController {
         
         rs.close();
         loadRecords();
-        clearGameSession();
+        DatabaseManager.resetGameSession();
     }
 
     private void setMenuButton() {
@@ -105,24 +105,6 @@ public class GameOverController {
         t_scoreNum.setText(String.valueOf(score));
         t_bestNum.setText(String.valueOf(bestScore));
 
-    }
-
-    private void clearGameSession() {
-        DatabaseManager.updateInitialGameSession(
-            0, 
-            0, 
-            "", 
-            0, 
-            0, 
-            0);
-
-        DatabaseManager.updateEndGameSession(
-            0, 
-            0, 
-            0, 
-            0, 
-            0, 
-            0);
     }
     
 

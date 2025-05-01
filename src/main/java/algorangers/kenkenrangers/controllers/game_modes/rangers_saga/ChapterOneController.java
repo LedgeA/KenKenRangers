@@ -29,7 +29,7 @@ public class ChapterOneController extends BaseStoryController {
 
         gameMode = "chap_1";
 
-        k_controller = new KenkenController(DIMENSION, 10, powerSurge, invincibility, cellReveal);
+        k_controller = new KenkenController(DIMENSION, dps, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
         outroDialogueStart = 3;
@@ -54,34 +54,6 @@ public class ChapterOneController extends BaseStoryController {
         int pos = p_main.getChildren().indexOf(tf_villain);
         p_main.getChildren().add(pos, k_view);
     }
-
-    @Override
-    protected void insertDialogues() {
-        dialogue = new String[] {
-            "Your tests were off the charts. This beacon’s yours. Prove you're more than just talk.",
-            "I won’t let humanity fall. Let’s see what these goblins are made of.",
-            "Another fleshling dare approach? You know not what you touch!",
-            "You did it, Ranger " + name + "! That was faster than any rookie I’ve ever seen…",
-            "They underestimated me. I’ll make sure the next ones regret that too.",
-            "Another would-be hero crushed beneath our swarm.",
-            "Tell your elders: the beacons are eternal!",
-            "No…",
-            "I was too slow. But next time, I’ll end this."
-        };
-
-        backstoryMonologue = new String[] {
-            "Long ago, Earth was peaceful, protected by the KenKen Rangers",
-            "Warriors who used both wisdom and power to maintain balance.",
-            "Everything changed when a dimensional rift tore open beneath the earth",
-            "From it came monsters—Goblin, Orc, Gnome, Dragon, Beast, and finally the Arcdemon.",
-            "These creatures fed off the power of the Beacons, allowing them to survive, propagate, and spread.",
-            "The KenKen Rangers rose to fight back.",
-            "Among them, only a few could destroy the Beacons.",
-            "You are one of them.",
-            "A newcomer with the rare power to break their lifeline.",
-            "The battle for Earth begins."
-        };
-	}
 
     private void startMonologue() {      
         Timeline monologueTimeline = new Timeline(
@@ -121,6 +93,34 @@ public class ChapterOneController extends BaseStoryController {
             MONOLOGUE_COUNT++;
         }, t_monologue);
     }
+
+    @Override
+    protected void insertDialogues() {
+        dialogue = new String[] {
+            "Your tests were off the charts. This beacon’s yours. Prove you're more than just talk.",
+            "I won’t let humanity fall. Let’s see what these goblins are made of.",
+            "Another fleshling dare approach? You know not what you touch!",
+            "You did it, Ranger " + name + "! That was faster than any rookie I’ve ever seen…",
+            "They underestimated me. I’ll make sure the next ones regret that too.",
+            "Another would-be hero crushed beneath our swarm.",
+            "Tell your elders: the beacons are eternal!",
+            "No…",
+            "I was too slow. But next time, I’ll end this."
+        };
+
+        backstoryMonologue = new String[] {
+            "Long ago, Earth was peaceful, protected by the KenKen Rangers",
+            "Warriors who used both wisdom and power to maintain balance.",
+            "Everything changed when a dimensional rift tore open beneath the earth",
+            "From it came monsters—Goblin, Orc, Gnome, Dragon, Beast, and finally the Arcdemon.",
+            "These creatures fed off the power of the Beacons, allowing them to survive, propagate, and spread.",
+            "The KenKen Rangers rose to fight back.",
+            "Among them, only a few could destroy the Beacons.",
+            "You are one of them.",
+            "A newcomer with the rare power to break their lifeline.",
+            "The battle for Earth begins."
+        };
+	}
 
     @Override
     protected void introDialogue(String text) {

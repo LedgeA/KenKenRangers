@@ -58,22 +58,23 @@ public class GameUtils {
                 GameUtils.class.getResource("/algorangers/kenkenrangers/views/" + fxml));
 
             Stage stage = (Stage) p_main.getScene().getWindow();
-            Parent root = fxmlLoader.load();
+            double width = stage.getWidth();
+            double height = stage.getHeight();
 
+            Parent root = fxmlLoader.load();
             StackPane wrapper = new StackPane();
             wrapper.getChildren().add(root);
 
-            Scene scene = new Scene(wrapper, BASE_WIDTH, BASE_HEIGHT);
+            Scene scene = new Scene(wrapper, width, height);
 
             root.scaleXProperty().bind(Bindings.createDoubleBinding(() ->
-                    Math.min(scene.getWidth() / BASE_WIDTH, scene.getHeight() / BASE_HEIGHT),
-                    scene.widthProperty(), scene.heightProperty()));
+                Math.min(scene.getWidth() / BASE_WIDTH, scene.getHeight() / BASE_HEIGHT),
+                scene.widthProperty(), scene.heightProperty()));
             root.scaleYProperty().bind(root.scaleXProperty());
 
-            stage.setTitle("KenKenRangers");
             stage.setScene(scene);
-            stage.setMinWidth(BASE_WIDTH);
-            stage.setMinHeight(BASE_HEIGHT);
+            stage.setWidth(width);   
+            stage.setHeight(height);
             stage.show();
 
         } catch (IOException e) {

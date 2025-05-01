@@ -201,4 +201,27 @@ public class DatabaseManager {
         }     
     }
 
+    public static void resetGameSession() throws SQLException {
+        String sql = """
+            UPDATE game_session SET
+                dimension = 3,
+                dps = 0,
+                powersurge_initial = 0,
+                invincibility_initial = 0,
+                cellreveal_initial = 0,
+                powersurge_used = 0,
+                invincibility_used = 0,
+                cellreveal_used = 0,
+                time = 0,
+                score = 0,
+                stars = 0
+        """;
+    
+        try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
+            pstmt.executeUpdate();
+            System.out.println("\nResettted Game Session");
+        }
+    }
+    
+
 }
