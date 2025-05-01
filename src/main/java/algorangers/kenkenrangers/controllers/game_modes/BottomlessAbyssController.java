@@ -2,6 +2,7 @@ package algorangers.kenkenrangers.controllers.game_modes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 
 import algorangers.kenkenrangers.controllers.base.BaseGameController;
 import algorangers.kenkenrangers.controllers.base.KenkenController;
@@ -10,21 +11,23 @@ import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class BottomlessAbyssController extends BaseGameController {
     
+    @FXML
+    private ImageView background;
+
     String[] villains = {"orc", "gnome", "goblin", "dragon", "beast", "demon"};
     String[] backgrounds = {"forest-entrance", "forest", "city", "mountain", "dusk", "moon"};
-
-
-    protected int powerSurgeUsed, invincibilityUsed, cellRevealUsed;
-    protected int score = 0;
 
     @FXML
     protected void initialize() throws SQLException {
         gameMode = "bottomless_abyss";
-        
+        generateRandomEnvironment();
+
         k_controller = new KenkenController(DIMENSION, 10, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
@@ -48,6 +51,9 @@ public class BottomlessAbyssController extends BaseGameController {
         gameResultChecker = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             if (!gameOver) return;
 
+            stopAllTimelines();
+            nullifyAllTimelines();
+
             try {
                 gameEnd(gameWon);
             } catch (SQLException e) {
@@ -62,15 +68,11 @@ public class BottomlessAbyssController extends BaseGameController {
 
     @Override
     protected void gameEnd(boolean cleared) throws SQLException {
-        timer.stop();
-        attackInterval.stop();
-        gameResultChecker.stop();
-
         ResultSet rs = DatabaseManager.retrieveGameSession();
 
         if (!rs.next()) return;
 
-        this.name = rs.getString("name");
+        name = rs.getString("name");
         int newPowerSurge = rs.getInt("powersurge_initial") + powerSurge;
         int newInvincibility = rs.getInt("invincibility_initial") + invincibility;
         int newCellReveal = rs.getInt("cellreveal_initial") + cellReveal;
@@ -89,6 +91,9 @@ public class BottomlessAbyssController extends BaseGameController {
         if (!cleared) {
             int timesCleared = newPowerSurge / 3;
             score = (120 * timesCleared - newTime) * 100 + 10 * (allPowerUps - allPowerUpsRemaining);
+            
+            int highscore = DatabaseManager.retrieveHighScore(name, "bottomless_abyss");
+            if (score > highscore) DatabaseManager.updateHighscore(name, "bottomless_abyss", score);
         }
 
         DatabaseManager.updateInitialGameSession(
@@ -108,9 +113,6 @@ public class BottomlessAbyssController extends BaseGameController {
             3);
             
         if (!cleared) {
-            int highscore = DatabaseManager.retrieveHighScore(name, "bottomless_abyss");
-            if (score > highscore) DatabaseManager.updateHighscore(name, "bottomless_abyss", score);
-
             GameUtils.navigate("game-over.fxml", p_main);
             return;
         }
@@ -118,5 +120,19 @@ public class BottomlessAbyssController extends BaseGameController {
         gameOver = true;
         GameUtils.navigate("bottomless-abyss.fxml", p_main);
         
+    }
+
+    private void generateRandomEnvironment() {
+        Random rand = new Random();
+        
+        int randomVillain = rand.nextInt(6);
+        int randomBg = rand.nextInt(6);
+
+        String villainPath = "/algorangers/kenkenrangers/sprites/" + villains[randomVillain] + ".png";
+        String backgroundPath = "/algorangers/kenkenrangers/backgrounds/" + backgrounds[randomBg] + ".png";
+
+        i_character.setImage(new Image(getClass().getResource(villainPath).toExternalForm()));
+        background.setImage(new Image(getClass().getResource(backgroundPath).toExternalForm()));
+
     }
 }

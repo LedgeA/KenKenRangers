@@ -9,24 +9,17 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import algorangers.kenkenrangers.helpers.ComponentCreator;
 import algorangers.kenkenrangers.utils.*;
 
 public abstract class BaseGameController {
@@ -84,7 +77,7 @@ public abstract class BaseGameController {
 
     protected abstract void startGameResultChecker();
     protected abstract void gameEnd(boolean cleared) throws SQLException;
-    protected int score;
+    protected int score = 0;
 
     protected void setUpPause() {
         p_main.sceneProperty().addListener((observable, oldScene, newScene) -> {
@@ -93,11 +86,9 @@ public abstract class BaseGameController {
         });
 
         i_resume.setOnMouseClicked(event -> {
-            if (timer != null) timer.play();
-            if (attackInterval != null) attackInterval.stop(); 
+            playAllTimelines();
             paused = false;
 
-            // Hide pause menu
             p_pause.setVisible(false);
         });
 
@@ -112,21 +103,17 @@ public abstract class BaseGameController {
         paused = !paused;
         
         if (paused) {
-            if (timer != null) timer.stop();
-            if (attackInterval != null) attackInterval.stop();
-
+            stopAllTimelines();
             t_time.setText(GameUtils.timeToString(timeCount)); // update time
         } else {
-            if (timer != null) timer.play();
-            if (attackInterval != null) attackInterval.play();
+            playAllTimelines();
         }
     
         p_pause.setVisible(paused);
     }
 
     protected void startTimer() {
-        timer = new Timeline();
-        timer.getKeyFrames().add(new KeyFrame(Duration.seconds(1), event -> {
+        timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             timeCount++;
             updateGaugeMeter();
 
@@ -146,12 +133,8 @@ public abstract class BaseGameController {
     }
 
     protected void startAttackInterval() {
+        attackInterval = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
 
-        // Deals damage every 5 seconds
-        attackInterval = new Timeline();
-        attackInterval.getKeyFrames().add(new KeyFrame(Duration.seconds(5), event -> {
-
-            // decrease hp if player isn't invincible
             if (!k_controller.getInvincibleState()) k_controller.decreaseHp();            
 
             // if hp runs out, end the game
@@ -174,7 +157,7 @@ public abstract class BaseGameController {
         setupPowerUp(s_cellReveal, k_controller::consumeCellReveal, k_controller::getCellReveal, "cell-reveal");
     }
 
-    private void setupPowerUp(StackPane powerUp, Runnable consume, Supplier<Integer> remainingCount, String name) {
+    private void setupPowerUp(StackPane powerUp, Runnable consume, Supplier<Integer> remainingCount, String imgName) {
         powerUp.setOnMouseClicked(event -> {
             consume.run();
             powerUp.setDisable(true);
@@ -185,7 +168,7 @@ public abstract class BaseGameController {
             } 
 
             updatePowerUpCount(powerUp, remainingCount.get());
-            Arc arc = addCooldownImages(name);
+            Arc arc = ComponentCreator.addCooldownImages(v_cooldowns, imgName);
 
             setCooldown(powerUp, arc);
         });
@@ -216,51 +199,6 @@ public abstract class BaseGameController {
         Text text = (Text) pane.getChildren().get(0);
 
         text.setText(String.valueOf(remainingCount));
-    }
-
-    private Arc addCooldownImages(String name) {
-        ImageView imageView = createImageView(name);
-        imageView.setLayoutX(30);
-        
-        Arc arc = createArc();
-        arc.setLayoutX(30);
-
-        Pane imagePane = new Pane(imageView);
-        imagePane.setPrefSize(100, 40);
-        Pane arcPane = new Pane(arc);
-        arcPane.setPrefSize(100, 40);
-
-        StackPane stackPane = new StackPane();
-        stackPane.setPrefSize(100, 40);
-        stackPane.getChildren().addAll(imagePane, arcPane);
-
-        v_cooldowns.getChildren().addAll(stackPane);
-
-        return arc;
-    }
-    
-    private ImageView createImageView(String name) {
-        String imagePath = "/algorangers/kenkenrangers/power-ups/" + name + ".png";
-        Image image = new Image(getClass().getResource(imagePath).toExternalForm());
-        ImageView imageView = new ImageView(image);
-
-        imageView.setFitWidth(40);
-        imageView.setFitHeight(40);
-
-        Circle clip = new Circle(20, 20, 20);
-        imageView.setClip(clip);
-
-        return imageView;
-    }
-
-    private Arc createArc() {
-        Arc arc = new Arc(20, 20, 20, 20, -90, 0);
-        arc.setType(ArcType.ROUND);
-        arc.setFill(Color.rgb(0, 0, 0, 0.5));
-
-        arc.setClip(new Circle(20, 20, 20));
-
-        return arc;
     }
     
     protected void setPowerUpFocus(boolean isFocusable) {
@@ -305,16 +243,27 @@ public abstract class BaseGameController {
                k_controller.getCellReveal() == cellReveal;
     }
 
-    protected int allRemainingPowerups() {
+    protected int countRemainingPowerups() {
         return  k_controller.getPowerSurge() +
                 k_controller.getInvincibility() + 
                 k_controller.getCellReveal();
     }
 
-    protected Background getTextFill() {
-        Color backgroundColor = Color.web("#F3EAD1", 0.8);
-        BackgroundFill backgroundFill = new BackgroundFill(backgroundColor, new CornerRadii(25), Insets.EMPTY);
+    protected void playAllTimelines() {
+        timer.play();
+        if (attackInterval != null) attackInterval.play();
+        if (gameResultChecker != null) gameResultChecker.play();
+    }
 
-        return new Background(backgroundFill);
+    protected void stopAllTimelines() {
+        timer.stop();
+        if (attackInterval != null) attackInterval.stop();
+        if (gameResultChecker != null) gameResultChecker.stop();
+    }
+
+    protected void nullifyAllTimelines() {
+        timer = null;
+        attackInterval = null;
+        gameResultChecker = null;
     }
 }

@@ -141,7 +141,7 @@ public class ChapterOneController extends BaseStoryController {
             }
         }
     }
-
+    
     @Override
     protected void winningDialogue(String text) {
         switch (CONVERSE_COUNT) {

@@ -3,6 +3,7 @@ package algorangers.kenkenrangers.controllers.base;
 import java.sql.SQLException;
 
 import algorangers.kenkenrangers.database.DatabaseManager;
+import algorangers.kenkenrangers.helpers.ComponentCreator;
 import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -74,7 +75,7 @@ public abstract class BaseStoryController extends BaseGameController {
         tf_player.setVisible(true);
         t_player.setText(dialogue[CONVERSE_COUNT]);
 
-        Background background = getTextFill();
+        Background background = ComponentCreator.createTextFlowFill();
 
         tf_player.setBackground(background);
         tf_villain.setBackground(background);
@@ -97,13 +98,13 @@ public abstract class BaseStoryController extends BaseGameController {
 
     protected void startGameResultChecker() {
         gameResultChecker = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            if (gameOver) {
-                if (!gameWon) CONVERSE_COUNT = 5;
-                
-                updateDialogue();
-                gameResultChecker.stop();
-                gameResultChecker = null;
-            }
+            if (!gameOver) return;
+
+            if (!gameWon) CONVERSE_COUNT = 5;
+            
+            updateDialogue();
+            stopAllTimelines();
+            nullifyAllTimelines();
         }));
 
         gameResultChecker.setCycleCount(Animation.INDEFINITE);
@@ -122,12 +123,7 @@ public abstract class BaseStoryController extends BaseGameController {
 
     @Override
     protected void gameEnd(boolean cleared) throws SQLException {
-
-        timer.stop();
-        attackInterval.stop();
-        gameResultChecker.stop();
-
-        score = (120 - timeCount) * 100 + 10 * (9 - allRemainingPowerups());
+        score = (120 - timeCount) * 100 + 10 * (9 - countRemainingPowerups());
 
         DatabaseManager.updateInitialGameSession(
             DIMENSION, 
