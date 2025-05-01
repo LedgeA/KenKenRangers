@@ -34,7 +34,7 @@ public class TutorialController extends BaseGameController {
     protected void initialize() throws SQLException {
         gameMode = "tutorial";
 
-        k_controller = new KenkenController(DIMENSION, dps, powerSurge, invincibility, cellReveal);
+        k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
 
         // Setup Tutorial Dialogue
@@ -136,7 +136,7 @@ public class TutorialController extends BaseGameController {
         
         DatabaseManager.updateInitialGameSession(
             DIMENSION, 
-            dps, 
+            dot, 
             gameMode,
             powerSurge,
             invincibility,

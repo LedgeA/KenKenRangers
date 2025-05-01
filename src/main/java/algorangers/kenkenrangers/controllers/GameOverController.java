@@ -65,7 +65,7 @@ public class GameOverController {
         timeFinished = rs.getInt("time");
         stars = rs.getInt("stars");
 
-        if (gameMode != "tutorial" && gameMode != "custom_trial") {
+        if (!gameMode.equals("tutorial") && !gameMode.equals("custom_trial")) {
             bestScore = DatabaseManager.retrieveHighScore(name, gameMode);
         }
         

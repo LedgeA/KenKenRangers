@@ -46,7 +46,7 @@ public class MainMenuController {
         });
 
         t_customTrial.setOnMouseClicked(event -> {
-            System.out.println("3");
+            GameUtils.navigate("configure-trial.fxml", p_main);
         });
 
         t_tutorial.setOnMouseClicked(event -> {

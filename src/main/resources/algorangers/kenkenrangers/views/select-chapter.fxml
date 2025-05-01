@@ -24,7 +24,7 @@
                   <Font name="Press Start 2P Regular" size="64.0" />
                </font>
             </Text>
-            <Text fx:id="t_cancel" fill="WHITE" fontSmoothingType="LCD" layoutX="532.0" layoutY="631.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Cancel">
+            <Text fx:id="t_cancel" fill="WHITE" fontSmoothingType="LCD" layoutX="514.0" layoutY="632.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Go Back">
                <font>
                   <Font name="Press Start 2P Regular" size="36.0" />
                </font>

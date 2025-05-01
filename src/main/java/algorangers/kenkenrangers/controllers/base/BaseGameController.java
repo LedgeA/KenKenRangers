@@ -66,7 +66,7 @@ public abstract class BaseGameController {
     // Database Parameters
     protected String name;
     protected int DIMENSION = 4;
-    protected int hp = 100, dps = 10;
+    protected int hp = 100, dot = 10;
     protected int powerSurge = 3, invincibility = 3, cellReveal = 3;
     protected String gameMode;
 
@@ -162,15 +162,14 @@ public abstract class BaseGameController {
             consume.run();
             powerUp.setDisable(true);
 
+            updatePowerUpCount(powerUp, remainingCount.get());
+            Arc arc = ComponentCreator.addCooldownImages(v_cooldowns, imgName);
+            setCooldown(powerUp, arc);
+            
             if (remainingCount.get() == 0) {
                 powerUp.setOnMouseClicked(null);
                 return;
             } 
-
-            updatePowerUpCount(powerUp, remainingCount.get());
-            Arc arc = ComponentCreator.addCooldownImages(v_cooldowns, imgName);
-
-            setCooldown(powerUp, arc);
         });
     }
     

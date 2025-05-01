@@ -14,13 +14,14 @@ public class Kenken {
     private final List<Cage> cages = new ArrayList<>();
 
     List<String> colors = new ArrayList<>(Arrays.asList(
-        "#FF5733", "#FF6F61", "#FF8D1A", "#FF9F1A", "#FFB01E", "#FFB233", "#FFB347",
-        "#D45F4A", "#C65C52", "#C3552B", "#BD4F19", "#B74B1C", "#B03C18", "#A63314",
-        "#F54291", "#F53C8D", "#F5348C", "#F4308B", "#F4228A", "#F41889", "#F31188",
-        "#42A5F5", "#40A1F0", "#3E9AE5", "#3D95E0", "#3C8FDD", "#3B8AD9", "#3A85D6",
-        "#8E44AD", "#9B3C9C", "#A83393", "#B82A8A", "#C72181", "#D31878", "#E10F6F",
-        "#1ABC9C", "#16A896", "#159C92", "#13988E", "#118E8A", "#0F8786", "#0E7F82"
+        "#FF5733", "#33FF57", "#5733FF", "#FF33A1", "#A1FF33", 
+        "#33A1FF", "#FF9E33", "#9E33FF", "#33FF9E", "#9EFF33", 
+        "#FF33FF", "#33FFFF", "#FF5733", "#5733FF", "#FF33A1", 
+        "#A1FF33", "#33A1FF", "#FF9E33", "#9E33FF", "#33FF9E", 
+        "#9EFF33", "#FF33FF", "#33FFFF", "#FF5733", "#5733FF", 
+        "#FF33A1", "#A1FF33", "#33A1FF", "#FF9E33", "#9E33FF"
     ));
+
     
     private final Random RANDOM = new Random();
     
@@ -107,7 +108,8 @@ public class Kenken {
 
         switch (cells.size()) {
             case 2: operation = RANDOM.nextBoolean() ? '-' : '/';
-            case 3, 4: operation = RANDOM.nextBoolean() ? '+' : '*';
+            case 3: operation = RANDOM.nextBoolean() ? '+' : '*';
+            case 4: operation = '+';
         }
 
         int target = computeTarget(cells, operation);

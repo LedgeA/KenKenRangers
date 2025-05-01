@@ -29,7 +29,7 @@ public class BottomlessAbyssController extends BaseGameController {
         generateRandomEnvironment();
         updateDifficulty();
 
-        k_controller = new KenkenController(DIMENSION, dps, powerSurge, invincibility, cellReveal);
+        k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
         startTimer();
@@ -91,7 +91,9 @@ public class BottomlessAbyssController extends BaseGameController {
 
         if (!cleared) {
             int timesCleared = newPowerSurge / 3;
-            score = (120 * timesCleared - newTime) * 100 + 10 * (allPowerUps - allPowerUpsRemaining);
+            int powerUpDeductions = 10 * (allPowerUps - allPowerUpsRemaining);
+            int difficultyBonusRate = DIMENSION * dot;
+            score = difficultyBonusRate * (120 * timesCleared - newTime) * 100 + powerUpDeductions;
             
             int highscore = DatabaseManager.retrieveHighScore(name, "bottomless_abyss");
             if (score > highscore) DatabaseManager.updateHighscore(name, "bottomless_abyss", score);
@@ -99,7 +101,7 @@ public class BottomlessAbyssController extends BaseGameController {
 
         DatabaseManager.updateInitialGameSession(
             DIMENSION, 
-            dps, 
+            dot, 
             gameMode,
             newPowerSurge, 
             newInvincibility, 
@@ -139,12 +141,13 @@ public class BottomlessAbyssController extends BaseGameController {
 
     private void updateDifficulty() throws SQLException {
         ResultSet rs = DatabaseManager.retrieveGameSession();
-
         if (!rs.next()) return;
         
-        DIMENSION = rs.getInt("dimension") + 1;
-        dps += rs.getInt("dps");
+        dot = rs.getInt("dps") + 5;
+        if (dot > 15) DIMENSION = rs.getInt("dimension") + 1;
 
         if (DIMENSION < 3) DIMENSION = 3;
+
+        rs.close();
     }
 }

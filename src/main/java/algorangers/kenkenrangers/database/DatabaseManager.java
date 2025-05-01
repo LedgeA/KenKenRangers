@@ -163,6 +163,8 @@ public class DatabaseManager {
     }
 
     public static int retrieveHighScore(String name, String gameMode) throws SQLException {
+        if (gameMode == "custom_trial" || gameMode == "tutorial") return -1;
+
         String sql = "SELECT " + gameMode + " FROM highscores WHERE name = ?";
         
         PreparedStatement pstmt = getConnection().prepareStatement(sql);

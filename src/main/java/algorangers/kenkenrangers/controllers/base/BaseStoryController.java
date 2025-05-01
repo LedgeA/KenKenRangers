@@ -123,11 +123,16 @@ public abstract class BaseStoryController extends BaseGameController {
 
     @Override
     protected void gameEnd(boolean cleared) throws SQLException {
-        score = (120 - timeCount) * 100 + 10 * (9 - countRemainingPowerups());
 
+        int powerUpDeductions = 10 * (9 - countRemainingPowerups());
+        int difficultyBonusRate = DIMENSION * dot;
+        score = difficultyBonusRate * (120 - timeCount) * 100 + powerUpDeductions;
+
+        if (!cleared) score = 0;
+        
         DatabaseManager.updateInitialGameSession(
             DIMENSION, 
-            dps, 
+            dot, 
             gameMode,
             powerSurge, 
             invincibility, 

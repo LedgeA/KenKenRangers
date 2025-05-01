@@ -29,7 +29,7 @@ public class ChapterOneController extends BaseStoryController {
 
         gameMode = "chap_1";
 
-        k_controller = new KenkenController(DIMENSION, dps, powerSurge, invincibility, cellReveal);
+        k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
         outroDialogueStart = 3;

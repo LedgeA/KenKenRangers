@@ -37,18 +37,18 @@ public class KenkenController {
     private Button[][] buttonRefs;
     private int DIMENSION;
 
-    private int hp = 100, dps;
+    private int hp = 100, dot;
     private int powerSurge, invincibility, cellReveal;
     private boolean invincible;
     private int multiplier = 1;
     
     private Random rand = new Random();
 
-    public KenkenController(int DIMENSION, int dps, int powerSurge, int invincibility, int cellReveal) {
+    public KenkenController(int DIMENSION, int dot, int powerSurge, int invincibility, int cellReveal) {
         this.inputGrid = new int[DIMENSION][DIMENSION];
         this.DIMENSION = DIMENSION;
 
-        this.dps = dps;
+        this.dot = dot;
         this.powerSurge = powerSurge;
         this.invincibility = invincibility;
         this.cellReveal = cellReveal;
@@ -60,34 +60,6 @@ public class KenkenController {
         this.buttonRefs = new Button[DIMENSION][DIMENSION];
 
         setupGrid();
-    }
-
-    public KenkenController(int DIMENSION, int dps) {
-        this.inputGrid = new int[DIMENSION][DIMENSION];
-        this.DIMENSION = DIMENSION;
-        this.dps = dps;
-
-        k_model = new Kenken(DIMENSION);
-        this.solutionGrid = k_model.getGrid();
-        
-        k_cages = k_model.getCages();
-        this.buttonRefs = new Button[DIMENSION][DIMENSION];
-
-        setupGrid();
-    }
-
-    public KenkenController(int DIMENSION) {
-        this.inputGrid = new int[DIMENSION][DIMENSION];
-        this.DIMENSION = DIMENSION;
-
-        k_model = new Kenken(DIMENSION);
-        this.solutionGrid = k_model.getGrid();
-        
-        k_cages = k_model.getCages();
-        this.buttonRefs = new Button[DIMENSION][DIMENSION];
-
-        setupGrid();
-
     }
 
     private void setupGrid() {
@@ -176,9 +148,12 @@ public class KenkenController {
     private Label createLabel(int target, char operation) {
         Label label = new Label(target + " " + operation);
         
+        double fontSizeRatio = 40.0 / 125;
+        double fontSize = fontSizeRatio * (500.0 / DIMENSION);
+
         label.setFont(Font.loadFont(
             getClass().getResourceAsStream(
-                "/algorangers/kenkenrangers/fonts/VT323-Regular.ttf"), 40));
+                "/algorangers/kenkenrangers/fonts/VT323-Regular.ttf"), fontSize));
 
         label.setAlignment(Pos.TOP_LEFT);
         label.setMaxWidth(Double.MAX_VALUE);
@@ -196,9 +171,12 @@ public class KenkenController {
         button.setMaxWidth(Double.MAX_VALUE);
         button.setMaxHeight(Double.MAX_VALUE);  
 
+        double fontSizeRatio = 35.0 / 125;
+        double fontSize = fontSizeRatio * (500.0 / DIMENSION);
+
         button.setFont(Font.loadFont(
             getClass().getResourceAsStream(
-                "/algorangers/kenkenrangers/fonts/PressStart2P-Regular.ttf"), 35));
+                "/algorangers/kenkenrangers/fonts/PressStart2P-Regular.ttf"), fontSize));
         
         button.setBackground(
             new Background(
@@ -278,7 +256,7 @@ public class KenkenController {
             int col = rand.nextInt(DIMENSION);
             Button button = buttonRefs[row][col];
 
-            if (button.isDisabled()) return;
+            if (button.isDisabled()) continue;
             int value = solutionGrid[row][col];
             inputGrid[row][col] = value;
 
@@ -298,11 +276,11 @@ public class KenkenController {
     }
 
     public void increaseHp() {
-        this.hp += this.dps;
+        this.hp += this.dot;
     }
 
     public void decreaseHp() {
-        this.hp -= this.dps;
+        this.hp -= this.dot;
     }
 
     public void consumePowerSurge() {
