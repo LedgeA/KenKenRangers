@@ -1,15 +1,14 @@
 package algorangers.kenkenrangers.controllers.game_modes.rangers_saga;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import algorangers.kenkenrangers.controllers.base.BaseStoryController;
 import algorangers.kenkenrangers.controllers.base.KenkenController;
-import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.AnimationUtils;
 import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -28,7 +27,9 @@ public class ChapterOneController extends BaseStoryController {
     @FXML
     protected void initialize() throws SQLException {
 
-        k_controller = new KenkenController(DIMENSION, 100, powerSurge, invincibility, cellReveal);
+        gameMode = "chap_1";
+
+        k_controller = new KenkenController(DIMENSION, 10, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
         outroDialogueStart = 3;
@@ -37,11 +38,14 @@ public class ChapterOneController extends BaseStoryController {
         // Setup Story Dialogue
         insertDialogues();
         startMonologue();
-        GameUtils.setAllUnfocusable(k_view, false);
 
         // enable powerups
         powerUpsHandler();
 
+        // disable powerups and grid
+        GameUtils.setGridFocusable(k_view, false);
+        GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
+        
         // Setup Pause Menu Visiblity
         setUpPause();
         setupFinishButton();
@@ -129,10 +133,11 @@ public class ChapterOneController extends BaseStoryController {
                 switchDialogue(false);
                 t_villain.setText(text);
                 
-                GameUtils.setAllUnfocusable(k_view, true);
+                GameUtils.setGridFocusable(k_view, true);
+                GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
                 startTimer();
                 startAttackInterval();
-                addGameResultChecker();
+                startGameResultChecker();
             }
         }
     }

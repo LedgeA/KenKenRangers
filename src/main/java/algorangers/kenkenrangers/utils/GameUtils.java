@@ -36,13 +36,19 @@ public class GameUtils {
              + (sec < 10 ? "0" : "") + String.valueOf(sec);
     }
 
-    public static void setAllUnfocusable(Parent parent, boolean isFocusable) {
+    public static void setGridFocusable(Parent parent, boolean isFocusable) {
         for (Node child : parent.getChildrenUnmodifiable()) {
             child.setFocusTraversable(isFocusable);
 
             if (child instanceof Parent) {
-                setAllUnfocusable((Parent) child, isFocusable);
+                setGridFocusable((Parent) child, isFocusable);
             }
+        }
+    }
+
+    public static void setComponentsClickable(Node[] nodes, boolean isClickable) {
+        for (Node node : nodes) {
+            node.setMouseTransparent(!isClickable);
         }
     }
 

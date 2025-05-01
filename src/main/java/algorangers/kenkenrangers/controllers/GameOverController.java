@@ -37,6 +37,7 @@ public class GameOverController {
     private int powerSurge, invincibility, cellReveal;
     private int powerSurgeUsed, invincibilityUsed, cellRevealUsed;
     private int timeFinished, score, stars;
+    private String gameMode;
 
     private int bestScore = 0;
 
@@ -53,6 +54,7 @@ public class GameOverController {
         if (!rs.next()) return; 
 
         name = rs.getString("name");
+        gameMode = rs.getString("game_mode");
         powerSurge = rs.getInt("powersurge_initial");
         invincibility = rs.getInt("invincibility_initial");
         cellReveal = rs.getInt("cellreveal_initial");
@@ -63,9 +65,13 @@ public class GameOverController {
         timeFinished = rs.getInt("time");
         stars = rs.getInt("stars");
 
-        bestScore = DatabaseManager.retrieveHighScore(name, "bottomless_abyss");
+        if (gameMode != "tutorial" && gameMode != "custom_trial") {
+            bestScore = DatabaseManager.retrieveHighScore(name, gameMode);
+        }
         
+        rs.close();
         loadRecords();
+        clearGameSession();
     }
 
     private void setMenuButton() {
@@ -94,8 +100,30 @@ public class GameOverController {
             h_stars.getChildren().add(imageView);
         }
         
-        t_scoreNum.setText(score > bestScore ? String.valueOf(score) : String.valueOf(bestScore));
+        if (score > bestScore) bestScore = score;
+
+        t_scoreNum.setText(String.valueOf(score));
+        t_bestNum.setText(String.valueOf(bestScore));
 
     }
+
+    private void clearGameSession() {
+        DatabaseManager.updateInitialGameSession(
+            0, 
+            0, 
+            "", 
+            0, 
+            0, 
+            0);
+
+        DatabaseManager.updateEndGameSession(
+            0, 
+            0, 
+            0, 
+            0, 
+            0, 
+            0);
+    }
+    
 
 }

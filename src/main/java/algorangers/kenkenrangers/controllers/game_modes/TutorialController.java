@@ -4,15 +4,20 @@ import java.sql.SQLException;
 
 import algorangers.kenkenrangers.controllers.base.BaseGameController;
 import algorangers.kenkenrangers.controllers.base.KenkenController;
+import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.GameUtils;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 
 public class TutorialController extends BaseGameController {
     
@@ -27,6 +32,7 @@ public class TutorialController extends BaseGameController {
     
     @FXML
     protected void initialize() throws SQLException {
+        gameMode = "tutorial";
 
         k_controller = new KenkenController(DIMENSION, dps, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
@@ -34,10 +40,13 @@ public class TutorialController extends BaseGameController {
         // Setup Tutorial Dialogue
         insertDialogues();
         setTextFlowContent();
-        GameUtils.setAllUnfocusable(k_view, false);
 
         // enable powerups
         powerUpsHandler();
+
+        // disable powerups and grid
+        GameUtils.setGridFocusable(k_view, false);
+        GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
 
         // Setup Pause Menu Visiblity
         setUpPause();
@@ -84,7 +93,9 @@ public class TutorialController extends BaseGameController {
                 // Start Timelines and enable buttons
                 startTimer();
                 startAttackInterval();
-                GameUtils.setAllUnfocusable(k_view, true);
+                startGameResultChecker();
+                GameUtils.setGridFocusable(k_view, true);
+                GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, false);
             };
 
             if (DIALOGUE_COUNT >= dialogue.length) {
@@ -100,8 +111,45 @@ public class TutorialController extends BaseGameController {
     }
 
     @Override
-    protected void gameEnd(boolean cleared) {
+    protected void startGameResultChecker() {
+        gameResultChecker = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if (!gameOver) return;
+            gameEnd(true);
+            timer.stop();
+            attackInterval.stop();
+            gameResultChecker.stop();
+        }));
 
+        gameResultChecker.setCycleCount(Timeline.INDEFINITE);
+        gameResultChecker.play();
+    }
+
+    @Override
+    protected void gameEnd(boolean cleared) {
+        int allPowerUps = 9; // Default
+        int allRemainingPowerups = 
+            k_controller.getPowerSurge() + 
+            k_controller.getInvincibility() + 
+            k_controller.getCellReveal();
+
+        score = (120 - timeCount) * 10 * (allPowerUps - allRemainingPowerups);
+        
+        DatabaseManager.updateInitialGameSession(
+            DIMENSION, 
+            dps, 
+            gameMode,
+            powerSurge,
+            invincibility,
+            cellReveal);
+        DatabaseManager.updateEndGameSession(
+            k_controller.getPowerSurge(), 
+            k_controller.getInvincibility(), 
+            k_controller.getCellReveal(), 
+            timeCount, 
+            score, 
+            computeStars());
+        
+        GameUtils.navigate("game-over.fxml", p_main);
     }
 
 }

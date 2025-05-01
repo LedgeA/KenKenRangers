@@ -42,7 +42,7 @@ public class MainMenuController {
         });
 
         t_bottomlessAbyss.setOnMouseClicked(event -> {
-            System.out.println("2");
+            GameUtils.navigate("bottomless-abyss.fxml", p_main);
         });
 
         t_customTrial.setOnMouseClicked(event -> {

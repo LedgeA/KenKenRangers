@@ -28,8 +28,6 @@ public abstract class BaseStoryController extends BaseGameController {
 
     @FXML
     protected StackPane s_finish;
-
-    protected Timeline gameResultChecker;
     
     protected int CONVERSE_COUNT = 0;
     protected String[] dialogue;
@@ -43,10 +41,14 @@ public abstract class BaseStoryController extends BaseGameController {
     protected abstract void losingDialogue(String text);
 
     protected void updateDialogue() {
-        String text = dialogue[CONVERSE_COUNT];
-        System.out.println(CONVERSE_COUNT);
+        if (CONVERSE_COUNT == outroDialogueEnd) {
+            p_main.setOnMouseClicked(null);
+            return;
+        }
 
-        if (CONVERSE_COUNT <= outroDialogueStart) {
+        String text = dialogue[CONVERSE_COUNT];
+
+        if (CONVERSE_COUNT < outroDialogueStart) {
             introDialogue(text);
             CONVERSE_COUNT++;
             return;
@@ -56,7 +58,7 @@ public abstract class BaseStoryController extends BaseGameController {
         tf_villain.setVisible(false);
 
         if (!gameOver) return;
-        GameUtils.setAllUnfocusable(k_view, false);
+        GameUtils.setGridFocusable(k_view, false);
         s_finish.setVisible(true);
 
         if (gameWon) {
@@ -64,8 +66,6 @@ public abstract class BaseStoryController extends BaseGameController {
         } else {
             losingDialogue(text);
         }
-
-        if (CONVERSE_COUNT == outroDialogueEnd) return;
 
         CONVERSE_COUNT++;
     }
@@ -95,7 +95,7 @@ public abstract class BaseStoryController extends BaseGameController {
         i_senior.setVisible(!isPlayer);
     }
 
-    protected void addGameResultChecker() {
+    protected void startGameResultChecker() {
         gameResultChecker = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             if (gameOver) {
                 if (!gameWon) CONVERSE_COUNT = 5;
@@ -122,12 +122,17 @@ public abstract class BaseStoryController extends BaseGameController {
 
     @Override
     protected void gameEnd(boolean cleared) throws SQLException {
+
         timer.stop();
         attackInterval.stop();
+        gameResultChecker.stop();
+
+        score = (120 - timeCount) * 100 + 10 * (9 - allRemainingPowerups());
 
         DatabaseManager.updateInitialGameSession(
             DIMENSION, 
             dps, 
+            gameMode,
             powerSurge, 
             invincibility, 
             cellReveal);
@@ -139,5 +144,10 @@ public abstract class BaseStoryController extends BaseGameController {
             timeCount, 
             score, 
             computeStars());
+
+        int highscore = DatabaseManager.retrieveHighScore(name, gameMode);
+        if (score > highscore) DatabaseManager.updateHighscore(name, gameMode, score);
+        
+        GameUtils.navigate("game-over.fxml", p_main);
     }
 }
