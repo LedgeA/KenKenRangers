@@ -163,7 +163,7 @@ public class DatabaseManager {
     }
 
     public static int retrieveHighScore(String name, String gameMode) throws SQLException {
-        if (gameMode == "custom_trial" || gameMode == "tutorial") return -1;
+        if (gameMode == "custom_trial" || gameMode == "tutorial") return 0;
 
         String sql = "SELECT " + gameMode + " FROM highscores WHERE name = ?";
         
@@ -225,5 +225,41 @@ public class DatabaseManager {
         }
     }
     
+    public static int retrieveLastestFinishedChapter(String name) throws SQLException {
+        String sql = "SELECT latest_finished_chap FROM players WHERE name = ?";
+        
+        PreparedStatement pstmt = getConnection().prepareStatement(sql);
+        pstmt.setString(1, name);
+        ResultSet rs = pstmt.executeQuery();
 
+        if (!rs.next()) return 0;
+
+        int lastFinishedChapter = rs.getInt("latest_finished_chap");
+
+        System.out.println(
+            "\nRetrieved Current Player" +
+            "\nChapter: " + lastFinishedChapter);
+
+        return lastFinishedChapter;
+    }
+
+    public static void updateLatestFinishedChapter(String name, int chapter) {
+        String sql = "UPDATE players SET latest_finished_chap = " + chapter + " = ? WHERE name = ?";
+
+        try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
+
+            pstmt.setInt(1, chapter);
+            pstmt.setString(2, name);
+
+            int rowsUpdated = pstmt.executeUpdate();
+
+            System.out.println(
+                "\nRows updated: " + rowsUpdated + 
+                "\nChapter: " + chapter + 
+                "\nName: " + name);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }    
+    }
 }

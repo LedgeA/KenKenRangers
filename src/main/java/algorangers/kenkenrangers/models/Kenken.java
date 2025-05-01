@@ -108,8 +108,7 @@ public class Kenken {
 
         switch (cells.size()) {
             case 2: operation = RANDOM.nextBoolean() ? '-' : '/';
-            case 3: operation = RANDOM.nextBoolean() ? '+' : '*';
-            case 4: operation = '+';
+            case 3, 4: operation = RANDOM.nextBoolean() ? '+' : '*';
         }
 
         int target = computeTarget(cells, operation);
@@ -119,6 +118,12 @@ public class Kenken {
             operation = RANDOM.nextBoolean() ? '+' : '*';
             target = computeTarget(cells, operation);
         } 
+
+        // if product is too large and size = 4
+        if (target > 60 && cells.size() == 4) {
+            operation = '+';
+            target = computeTarget(cells, operation);
+        }  
 
         cages.add(new Cage(cells, target, operation, color));
         

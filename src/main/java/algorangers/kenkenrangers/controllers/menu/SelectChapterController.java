@@ -1,6 +1,5 @@
 package algorangers.kenkenrangers.controllers.menu;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import algorangers.kenkenrangers.database.DatabaseManager;
@@ -33,7 +32,6 @@ public class SelectChapterController {
     
     @FXML
     private void initialize() throws SQLException{
-        retrievePlayerSession();
         retrievePlayerProgress();
 
         setImagesAsButtons();
@@ -107,24 +105,9 @@ public class SelectChapterController {
         };
     }
 
-    private void retrievePlayerSession() throws SQLException {
-        ResultSet rs = DatabaseManager.retrieveGameSession();
-
-        if (rs.next()) {
-            name = rs.getString("name");
-        }
-
-        rs.close();
-    }
-
     private void retrievePlayerProgress() throws SQLException {
-        ResultSet rs = DatabaseManager.retrievePlayerData(name);
-
-        if (rs.next()) {
-            latestFinishedChapter = rs.getInt("latest_finished_chap");
-        }
-
-        rs.close();
+        name = DatabaseManager.retrieveCurrentPlayer();
+        latestFinishedChapter = DatabaseManager.retrieveLastestFinishedChapter(name);
     }
 
 

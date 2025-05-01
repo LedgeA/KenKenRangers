@@ -25,7 +25,7 @@ public abstract class BaseStoryController extends BaseGameController {
     protected Text t_player, t_villain;
 
     @FXML
-    protected ImageView i_senior, i_player;
+    protected ImageView i_player;
 
     @FXML
     protected StackPane s_finish;
@@ -91,11 +91,6 @@ public abstract class BaseStoryController extends BaseGameController {
         tf_villain.setVisible(!isPlayer);
     }
 
-    protected void switchRanger(boolean isPlayer) {
-        i_player.setVisible(isPlayer);
-        i_senior.setVisible(!isPlayer);
-    }
-
     protected void startGameResultChecker() {
         gameResultChecker = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             if (!gameOver) return;
@@ -148,6 +143,7 @@ public abstract class BaseStoryController extends BaseGameController {
 
         int highscore = DatabaseManager.retrieveHighScore(name, gameMode);
         if (score > highscore) DatabaseManager.updateHighscore(name, gameMode, score);
+        
         
         GameUtils.navigate("game-over.fxml", p_main);
     }

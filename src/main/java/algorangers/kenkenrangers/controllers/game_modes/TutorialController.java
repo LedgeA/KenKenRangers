@@ -34,6 +34,9 @@ public class TutorialController extends BaseGameController {
     protected void initialize() throws SQLException {
         gameMode = "tutorial";
 
+        DIMENSION = 3;
+        dot = 5;
+        
         k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
 

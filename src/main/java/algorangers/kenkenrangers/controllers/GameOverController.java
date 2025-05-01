@@ -68,6 +68,20 @@ public class GameOverController {
         if (!gameMode.equals("tutorial") && !gameMode.equals("custom_trial")) {
             bestScore = DatabaseManager.retrieveHighScore(name, gameMode);
         }
+
+        if (score > bestScore) {
+            bestScore = score;
+            DatabaseManager.updateHighscore(name, gameMode, score);
+        }
+
+        if (score != 0) {
+            int lastFinishedChapter = DatabaseManager.retrieveLastestFinishedChapter(name);
+            int currentChapter = chapterToInt(gameMode);
+
+            if (currentChapter > lastFinishedChapter) {
+                DatabaseManager.updateLatestFinishedChapter(name, currentChapter);
+            }
+        }
         
         rs.close();
         loadRecords();
@@ -99,11 +113,15 @@ public class GameOverController {
 
             h_stars.getChildren().add(imageView);
         }
-        
-        if (score > bestScore) bestScore = score;
 
         t_scoreNum.setText(String.valueOf(score));
         t_bestNum.setText(String.valueOf(bestScore));
+
+    }
+
+    private int chapterToInt(String chapter) {
+        if (chapter.length() > 6) return 0;
+        return Integer.parseInt(chapter.substring(chapter.length() - 1));
 
     }
     

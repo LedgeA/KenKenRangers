@@ -44,7 +44,7 @@
                      <children>
                         <ImageView fx:id="i_orc" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../sprites/select-orc.png" />
+                              <Image url="@../sprites/select-goblin.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -62,7 +62,7 @@
                      <children>
                         <ImageView fx:id="i_goblin" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../sprites/select-goblin.png" />
+                              <Image url="@../sprites/select-orc.png" />
                            </image>
                         </ImageView>
                      </children>
