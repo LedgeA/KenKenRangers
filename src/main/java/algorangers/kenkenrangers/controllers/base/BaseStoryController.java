@@ -47,6 +47,8 @@ public abstract class BaseStoryController extends BaseGameController {
             return;
         }
 
+        System.out.println("Dialogue Count: " + CONVERSE_COUNT);
+
         String text = dialogue[CONVERSE_COUNT];
 
         if (CONVERSE_COUNT < outroDialogueStart) {
@@ -95,7 +97,7 @@ public abstract class BaseStoryController extends BaseGameController {
         gameResultChecker = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             if (!gameOver) return;
 
-            if (!gameWon) CONVERSE_COUNT = 5;
+            if (!gameWon) CONVERSE_COUNT = outroDialogueStart;
             
             updateDialogue();
             stopAllTimelines();
@@ -144,7 +146,7 @@ public abstract class BaseStoryController extends BaseGameController {
         int highscore = DatabaseManager.retrieveHighScore(name, gameMode);
         if (score > highscore) DatabaseManager.updateHighscore(name, gameMode, score);
         
-        
+
         GameUtils.navigate("game-over.fxml", p_main);
     }
 }

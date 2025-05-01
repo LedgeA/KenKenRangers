@@ -15,12 +15,12 @@ public class ChapterTwoController extends BaseStoryController {
         gameMode = "chap_2";
 
         DIMENSION = 4;
-        dot = 20;
+        dot = 15;
 
         k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
-        outroDialogueStart = 6;
+        outroDialogueStart = 2;
         outroDialogueEnd = 8;
 
         // Setup Story Dialogue
@@ -49,7 +49,7 @@ public class ChapterTwoController extends BaseStoryController {
             "You’re in my way. But you won’t be for long.",
             "You think you can defeat me? I’ve crushed countless foes. You’ll be no different.",
             "How…?",
-            "How could I fail",
+            "How could I fail...",
             "Strength is nothing without purpose. And you had neither.",
             "Pathetic. You never had a chance. I’ll make sure of that.",
             "I slipped up…",
@@ -61,9 +61,6 @@ public class ChapterTwoController extends BaseStoryController {
     protected void introDialogue(String text) {
         switch(CONVERSE_COUNT) {
             case 1 -> {
-                t_player.setText(text);
-            }
-            case 2 -> {
                 switchDialogue(false);
                 t_villain.setText(text);
                 
@@ -79,9 +76,9 @@ public class ChapterTwoController extends BaseStoryController {
     @Override
     protected void winningDialogue(String text) {
         switch (CONVERSE_COUNT) {
-            case 3 -> {
-                switchDialogue(true);
-                t_player.setText(text);
+            case 2, 3 -> {
+                switchDialogue(false);
+                t_villain.setText(text);
             }
             case 4 -> {
                 switchDialogue(true);
@@ -93,11 +90,11 @@ public class ChapterTwoController extends BaseStoryController {
     @Override
     protected void losingDialogue(String text) {
         switch (CONVERSE_COUNT) {
-            case 5, 6 -> {
+            case 5 -> {
                 switchDialogue(false);
                 t_villain.setText(text);
             }
-            case 7, 8 -> {
+            case 6, 7 -> {
                 switchDialogue(true);
                 t_player.setText(text);
             }

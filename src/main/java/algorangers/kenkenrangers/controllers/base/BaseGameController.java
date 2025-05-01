@@ -165,7 +165,7 @@ public abstract class BaseGameController {
             updatePowerUpCount(powerUp, remainingCount.get());
             Arc arc = ComponentCreator.addCooldownImages(v_cooldowns, imgName);
             setCooldown(powerUp, arc);
-            
+
             if (remainingCount.get() == 0) {
                 powerUp.setOnMouseClicked(null);
                 return;
@@ -249,13 +249,13 @@ public abstract class BaseGameController {
     }
 
     protected void playAllTimelines() {
-        timer.play();
+        if (timer != null) timer.play();
         if (attackInterval != null) attackInterval.play();
         if (gameResultChecker != null) gameResultChecker.play();
     }
 
     protected void stopAllTimelines() {
-        timer.stop();
+        if (timer != null) timer.stop();
         if (attackInterval != null) attackInterval.stop();
         if (gameResultChecker != null) gameResultChecker.stop();
     }

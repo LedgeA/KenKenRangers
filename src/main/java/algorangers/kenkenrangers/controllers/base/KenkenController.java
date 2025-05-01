@@ -1,5 +1,6 @@
 package algorangers.kenkenrangers.controllers.base;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -248,23 +249,39 @@ public class KenkenController {
     }
 
     private void revealCells() {
-        int cellCount = multiplier * 2;
+        List<Cell> availableCells = findAvailableCells();
+        int cellToReveal = multiplier * 2;
         int counter = 0;
 
-        while (cellCount > counter) {
-            int row = rand.nextInt(DIMENSION);
-            int col = rand.nextInt(DIMENSION);
-            Button button = buttonRefs[row][col];
+        while (counter < cellToReveal && availableCells.size() != 0) {
+            int randCell = rand.nextInt(availableCells.size());
+            Cell cell = availableCells.get(randCell);
+            availableCells.remove(randCell);
 
-            if (button.isDisabled()) continue;
+            int row = cell.row(), col = cell.col();
             int value = solutionGrid[row][col];
+
             inputGrid[row][col] = value;
 
+            Button button = buttonRefs[row][col];
             button.setText(String.valueOf(value));
             button.setDisable(true);
             counter++;
         }
+    }
 
+    private List<Cell> findAvailableCells() {
+        List<Cell> availableCells = new ArrayList<>();
+        
+        for (int row = 0; row < DIMENSION; row++) {
+            for (int col = 0; col < DIMENSION; col++) {
+                if (!buttonRefs[row][col].isDisabled()) {
+                    availableCells.add(new Cell(row, col));
+                }
+            }
+        }
+
+        return availableCells;
     }
 
     public GridPane getK_view() {

@@ -244,7 +244,7 @@ public class DatabaseManager {
     }
 
     public static void updateLatestFinishedChapter(String name, int chapter) {
-        String sql = "UPDATE players SET latest_finished_chap = " + chapter + " = ? WHERE name = ?";
+        String sql = "UPDATE players SET latest_finished_chap = ? WHERE name = ?";
 
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
 

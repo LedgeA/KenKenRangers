@@ -78,6 +78,7 @@ public class GameOverController {
             int lastFinishedChapter = DatabaseManager.retrieveLastestFinishedChapter(name);
             int currentChapter = chapterToInt(gameMode);
 
+            System.out.println(currentChapter + " :: " + lastFinishedChapter);
             if (currentChapter > lastFinishedChapter) {
                 DatabaseManager.updateLatestFinishedChapter(name, currentChapter);
             }
@@ -120,8 +121,15 @@ public class GameOverController {
     }
 
     private int chapterToInt(String chapter) {
-        if (chapter.length() > 6) return 0;
-        return Integer.parseInt(chapter.substring(chapter.length() - 1));
+        return switch (chapter) {
+            case "chap_1" -> 1;
+            case "chap_2" -> 2;
+            case "chap_3" -> 3;
+            case "chap_4" -> 4;
+            case "chap_5" -> 5;
+            case "chap_6" -> 6;
+            default -> 6;
+        };
 
     }
     
