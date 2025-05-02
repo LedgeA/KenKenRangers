@@ -49,7 +49,7 @@ public class TutorialController extends BaseGameController {
 
         // disable powerups and grid
         GameUtils.setGridFocusable(k_view, false);
-        GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
+        GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, false);
 
         // Setup Pause Menu Visiblity
         setUpPause();
@@ -98,7 +98,7 @@ public class TutorialController extends BaseGameController {
                 startAttackInterval();
                 startGameResultChecker();
                 GameUtils.setGridFocusable(k_view, true);
-                GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, false);
+                GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
             };
 
             if (DIALOGUE_COUNT >= dialogue.length) {
@@ -129,14 +129,6 @@ public class TutorialController extends BaseGameController {
 
     @Override
     protected void gameEnd(boolean cleared) {
-        int allPowerUps = 9; // Default
-        int allRemainingPowerups = 
-            k_controller.getPowerSurge() + 
-            k_controller.getInvincibility() + 
-            k_controller.getCellReveal();
-
-        score = (120 - timeCount) * 10 * (allPowerUps - allRemainingPowerups);
-        
         DatabaseManager.updateInitialGameSession(
             DIMENSION, 
             dot, 

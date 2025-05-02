@@ -45,7 +45,7 @@ public class ComponentCreator {
 
         return imageView;
     }
-
+    
     public static Arc addCooldownImages(VBox vbox, String imgName) {
         ImageView imageView = createImageView(imgName);
         imageView.setLayoutX(30);
@@ -65,5 +65,11 @@ public class ComponentCreator {
         vbox.getChildren().addAll(stackPane);
 
         return arc;
+    }
+
+    public static Image createImage(String imgName) {
+        String imagePath = "/algorangers/kenkenrangers/power-ups/" + imgName + ".png";
+
+        return new Image(ComponentCreator.class.getResource(imagePath).toExternalForm());
     }
 }

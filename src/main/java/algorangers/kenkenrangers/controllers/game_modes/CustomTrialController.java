@@ -71,7 +71,8 @@ public class CustomTrialController extends BaseGameController {
     @Override
     protected void gameEnd(boolean cleared) throws SQLException {
         
-        int powerUpDeductions = 10 * (9 - countRemainingPowerups());
+        int allPowerUps = powerSurge + invincibility + cellReveal;
+        int powerUpDeductions = 10 * (allPowerUps - countRemainingPowerups());
         int difficultyBonusRate = DIMENSION * dot;
         score = difficultyBonusRate * (120 - timeCount) * 100 + powerUpDeductions;
 

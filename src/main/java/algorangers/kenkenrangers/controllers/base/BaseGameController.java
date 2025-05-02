@@ -5,6 +5,7 @@ import javafx.util.Duration;
 import java.sql.SQLException;
 import java.util.function.Supplier;
 
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -31,7 +32,7 @@ public abstract class BaseGameController {
     protected Pane p_pause;
 
     @FXML
-    protected Text t_time, t_sTime;
+    protected Text t_time, t_sTime, t_dot;
 
     @FXML
     protected Rectangle r_dim;
@@ -52,7 +53,7 @@ public abstract class BaseGameController {
     protected Text t_powerSurge, t_invincibility, t_cellReveal;
 
     @FXML
-    protected ImageView i_character;
+    protected ImageView i_character, i_powerUpUsed;
 
     @FXML
     protected VBox v_cooldowns;
@@ -72,6 +73,8 @@ public abstract class BaseGameController {
 
     protected boolean paused = false;
     protected boolean gameOver = false, gameWon = true;
+
+    protected double prevMeterHeight = 540;
 
     protected final int BASE_WIDTH = 1280, BASE_HEIGHT = 720;
 
@@ -155,6 +158,14 @@ public abstract class BaseGameController {
         setupPowerUp(s_powerSurge, k_controller::consumePowerSurge, k_controller::getPowerSurge, "double-damage");
         setupPowerUp(s_invincibility, k_controller::consumeInvincibility, k_controller::getInvincibility, "invincibility");
         setupPowerUp(s_cellReveal, k_controller::consumeCellReveal, k_controller::getCellReveal, "cell-reveal");
+
+        Rectangle clip = new Rectangle(60, 60);
+        clip.setArcWidth(20);  
+        clip.setArcHeight(20);
+        clip.widthProperty().bind(i_powerUpUsed.fitWidthProperty());
+        clip.heightProperty().bind(i_powerUpUsed.fitHeightProperty());
+
+        i_powerUpUsed.setClip(clip);
     }
 
     private void setupPowerUp(StackPane powerUp, Runnable consume, Supplier<Integer> remainingCount, String imgName) {
@@ -165,6 +176,7 @@ public abstract class BaseGameController {
             updatePowerUpCount(powerUp, remainingCount.get());
             Arc arc = ComponentCreator.addCooldownImages(v_cooldowns, imgName);
             setCooldown(powerUp, arc);
+            setPowerUpCast(imgName);
 
             if (remainingCount.get() == 0) {
                 powerUp.setOnMouseClicked(null);
@@ -176,12 +188,12 @@ public abstract class BaseGameController {
     private void setCooldown(StackPane powerUp, Arc arc) {
         double cooldownTime = 5 * k_controller.getMultiplier();
 
-        Timeline timeline = new Timeline(
+        Timeline cooldown = new Timeline(
             new KeyFrame(Duration.ZERO, new KeyValue(arc.lengthProperty(), 360)),
             new KeyFrame(Duration.seconds(cooldownTime), new KeyValue(arc.lengthProperty(), 0))
         );
 
-        timeline.setOnFinished(e -> {
+        cooldown.setOnFinished(e -> {
             powerUp.setDisable(false);
 
             if (powerUp == s_invincibility) k_controller.invincibilityWearOff();
@@ -190,7 +202,31 @@ public abstract class BaseGameController {
             v_cooldowns.getChildren().remove(0); 
         });
 
-        timeline.play();
+        cooldown.play();
+    }
+
+    private void setPowerUpCast(String imgName) {
+        i_powerUpUsed.setImage(ComponentCreator.createImage(imgName));
+
+        Timeline powerUpUsed = new Timeline(
+            new KeyFrame(Duration.millis(500),
+                new KeyValue(i_powerUpUsed.fitWidthProperty(), 120, Interpolator.EASE_BOTH),
+                new KeyValue(i_powerUpUsed.fitHeightProperty(), 120, Interpolator.EASE_BOTH),
+                new KeyValue(i_powerUpUsed.opacityProperty(), 0, Interpolator.EASE_BOTH)
+            )
+        );
+
+        powerUpUsed.setOnFinished(event -> {
+            if (i_powerUpUsed.getImage() == null) return;
+
+            i_powerUpUsed.setFitWidth(60);
+            i_powerUpUsed.setFitHeight(60);
+            i_powerUpUsed.setOpacity(1);
+            i_powerUpUsed.setImage(null);
+        });
+
+
+        powerUpUsed.play();
     }
 
     private void updatePowerUpCount(StackPane powerUp, int remainingCount) {
@@ -211,13 +247,33 @@ public abstract class BaseGameController {
         double currentMeterHeight = 540 * hpPercentage;
 
         if (currentMeterHeight < 25) {
+            prevMeterHeight = 25;
             currentMeterHeight = 25;
         } else if (currentMeterHeight > 540) {
+            prevMeterHeight = 25;
             currentMeterHeight = 540;
         }
 
+        if (prevMeterHeight == currentMeterHeight) return;
+        prevMeterHeight = currentMeterHeight;
+
+        t_dot.setText("- " + String.valueOf(dot));
+        t_dot.setVisible(true);
+
         // update size
-        r_gaugeMeter.setHeight(currentMeterHeight);
+        Timeline hpUpdater = 
+            new Timeline(new KeyFrame(Duration.seconds(1),
+                new KeyValue(r_gaugeMeter.heightProperty(), currentMeterHeight, Interpolator.EASE_OUT),
+                new KeyValue(t_dot.layoutYProperty(), 121, Interpolator.EASE_OUT)
+            )
+        );
+
+        hpUpdater.setOnFinished(event -> {
+            t_dot.setLayoutY(230);
+            t_dot.setVisible(false);
+        });
+
+        hpUpdater.play();
     }
 
     protected int computeStars() {
@@ -266,3 +322,4 @@ public abstract class BaseGameController {
         gameResultChecker = null;
     }
 }
+//      
