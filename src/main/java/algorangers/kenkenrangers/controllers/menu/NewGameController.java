@@ -38,14 +38,14 @@ public class NewGameController {
             if (event.getCode() != KeyCode.ENTER) return;
             
             DatabaseManager.createNewPlayer(tf_name.getText().trim());
-            DatabaseManager.updateGameSession(tf_name.getText());
+            DatabaseManager.updateCurrentPlayer(tf_name.getText());
             GameUtils.navigate("tutorial.fxml", p_main);
             
         });
 
         t_proceed.setOnMouseClicked(event -> {
             DatabaseManager.createNewPlayer(tf_name.getText().trim());
-            DatabaseManager.updateGameSession(tf_name.getText());
+            DatabaseManager.updateCurrentPlayer(tf_name.getText());
             GameUtils.navigate("tutorial.fxml", p_main);
         });
 

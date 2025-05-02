@@ -1,12 +1,12 @@
 package algorangers.kenkenrangers.controllers.game_modes;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
 import algorangers.kenkenrangers.controllers.base.BaseGameController;
 import algorangers.kenkenrangers.controllers.base.KenkenController;
 import algorangers.kenkenrangers.database.DatabaseManager;
+import algorangers.kenkenrangers.database.DatabaseManager.GameSession;
 import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -69,25 +69,21 @@ public class BottomlessAbyssController extends BaseGameController {
 
     @Override
     protected void gameEnd(boolean cleared) throws SQLException {
-        ResultSet rs = DatabaseManager.retrieveGameSession();
+        GameSession gameSession = DatabaseManager.retrieveGameSession();
 
-        if (!rs.next()) return;
+        name = gameSession.name();
+        int newPowerSurge = gameSession.init_ps() + powerSurge;
+        int newInvincibility = gameSession.init_i() + invincibility;
+        int newCellReveal = gameSession.init_cr() + cellReveal;
 
-        name = rs.getString("name");
-        int newPowerSurge = rs.getInt("powersurge_initial") + powerSurge;
-        int newInvincibility = rs.getInt("invincibility_initial") + invincibility;
-        int newCellReveal = rs.getInt("cellreveal_initial") + cellReveal;
+        int newPowerSurgeUsed = gameSession.rem_ps() + k_controller.getPowerSurge();
+        int newInvincibilityUsed = gameSession.rem_i() + k_controller.getInvincibility();
+        int newCellRevealUsed = gameSession.rem_cr()+ k_controller.getCellReveal();
 
-        int newPowerSurgeUsed = rs.getInt("powersurge_used") + k_controller.getPowerSurge();
-        int newInvincibilityUsed = rs.getInt("invincibility_used") + k_controller.getInvincibility();
-        int newCellRevealUsed = rs.getInt("cellreveal_used") + k_controller.getCellReveal();
-
-        int newTime = rs.getInt("time") + timeCount;
+        int newTime = gameSession.time() + timeCount;
 
         int allPowerUps = newPowerSurge + newInvincibility + newCellReveal;
         int allPowerUpsRemaining = newPowerSurgeUsed + newInvincibilityUsed + newCellRevealUsed;
-
-        rs.close();
 
         if (!cleared) {
             int timesCleared = newPowerSurge / 3;
@@ -140,14 +136,11 @@ public class BottomlessAbyssController extends BaseGameController {
     }
 
     private void updateDifficulty() throws SQLException {
-        ResultSet rs = DatabaseManager.retrieveGameSession();
-        if (!rs.next()) return;
+        GameSession gameSession = DatabaseManager.retrieveGameSession();
         
-        dot = rs.getInt("dps") + 5;
-        if (dot > 15) DIMENSION = rs.getInt("dimension") + 1;
+        dot = gameSession.dps() + 5;
+        if (dot > 15) DIMENSION = gameSession.dimension() + 1;
 
         if (DIMENSION < 3) DIMENSION = 3;
-
-        rs.close();
     }
 }

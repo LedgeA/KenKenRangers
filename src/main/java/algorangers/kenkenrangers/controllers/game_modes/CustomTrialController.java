@@ -1,11 +1,11 @@
 package algorangers.kenkenrangers.controllers.game_modes;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import algorangers.kenkenrangers.controllers.base.BaseGameController;
 import algorangers.kenkenrangers.controllers.base.KenkenController;
 import algorangers.kenkenrangers.database.DatabaseManager;
+import algorangers.kenkenrangers.database.DatabaseManager.GameSession;
 import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -38,17 +38,14 @@ public class CustomTrialController extends BaseGameController {
     }
 
     private void setInitialSettings() throws SQLException {
-        ResultSet rs = DatabaseManager.retrieveGameSession();
+        GameSession gameSession = DatabaseManager.retrieveGameSession();
 
-        if (!rs.next()) return;
+        DIMENSION = gameSession.dimension();
+        dot = gameSession.dps();
+        powerSurge = gameSession.init_ps();
+        invincibility = gameSession.init_i();
+        cellReveal = gameSession.init_cr();
 
-        DIMENSION = rs.getInt("dimension");
-        dot = rs.getInt("dps");
-        powerSurge = rs.getInt("powersurge_initial");
-        invincibility = rs.getInt("invincibility_initial");
-        cellReveal = rs.getInt("cellreveal_initial");
-        
-        rs.close();
     }
 
     @Override

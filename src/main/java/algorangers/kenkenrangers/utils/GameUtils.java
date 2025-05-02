@@ -11,7 +11,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 public class GameUtils {
 
@@ -53,29 +52,23 @@ public class GameUtils {
     }
 
     public static void navigate(String fxml, Pane p_main) {
+
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(
                 GameUtils.class.getResource("/algorangers/kenkenrangers/views/" + fxml));
 
-            Stage stage = (Stage) p_main.getScene().getWindow();
-            double width = stage.getWidth();
-            double height = stage.getHeight();
+            Scene scene = (Scene) p_main.getScene();
 
             Parent root = fxmlLoader.load();
             StackPane wrapper = new StackPane();
             wrapper.getChildren().add(root);
-
-            Scene scene = new Scene(wrapper, width, height);
+            
+            scene.setRoot(wrapper);
 
             root.scaleXProperty().bind(Bindings.createDoubleBinding(() ->
                 Math.min(scene.getWidth() / BASE_WIDTH, scene.getHeight() / BASE_HEIGHT),
                 scene.widthProperty(), scene.heightProperty()));
             root.scaleYProperty().bind(root.scaleXProperty());
-
-            stage.setScene(scene);
-            stage.setWidth(width);   
-            stage.setHeight(height);
-            stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();

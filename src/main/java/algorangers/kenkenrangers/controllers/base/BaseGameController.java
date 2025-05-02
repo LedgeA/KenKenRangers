@@ -98,7 +98,7 @@ public abstract class BaseGameController {
     }
 
     private void escapePressed(KeyEvent event) {
-        if (event.getCode() != KeyCode.ESCAPE) return;
+        if (event.getCode() != KeyCode.SPACE) return;
 
         paused = !paused;
         

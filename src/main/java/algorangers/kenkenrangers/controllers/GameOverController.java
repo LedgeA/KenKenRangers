@@ -1,9 +1,9 @@
 package algorangers.kenkenrangers.controllers;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import algorangers.kenkenrangers.database.DatabaseManager;
+import algorangers.kenkenrangers.database.DatabaseManager.GameSession;
 import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -49,21 +49,20 @@ public class GameOverController {
     }
 
     private void retrieveGameData() throws SQLException {
-        ResultSet rs = DatabaseManager.retrieveGameSession();
+        GameSession gameSession = DatabaseManager.retrieveGameSession();
 
-        if (!rs.next()) return; 
-
-        name = rs.getString("name");
-        gameMode = rs.getString("game_mode");
-        powerSurge = rs.getInt("powersurge_initial");
-        invincibility = rs.getInt("invincibility_initial");
-        cellReveal = rs.getInt("cellreveal_initial");
-        powerSurgeUsed = rs.getInt("powersurge_used");
-        invincibilityUsed = rs.getInt("invincibility_used");
-        cellRevealUsed = rs.getInt("cellreveal_used");
-        score = rs.getInt("score");
-        timeFinished = rs.getInt("time");
-        stars = rs.getInt("stars");
+        name = gameSession.name();
+        gameMode = gameSession.gameMode();
+        powerSurge = gameSession.init_ps();
+        invincibility = gameSession.init_i();
+        cellReveal = gameSession.init_cr();
+        powerSurgeUsed = gameSession.rem_ps();
+        invincibilityUsed = gameSession.rem_i();
+        cellRevealUsed = gameSession.rem_cr();
+        score = gameSession.score();
+        timeFinished = gameSession.time();
+        stars = gameSession.stars();
+        
 
         if (!gameMode.equals("tutorial") && !gameMode.equals("custom_trial")) {
             bestScore = DatabaseManager.retrieveHighScore(name, gameMode);
@@ -75,7 +74,7 @@ public class GameOverController {
         }
 
         if (score != 0) {
-            int lastFinishedChapter = DatabaseManager.retrieveLastestFinishedChapter(name);
+            int lastFinishedChapter = DatabaseManager.retrieveLatestFinishedChapter(name);
             int currentChapter = chapterToInt(gameMode);
 
             System.out.println(currentChapter + " :: " + lastFinishedChapter);
@@ -84,7 +83,6 @@ public class GameOverController {
             }
         }
         
-        rs.close();
         loadRecords();
         DatabaseManager.resetGameSession();
     }

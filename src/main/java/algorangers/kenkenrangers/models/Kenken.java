@@ -38,7 +38,6 @@ public class Kenken {
     private void generateGrid() {
         fillGrid(0, 0);
     }
-
     
     private boolean fillGrid(int row, int col) {
         if (row == DIMENSION) return true;
@@ -99,7 +98,7 @@ public class Kenken {
             visited[cRow][cCol] = true;
             cells.add(cell);
             
-            // add orthogonally adjacent unassigned cells as to openCells
+            // add orthogonally adjacent unassigned cells to openCells
             if (cRow + 1 < DIMENSION && !visited[cRow + 1][cCol]) openCells.add(new Cell(cRow + 1, cCol));
             if (cCol + 1 < DIMENSION && !visited[cRow][cCol + 1]) openCells.add(new Cell(cRow, cCol + 1));
         }

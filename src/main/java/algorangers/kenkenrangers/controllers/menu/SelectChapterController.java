@@ -107,7 +107,7 @@ public class SelectChapterController {
 
     private void retrievePlayerProgress() throws SQLException {
         name = DatabaseManager.retrieveCurrentPlayer();
-        latestFinishedChapter = DatabaseManager.retrieveLastestFinishedChapter(name);
+        latestFinishedChapter = DatabaseManager.retrieveLatestFinishedChapter(name);
     }
 
 

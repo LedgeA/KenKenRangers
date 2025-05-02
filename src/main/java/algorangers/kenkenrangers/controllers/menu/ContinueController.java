@@ -1,7 +1,7 @@
 package algorangers.kenkenrangers.controllers.menu;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.GameUtils;
@@ -47,15 +47,13 @@ public class ContinueController {
         });
     }
 
-    private void showPlayers() throws SQLException{
+    private void showPlayers() throws SQLException {
         Image fieldImage = new Image(getClass().getResource("/algorangers/kenkenrangers/icons/field.png").toExternalForm());
         Font defaultFont = Font.loadFont(getClass().getResourceAsStream("/algorangers/kenkenrangers/fonts/PressStart2P-Regular.ttf"), 20);
         
-        ResultSet rs = DatabaseManager.getListOfPlayers();
+        List<String> names = DatabaseManager.getListOfPlayers();
 
-        while (rs.next()) {
-
-            String name = rs.getString("name");
+        for (String name : names) {
             Text text = new Text(name);
             text.setFont(defaultFont);
 
@@ -66,13 +64,12 @@ public class ContinueController {
             StackPane stackPane = new StackPane(fieldView, text);
             stackPane.setPrefWidth(436);  
             stackPane.setOnMouseClicked(event -> {
-                DatabaseManager.updateGameSession(name);
+                DatabaseManager.updateCurrentPlayer(name);
                 GameUtils.navigate("main-menu.fxml", p_main);
             });
 
             v_players.getChildren().add(stackPane);
         }
 
-        rs.close();
     }
 }
