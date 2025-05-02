@@ -8,6 +8,7 @@ import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -23,6 +24,9 @@ public class GameOverController {
 
     @FXML
     private HBox h_stars;
+
+    @FXML 
+    private BorderPane b_bestNum, b_scoreNum;
 
     @FXML
     private Text t_bestNum, t_scoreNum;

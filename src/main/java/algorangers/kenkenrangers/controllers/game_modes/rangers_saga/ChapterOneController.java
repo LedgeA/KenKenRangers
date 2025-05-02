@@ -40,6 +40,7 @@ public class ChapterOneController extends BaseStoryController {
         k_view = k_controller.getK_view();
         
         outroDialogueStart = 3;
+        losingDialogueStart = 5;
         outroDialogueEnd = 9;
 
         // Setup Story Dialogue

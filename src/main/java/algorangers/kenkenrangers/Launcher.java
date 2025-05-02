@@ -7,11 +7,9 @@ import algorangers.kenkenrangers.database.DatabaseManager;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Launcher extends Application {
@@ -54,7 +52,7 @@ public class Launcher extends Application {
             }
         });
 
-        stage.setFullScreen(true);
+        stage.setFullScreen(false);
         stage.show();
 
     }

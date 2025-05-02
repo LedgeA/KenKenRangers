@@ -7,22 +7,22 @@ import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 
-public class ChapterTwoController extends BaseStoryController {
+public class ChapterThreeController extends BaseStoryController {
     
     @FXML
     protected void initialize() throws SQLException {
 
-        gameMode = "chap_2";
+        gameMode = "chap_3";
 
-        DIMENSION = 4;
-        dot = 20;
+        DIMENSION = 5;
+        dot = 10;
 
         k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
         outroDialogueStart = 2;
-        losingDialogueStart = 5;
-        outroDialogueEnd = 8;
+        losingDialogueStart = 4;
+        outroDialogueEnd = 6;
 
         // Setup Story Dialogue
         insertDialogues();
@@ -47,14 +47,12 @@ public class ChapterTwoController extends BaseStoryController {
     @Override
     protected void insertDialogues() {
         dialogue = new String[] {
-            "You’re in my way. But you won’t be for long.",
-            "You think you can defeat me? I’ve crushed countless foes. You’ll be no different.",
-            "How…?",
-            "How could I fail...",
-            "Strength is nothing without purpose. And you had neither.",
-            "Pathetic. You never had a chance. I’ll make sure of that.",
-            "I slipped up…",
-            "But I won’t again. You’ll fall next time.",
+            "I see through your tricks. Your magic won’t protect you.",
+            "You claim to be a solver... let’s see if your mind is truly unbreakable.",
+            "The forest... fades. We were... only memories...",
+            "They fought with riddles… but I answered with resolve.",
+            "Even the clever trip when the path is crooked. You don’t belong in our domain.",
+            "I let the puzzle beat me. But next time, I’ll crack it wide open.",
         };
 	}
 
@@ -77,11 +75,11 @@ public class ChapterTwoController extends BaseStoryController {
     @Override
     protected void winningDialogue(String text) {
         switch (CONVERSE_COUNT) {
-            case 2, 3 -> {
+            case 2 -> {
                 switchDialogue(false);
                 t_villain.setText(text);
             }
-            case 4 -> {
+            case 3 -> {
                 switchDialogue(true);
                 t_player.setText(text);
             }
@@ -91,11 +89,11 @@ public class ChapterTwoController extends BaseStoryController {
     @Override
     protected void losingDialogue(String text) {
         switch (CONVERSE_COUNT) {
-            case 5 -> {
+            case 4 -> {
                 switchDialogue(false);
                 t_villain.setText(text);
             }
-            case 6, 7 -> {
+            case 5 -> {
                 switchDialogue(true);
                 t_player.setText(text);
             }

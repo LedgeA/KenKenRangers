@@ -40,7 +40,7 @@
                            <children>
                               <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true">
                                  <image>
-                                    <Image url="@../power-ups/double-damage.png" />
+                                    <Image url="@../power-ups/power-surge.png" />
                                  </image>
                               </ImageView>
                               <Pane prefHeight="200.0" prefWidth="200.0">

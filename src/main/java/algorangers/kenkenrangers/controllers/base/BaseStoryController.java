@@ -34,15 +34,18 @@ public abstract class BaseStoryController extends BaseGameController {
     protected String[] dialogue;
 
     protected String name;
-    protected int outroDialogueStart, outroDialogueEnd;
+    protected int outroDialogueStart, outroDialogueEnd, losingDialogueStart, winningDialogueEnd;
 
+    private boolean textSkipped;
+    
     protected abstract void insertDialogues();
     protected abstract void introDialogue(String text);
     protected abstract void winningDialogue(String text);
     protected abstract void losingDialogue(String text);
 
     protected void updateDialogue() {
-        if (CONVERSE_COUNT == outroDialogueEnd) {
+        if (CONVERSE_COUNT == outroDialogueEnd || (CONVERSE_COUNT == losingDialogueStart && gameWon)) {
+            tf_player.setVisible(false);
             p_main.setOnMouseClicked(null);
             return;
         }
@@ -61,6 +64,12 @@ public abstract class BaseStoryController extends BaseGameController {
         tf_villain.setVisible(false);
 
         if (!gameOver) return;
+        
+        if (!textSkipped && !gameWon) {
+            CONVERSE_COUNT = losingDialogueStart;
+            textSkipped = true;
+        }
+
         GameUtils.setGridFocusable(k_view, false);
         s_finish.setVisible(true);
 
@@ -97,7 +106,7 @@ public abstract class BaseStoryController extends BaseGameController {
         gameResultChecker = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             if (!gameOver) return;
 
-            if (!gameWon) CONVERSE_COUNT = outroDialogueStart;
+            if (!gameWon) CONVERSE_COUNT = losingDialogueStart;
             
             updateDialogue();
             stopAllTimelines();

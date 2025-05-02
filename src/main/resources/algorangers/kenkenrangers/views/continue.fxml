@@ -23,7 +23,7 @@
                   <Font name="Press Start 2P Regular" size="36.0" />
                </font>
             </Text>
-            <Text fx:id="t_cancel" fill="WHITE" fontSmoothingType="LCD" layoutX="550.0" layoutY="591.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Cancel">
+            <Text fx:id="t_goBack" fill="WHITE" fontSmoothingType="LCD" layoutX="535.0" layoutY="637.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Go Back">
                <font>
                   <Font name="Press Start 2P Regular" size="30.0" />
                </font>
@@ -38,6 +38,21 @@
                   <VBox fx:id="v_players" alignment="TOP_CENTER" maxWidth="436.0" prefHeight="200.0" prefWidth="436.0" />
                </content>
             </ScrollPane>
+            <Text fx:id="t_removePlayer" fill="WHITE" fontSmoothingType="LCD" layoutX="447.0" layoutY="578.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Remove Player">
+               <font>
+                  <Font name="Press Start 2P Regular" size="30.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_remove" fill="WHITE" fontSmoothingType="LCD" layoutX="374.0" layoutY="578.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Remove" visible="false">
+               <font>
+                  <Font name="Press Start 2P Regular" size="30.0" />
+               </font>
+            </Text>
+            <Text fx:id="t_cancel" fill="WHITE" fontSmoothingType="LCD" layoutX="726.0" layoutY="578.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="Cancel" visible="false">
+               <font>
+                  <Font name="Press Start 2P Regular" size="30.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
    </children>

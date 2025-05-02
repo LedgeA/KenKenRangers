@@ -5,6 +5,7 @@ import javafx.util.Duration;
 import java.sql.SQLException;
 import java.util.function.Supplier;
 
+import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -63,6 +64,8 @@ public abstract class BaseGameController {
 
     protected Timeline timer, attackInterval, gameResultChecker;
     protected int timeCount = 0;
+
+    private Timeline powerUpUsed; 
 
     // Database Parameters
     protected String name;
@@ -155,10 +158,14 @@ public abstract class BaseGameController {
     }
     
     protected void powerUpsHandler() {
-        setupPowerUp(s_powerSurge, k_controller::consumePowerSurge, k_controller::getPowerSurge, "double-damage");
+        setupPowerUp(s_powerSurge, k_controller::consumePowerSurge, k_controller::getPowerSurge, "power-surge");
         setupPowerUp(s_invincibility, k_controller::consumeInvincibility, k_controller::getInvincibility, "invincibility");
         setupPowerUp(s_cellReveal, k_controller::consumeCellReveal, k_controller::getCellReveal, "cell-reveal");
 
+        setupPowerUpCast();
+    }
+
+    private void setupPowerUpCast() {
         Rectangle clip = new Rectangle(60, 60);
         clip.setArcWidth(20);  
         clip.setArcHeight(20);
@@ -208,7 +215,16 @@ public abstract class BaseGameController {
     private void setPowerUpCast(String imgName) {
         i_powerUpUsed.setImage(ComponentCreator.createImage(imgName));
 
-        Timeline powerUpUsed = new Timeline(
+            if (powerUpUsed != null && powerUpUsed.getStatus() == Animation.Status.RUNNING) {
+                powerUpUsed.stop();
+            }
+
+            i_powerUpUsed.setImage(ComponentCreator.createImage(imgName));
+            i_powerUpUsed.setFitWidth(60);
+            i_powerUpUsed.setFitHeight(60);
+            i_powerUpUsed.setOpacity(1);
+    
+        powerUpUsed = new Timeline(
             new KeyFrame(Duration.millis(500),
                 new KeyValue(i_powerUpUsed.fitWidthProperty(), 120, Interpolator.EASE_BOTH),
                 new KeyValue(i_powerUpUsed.fitHeightProperty(), 120, Interpolator.EASE_BOTH),
@@ -216,15 +232,7 @@ public abstract class BaseGameController {
             )
         );
 
-        powerUpUsed.setOnFinished(event -> {
-            if (i_powerUpUsed.getImage() == null) return;
-
-            i_powerUpUsed.setFitWidth(60);
-            i_powerUpUsed.setFitHeight(60);
-            i_powerUpUsed.setOpacity(1);
-            i_powerUpUsed.setImage(null);
-        });
-
+        powerUpUsed.setOnFinished(event -> i_powerUpUsed.setImage(null));
 
         powerUpUsed.play();
     }

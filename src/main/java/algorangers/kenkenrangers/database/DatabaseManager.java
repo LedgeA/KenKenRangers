@@ -1,5 +1,6 @@
 package algorangers.kenkenrangers.database;
 
+import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -22,6 +23,8 @@ public class DatabaseManager {
     public static Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection("jdbc:sqlite:kenken.db"); 
+            Statement stmt = connection.createStatement();
+            stmt.execute("PRAGMA foreign_keys = ON");
         } 
         
         return connection;
@@ -255,6 +258,24 @@ public class DatabaseManager {
 
         return lastFinishedChapter;
     }
+
+    public static void removePlayer(String name) {
+        String sql = "DELETE FROM players WHERE name = ?";
+
+        try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+
+            int rowsUpdated = pstmt.executeUpdate();
+            System.out.println(
+                "\nPlayer Deleted: " + rowsUpdated + 
+                "\nName: " + name);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }     
+    }
+
 
     public static void resetGameSession() throws SQLException {
         String sql = """

@@ -11,17 +11,17 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algorangers.kenkenrangers.controllers.game_modes.rangers_saga.ChapterTwoController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algorangers.kenkenrangers.controllers.game_modes.rangers_saga.ChapterFiveController">
    <children>
       <ImageView fx:id="background" fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true">
          <image>
-            <Image url="@../backgrounds/forest-entrance.png" />
+            <Image url="@../backgrounds/dusk.png" />
          </image></ImageView>
-      <Pane fx:id="p_main" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: rgba(0,0,0,0.2);">
+      <Pane fx:id="p_main" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: rgba(0,0,0,0.4);">
          <children>
-            <ImageView fx:id="i_character" fitHeight="301.0" fitWidth="246.0" layoutX="916.0" layoutY="368.0" pickOnBounds="true" preserveRatio="true" scaleX="-1.0">
+            <ImageView fx:id="i_character" fitHeight="371.0" fitWidth="286.0" layoutX="895.0" layoutY="294.0" pickOnBounds="true" preserveRatio="true" scaleX="-1.0">
                <image>
-                  <Image url="@../sprites/orc.png" />
+                  <Image url="@../sprites/beast.png" />
                </image>
             </ImageView>
             <StackPane fx:id="s_gauge" alignment="BOTTOM_CENTER" layoutY="71.0" prefHeight="150.0" prefWidth="200.0">

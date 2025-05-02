@@ -76,7 +76,7 @@
                      <children>
                         <ImageView fx:id="i_powerSurge" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
                            <image>
-                              <Image url="@../power-ups/double-damage.png" />
+                              <Image url="@../power-ups/power-surge.png" />
                            </image>
                         </ImageView>
                         <Text fx:id="t_powerSurge" fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" text="10">
