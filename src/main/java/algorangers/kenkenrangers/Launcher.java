@@ -53,8 +53,10 @@ public class Launcher extends Application {
                 stage.setFullScreen(false);
             }
         });
+
+        stage.setFullScreen(true);
         stage.show();
-        
+
     }
 
     public static void main(String[] args) {
