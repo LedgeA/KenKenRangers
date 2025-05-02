@@ -188,7 +188,7 @@
             </Pane>
          </children>
       </Pane>
-      <Pane fx:id="p_monologue" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" visible="false">
+      <Pane fx:id="p_monologue" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;">
          <children>
             <TextFlow layoutX="140.0" layoutY="310.0" maxHeight="100.0" maxWidth="1000.0" prefHeight="300.0" prefWidth="1000.0" textAlignment="CENTER">
                <children>
