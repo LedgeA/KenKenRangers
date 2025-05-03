@@ -71,12 +71,7 @@ public class CustomTrialController extends BaseGameController {
     @Override
     protected void gameEnd(boolean cleared) throws SQLException {
         
-        int allPowerUps = powerSurge + invincibility + cellReveal;
-        int powerUpDeductions = 10 * (allPowerUps - countRemainingPowerups());
-        int difficultyBonusRate = DIMENSION * dot;
-        score = difficultyBonusRate * (120 - timeCount) * 100 + powerUpDeductions;
-
-        if (!cleared) score = 0;
+        score = 0;
 
         DatabaseManager.updateInitialGameSession(
             DIMENSION, 

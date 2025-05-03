@@ -126,9 +126,6 @@ public abstract class BaseGameController {
             t_sTime.setText(GameUtils.timeToString(timeCount));
 
             if (k_controller.getRemainingCageAmount() == 0) {
-                timer.stop();
-                if (attackInterval != null) attackInterval.stop();
-                
                 gameOver = true;
             }
         }));
@@ -141,15 +138,16 @@ public abstract class BaseGameController {
     protected void startAttackInterval() {
         attackInterval = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
 
-            if (!k_controller.getInvincibleState()) k_controller.decreaseHp();            
-
+            if (k_controller.getInvincibleState()) {
+                SoundUtils.playBlocked();
+            } else {
+                k_controller.decreaseHp();
+            }
+            
             // if hp runs out, end the game
             if (k_controller.getHp() <= 0) {
                 gameWon = false;
                 gameOver = true;
-                
-                timer.stop();
-                attackInterval.stop();
             }
         }));
         
@@ -179,6 +177,7 @@ public abstract class BaseGameController {
         powerUp.setOnMouseClicked(event -> {
             consume.run();
             powerUp.setDisable(true);
+            SoundUtils.playCast();
 
             updatePowerUpCount(powerUp, remainingCount.get());
             Arc arc = ComponentCreator.addCooldownImages(v_cooldowns, imgName);
@@ -205,7 +204,8 @@ public abstract class BaseGameController {
 
             if (powerUp == s_invincibility) k_controller.invincibilityWearOff();
             if (powerUp == s_powerSurge) k_controller.multiplierWearOff();
-
+            
+            SoundUtils.playRecharge();
             v_cooldowns.getChildren().remove(0); 
         });
 

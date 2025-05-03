@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import algorangers.kenkenrangers.models.*;
-
+import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -46,6 +46,9 @@ public class KenkenController {
     private Random rand = new Random();
 
     public KenkenController(int DIMENSION, int dot, int powerSurge, int invincibility, int cellReveal) {
+
+        SoundUtils.preloadSounds();
+        
         this.inputGrid = new int[DIMENSION][DIMENSION];
         this.DIMENSION = DIMENSION;
 
@@ -191,6 +194,7 @@ public class KenkenController {
         button.setOnKeyPressed(event -> {
             if (!inputIsValid(event.getText())) return;
             
+            SoundUtils.playInput();
             button.setText(event.getText());
             updateButton(button);
             evaluateAllInputs();
@@ -205,13 +209,13 @@ public class KenkenController {
         while (iterator.hasNext()) {
             Cage cage = iterator.next();
     
-            if (cage.areCageEntriesAreValid(solutionGrid, inputGrid)) {
-                List<Cell> cells = cage.getCells();
-                disableCells(cells);
-    
-                iterator.remove(); 
-                this.hp += 5;
-            }
+            if (!cage.areCageEntriesAreValid(solutionGrid, inputGrid)) continue;
+            List<Cell> cells = cage.getCells();
+            disableCells(cells);
+            SoundUtils.playCageCleared();
+
+            iterator.remove(); 
+            this.hp += 5;
         }
     }
 

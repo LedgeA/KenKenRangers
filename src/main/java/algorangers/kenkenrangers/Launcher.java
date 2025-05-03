@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import algorangers.kenkenrangers.database.DatabaseManager;
+import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
@@ -51,7 +52,9 @@ public class Launcher extends Application {
                 stage.setFullScreen(false);
             }
         });
-
+        
+        SoundUtils.preloadSounds();
+        
         stage.setFullScreen(false);
         stage.show();
 

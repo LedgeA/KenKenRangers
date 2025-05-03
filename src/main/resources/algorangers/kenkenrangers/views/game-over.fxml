@@ -38,38 +38,6 @@
                </children>
             </HBox>
             <HBox fx:id="h_stars" alignment="CENTER" layoutX="471.0" layoutY="272.0" prefHeight="100.0" prefWidth="350.0" />
-            <BorderPane fx:id="b_score" layoutX="496.0" layoutY="459.0" prefHeight="50.0" prefWidth="300.0">
-               <left>
-                  <Text fx:id="t_score" fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="SCORE" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font name="Press Start 2P Regular" size="24.0" />
-                     </font>
-                  </Text>
-               </left>
-               <right>
-                  <Text fx:id="t_scoreNum" fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="100" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font name="Press Start 2P Regular" size="24.0" />
-                     </font>
-                  </Text>
-               </right>
-            </BorderPane>
-            <BorderPane fx:id="b_best" layoutX="496.0" layoutY="509.0" prefHeight="50.0" prefWidth="300.0">
-               <left>
-                  <Text fx:id="t_best" fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="BEST" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font name="Press Start 2P Regular" size="24.0" />
-                     </font>
-                  </Text>
-               </left>
-               <right>
-                  <Text fx:id="t_bestNum" fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="1000" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font name="Press Start 2P Regular" size="24.0" />
-                     </font>
-                  </Text>
-               </right>
-            </BorderPane>
             <HBox alignment="CENTER" layoutX="471.0" layoutY="352.0" prefHeight="100.0" prefWidth="350.0" spacing="10.0">
                <children>
                   <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="50.0" spacing="10.0">
@@ -121,6 +89,42 @@
                   <Image url="@../icons/game-over.png" />
                </image>
             </ImageView>
+            <VBox fx:id="v_score" alignment="CENTER" layoutX="496.0" layoutY="459.0" prefHeight="100.0" prefWidth="300.0">
+               <children>
+                  <BorderPane prefHeight="50.0" prefWidth="300.0">
+                     <left>
+                        <Text fx:id="t_score" fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="SCORE" BorderPane.alignment="CENTER">
+                           <font>
+                              <Font name="Press Start 2P Regular" size="24.0" />
+                           </font>
+                        </Text>
+                     </left>
+                     <right>
+                        <Text fx:id="t_scoreNum" fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="100" BorderPane.alignment="CENTER">
+                           <font>
+                              <Font name="Press Start 2P Regular" size="24.0" />
+                           </font>
+                        </Text>
+                     </right>
+                  </BorderPane>
+                  <BorderPane prefHeight="50.0" prefWidth="300.0">
+                     <left>
+                        <Text fx:id="t_best" fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="BEST" BorderPane.alignment="CENTER">
+                           <font>
+                              <Font name="Press Start 2P Regular" size="24.0" />
+                           </font>
+                        </Text>
+                     </left>
+                     <right>
+                        <Text fx:id="t_bestNum" fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" text="1000" BorderPane.alignment="CENTER">
+                           <font>
+                              <Font name="Press Start 2P Regular" size="24.0" />
+                           </font>
+                        </Text>
+                     </right>
+                  </BorderPane>
+               </children>
+            </VBox>
          </children>
       </Pane>
    </children>

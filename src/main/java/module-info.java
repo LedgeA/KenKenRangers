@@ -2,6 +2,7 @@ module algorangers.kenkenrangers {
     requires transitive javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
+    requires javafx.media;
     requires transitive java.sql;
 
 

@@ -8,9 +8,9 @@ import algorangers.kenkenrangers.utils.GameUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 
@@ -26,7 +26,7 @@ public class GameOverController {
     private HBox h_stars;
 
     @FXML 
-    private BorderPane b_bestNum, b_scoreNum;
+    private VBox v_score;
 
     @FXML
     private Text t_bestNum, t_scoreNum;
@@ -68,7 +68,9 @@ public class GameOverController {
         stars = gameSession.stars();
         
 
-        if (!gameMode.equals("tutorial") && !gameMode.equals("custom_trial")) {
+        if (gameMode.equals("tutorial") || gameMode.equals("custom_trial")) {
+            v_score.getChildren().remove(1);
+        } else {
             bestScore = DatabaseManager.retrieveHighScore(name, gameMode);
         }
 
