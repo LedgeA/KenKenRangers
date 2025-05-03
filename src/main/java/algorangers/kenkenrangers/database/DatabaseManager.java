@@ -21,6 +21,11 @@ public class DatabaseManager {
         int time, int score, int stars) {}
 
     public static Connection getConnection() throws SQLException {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("SQLite JDBC driver not found.", e);
+        }
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection("jdbc:sqlite:kenken.db"); 
             Statement stmt = connection.createStatement();

@@ -4,6 +4,7 @@ module algorangers.kenkenrangers {
     requires javafx.graphics;
     requires javafx.media;
     requires transitive java.sql;
+    requires org.xerial.sqlitejdbc;
 
 
     opens algorangers.kenkenrangers.controllers to javafx.fxml;
