@@ -6,6 +6,7 @@ import algorangers.kenkenrangers.controllers.base.BaseGameController;
 import algorangers.kenkenrangers.controllers.base.KenkenController;
 import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.GameUtils;
+import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -90,8 +91,10 @@ public class TutorialController extends BaseGameController {
         tf_dialogue.setBackground(new Background(backgroundFill));
         
         p_main.setOnMouseClicked(event -> {
-            if (!paused) DIALOGUE_COUNT++;
-
+            if (paused) return;
+            DIALOGUE_COUNT++;
+            
+            SoundUtils.playPress();
             if (DIALOGUE_COUNT == 12) {
                 // Start Timelines and enable buttons
                 startTimer();
@@ -143,7 +146,8 @@ public class TutorialController extends BaseGameController {
             timeCount, 
             score, 
             computeStars());
-        
+
+        SoundUtils.playGameFinished(gameOver);
         GameUtils.navigate("game-over.fxml", p_main);
     }
 

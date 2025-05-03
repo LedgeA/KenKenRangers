@@ -2,6 +2,7 @@ package algorangers.kenkenrangers.controllers.menu;
 
 import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.GameUtils;
+import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
@@ -44,13 +45,14 @@ public class ConfigureTrialController {
                 powerSurge, 
                 invincibility, 
                 cellReveal);
-        
+            SoundUtils.playPress();
             GameUtils.navigate("custom-trial.fxml", p_main);
 
         });
         
 
         t_goBack.setOnMouseClicked(event -> {
+            SoundUtils.playPress();
             GameUtils.navigate("main-menu.fxml", p_main);
         });
     }
@@ -75,7 +77,8 @@ public class ConfigureTrialController {
     private void setupButton(Button button, Runnable updater, Text targetText, int limit) {
         button.setOnAction(e -> {
             if (getTextAsNum(targetText) == limit) return;
-
+            SoundUtils.playPress();
+            
             updater.run();
             targetText.setText(getValueForText(targetText));
         });

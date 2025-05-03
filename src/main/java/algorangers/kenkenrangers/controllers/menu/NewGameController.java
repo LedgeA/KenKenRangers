@@ -2,6 +2,7 @@ package algorangers.kenkenrangers.controllers.menu;
 
 import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.GameUtils;
+import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -39,6 +40,7 @@ public class NewGameController {
             
             DatabaseManager.createNewPlayer(tf_name.getText().trim());
             DatabaseManager.updateCurrentPlayer(tf_name.getText());
+            SoundUtils.playPress();
             GameUtils.navigate("tutorial.fxml", p_main);
             
         });
@@ -46,10 +48,12 @@ public class NewGameController {
         t_proceed.setOnMouseClicked(event -> {
             DatabaseManager.createNewPlayer(tf_name.getText().trim());
             DatabaseManager.updateCurrentPlayer(tf_name.getText());
+            SoundUtils.playPress();
             GameUtils.navigate("tutorial.fxml", p_main);
         });
 
         t_cancel.setOnMouseClicked(event -> {
+            SoundUtils.playPress();
             GameUtils.navigate("initial-main-menu.fxml", p_main);
         });
     }

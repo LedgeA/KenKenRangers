@@ -5,6 +5,7 @@ import java.util.List;
 
 import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.GameUtils;
+import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.fxml.FXML;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -48,6 +49,7 @@ public class ContinueController {
 
     private void setOnClickListeners() {
         t_goBack.setOnMouseClicked(event -> {
+            SoundUtils.playPress();
             GameUtils.navigate("initial-main-menu.fxml", p_main);
         });
 
@@ -56,6 +58,7 @@ public class ContinueController {
             t_removePlayer.setVisible(false);
             t_remove.setVisible(true);
             t_cancel.setVisible(true);
+            SoundUtils.playPress();
         });
 
         t_remove.setOnMouseClicked(event -> {
@@ -69,6 +72,7 @@ public class ContinueController {
                 v_players.getChildren().remove(i);
                 names.remove(i);
             }
+            SoundUtils.playPress();
             
         });
         t_cancel.setOnMouseClicked(event -> {
@@ -76,6 +80,7 @@ public class ContinueController {
             t_removePlayer.setVisible(true);
             t_remove.setVisible(false);
             t_cancel.setVisible(false);
+            SoundUtils.playPress();
         });
 
 
@@ -97,6 +102,7 @@ public class ContinueController {
             StackPane stackPane = new StackPane(fieldView, text);
             stackPane.setPrefWidth(436);  
             stackPane.setOnMouseClicked(event -> {
+                SoundUtils.playPress();
                 if (removePlayers) {
                     if (fieldView.getEffect() == null) {
                         fieldView.setEffect(new ColorAdjust(0, 0, -0.5, 0));

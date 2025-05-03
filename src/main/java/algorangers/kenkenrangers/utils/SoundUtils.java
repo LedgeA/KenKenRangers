@@ -6,13 +6,18 @@ import javafx.scene.media.MediaPlayer;
 public class SoundUtils {
     
     private static final String path = "/algorangers/kenkenrangers/sounds/";
+
     private static final Media tap = new Media(SoundUtils.class.getResource(path + "tap.wav").toExternalForm());
     private static final Media cleared = new Media(SoundUtils.class.getResource(path + "clear.wav").toExternalForm());;
+
     private static final Media cast = new Media(SoundUtils.class.getResource(path + "cast.wav").toExternalForm());
     private static final Media recharge = new Media(SoundUtils.class.getResource(path + "recharge.wav").toExternalForm());
     private static final Media blocked = new Media(SoundUtils.class.getResource(path + "blocked.wav").toExternalForm());
+
     private static final Media win = new Media(SoundUtils.class.getResource(path + "win.wav").toExternalForm());
     private static final Media lose = new Media(SoundUtils.class.getResource(path + "lose.wav").toExternalForm());
+
+    private static final Media press = new Media(SoundUtils.class.getResource(path + "press.wav").toExternalForm());
 
     public static void preloadSounds() {}
     
@@ -51,6 +56,11 @@ public class SoundUtils {
             mediaPlayer = new MediaPlayer(lose);
         }
 
+        mediaPlayer.play();
+    }
+
+    public static void playPress() {
+        MediaPlayer mediaPlayer = new MediaPlayer(press);
         mediaPlayer.play();
     }
 

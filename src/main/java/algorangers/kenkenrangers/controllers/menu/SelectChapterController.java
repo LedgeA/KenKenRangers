@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.GameUtils;
+import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.effect.ColorAdjust;
@@ -38,6 +39,7 @@ public class SelectChapterController {
 
         GameUtils.setMenuTextAppearance(t_cancel);
         t_cancel.setOnMouseClicked(event -> {
+            SoundUtils.playPress();
             GameUtils.navigate("main-menu.fxml", p_main);
         });
     }
@@ -87,6 +89,7 @@ public class SelectChapterController {
         imageView.setOnMouseClicked(event -> {
             String fxml = "chapter-" + numToWord(chapterCount) + ".fxml";
 
+            SoundUtils.playPress();
             GameUtils.navigate(fxml, p_main);
         });
 

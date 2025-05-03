@@ -7,6 +7,7 @@ import algorangers.kenkenrangers.controllers.base.KenkenController;
 import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.database.DatabaseManager.GameSession;
 import algorangers.kenkenrangers.utils.GameUtils;
+import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -89,6 +90,7 @@ public class CustomTrialController extends BaseGameController {
             score, 
             computeStars());
         
+        SoundUtils.playGameFinished(gameOver);
         GameUtils.navigate("game-over.fxml", p_main);
     }
 }

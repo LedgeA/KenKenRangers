@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.helpers.ComponentCreator;
 import algorangers.kenkenrangers.utils.GameUtils;
+import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -57,6 +58,7 @@ public abstract class BaseStoryController extends BaseGameController {
         if (CONVERSE_COUNT < outroDialogueStart) {
             introDialogue(text);
             CONVERSE_COUNT++;
+            SoundUtils.playPress();
             return;
         }
         
@@ -72,7 +74,8 @@ public abstract class BaseStoryController extends BaseGameController {
 
         GameUtils.setGridFocusable(k_view, false);
         s_finish.setVisible(true);
-
+        SoundUtils.playPress();
+        
         if (gameWon) {
             winningDialogue(text);
         } else {
@@ -155,7 +158,7 @@ public abstract class BaseStoryController extends BaseGameController {
         int highscore = DatabaseManager.retrieveHighScore(name, gameMode);
         if (score > highscore) DatabaseManager.updateHighscore(name, gameMode, score);
         
-
+        SoundUtils.playGameFinished(gameOver);
         GameUtils.navigate("game-over.fxml", p_main);
     }
 }

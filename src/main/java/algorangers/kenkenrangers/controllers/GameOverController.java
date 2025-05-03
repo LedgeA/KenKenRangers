@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.database.DatabaseManager.GameSession;
 import algorangers.kenkenrangers.utils.GameUtils;
+import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -95,6 +96,7 @@ public class GameOverController {
 
     private void setMenuButton() {
         i_menu.setOnMouseClicked(event -> {
+            SoundUtils.playPress();
             GameUtils.navigate("main-menu.fxml", p_main);
         });
     }

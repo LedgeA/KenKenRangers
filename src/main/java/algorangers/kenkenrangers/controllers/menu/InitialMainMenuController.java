@@ -1,6 +1,7 @@
 package algorangers.kenkenrangers.controllers.menu;
 
 import algorangers.kenkenrangers.utils.GameUtils;
+import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -30,10 +31,12 @@ public class InitialMainMenuController {
     
     private void setOnClickListeners() {
         t_newGame.setOnMouseClicked(event -> {
+            SoundUtils.playPress();
             GameUtils.navigate("new-game.fxml", p_main);
         });
 
         t_continue.setOnMouseClicked(event -> {
+            SoundUtils.playPress();
             GameUtils.navigate("continue.fxml", p_main);
         });
 

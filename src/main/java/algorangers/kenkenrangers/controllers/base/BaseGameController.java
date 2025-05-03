@@ -88,28 +88,33 @@ public abstract class BaseGameController {
     protected void setUpPause() {
         p_main.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene == null) return; 
-            newScene.setOnKeyPressed(event -> escapePressed(event));
+            newScene.setOnKeyPressed(event -> spacePressed(event));
         });
 
         i_resume.setOnMouseClicked(event -> {
             playAllTimelines();
             paused = false;
 
+            SoundUtils.playPress();
             p_pause.setVisible(false);
         });
 
         i_quit.setOnMouseClicked(event -> {
+            SoundUtils.playPress();
+
+            stopAllTimelines();
+            nullifyAllTimelines();
             GameUtils.navigate("main-menu.fxml", p_main);
         });
     }
 
-    private void escapePressed(KeyEvent event) {
+    private void spacePressed(KeyEvent event) {
         if (event.getCode() != KeyCode.SPACE) return;
 
         paused = !paused;
-        
+        SoundUtils.playPress();
         if (paused) {
-            stopAllTimelines();
+            pauseAllTimelines();
             t_time.setText(GameUtils.timeToString(timeCount)); // update time
         } else {
             playAllTimelines();
@@ -322,6 +327,12 @@ public abstract class BaseGameController {
         if (timer != null) timer.stop();
         if (attackInterval != null) attackInterval.stop();
         if (gameResultChecker != null) gameResultChecker.stop();
+    }
+
+    protected void pauseAllTimelines() {
+        if (timer != null) timer.pause();
+        if (attackInterval != null) attackInterval.pause();
+        if (gameResultChecker != null) gameResultChecker.pause();
     }
 
     protected void nullifyAllTimelines() {
