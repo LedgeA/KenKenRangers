@@ -109,7 +109,7 @@ public abstract class BaseGameController {
     }
 
     private void spacePressed(KeyEvent event) {
-        if (event.getCode() != KeyCode.SPACE) return;
+        if (event.getCode() != KeyCode.ESCAPE) return;
 
         paused = !paused;
         SoundUtils.press();

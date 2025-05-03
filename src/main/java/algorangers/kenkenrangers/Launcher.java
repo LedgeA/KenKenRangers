@@ -10,6 +10,7 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -33,6 +34,7 @@ public class Launcher extends Application {
                 scene.widthProperty(), scene.heightProperty()));
         root.scaleYProperty().bind(root.scaleXProperty());
 
+        stage.setFullScreenExitKeyCombination(KeyCombination.keyCombination("F11"));
         stage.setTitle("KenKenRangers");
         stage.setScene(scene);
         stage.setMinWidth(BASE_WIDTH);
@@ -55,7 +57,7 @@ public class Launcher extends Application {
         
         SoundUtils.preloadSounds();
         
-        stage.setFullScreen(false);
+        stage.setFullScreen(true);
         stage.show();
 
     }
