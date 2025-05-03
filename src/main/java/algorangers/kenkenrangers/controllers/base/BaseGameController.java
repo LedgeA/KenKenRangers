@@ -265,21 +265,24 @@ public abstract class BaseGameController {
 
         if (!gameWon) currentMeterHeight = 0;
 
+        // track 
         if (currentMeterHeight <= 25 || currentMeterHeight > 0) {
             prevMeterHeight = 25;
             currentMeterHeight = 25;
         } else if (currentMeterHeight > 540) {
-            prevMeterHeight = 25;
+            prevMeterHeight = 540;
             currentMeterHeight = 540;
         }
 
-        if (prevMeterHeight == currentMeterHeight) return;
+        if (prevMeterHeight == currentMeterHeight) return; // cancel update if hp is unchanged
+
         prevMeterHeight = currentMeterHeight;
 
+        // show damage count
         t_dot.setText("- " + String.valueOf(dot));
         t_dot.setVisible(true);
 
-        // update size
+        // update animate size and text
         Timeline hpUpdater = 
             new Timeline(new KeyFrame(Duration.seconds(1),
                 new KeyValue(r_gaugeMeter.heightProperty(), currentMeterHeight, Interpolator.EASE_OUT),
@@ -296,17 +299,11 @@ public abstract class BaseGameController {
     }
 
     protected int computeStars() {
-        if (timeCount == 0) return 0;
-
-        int stars = 1; 
+        if (timeCount == 0) return 0; // if player lost
         
-        if (arePowerupsUnused()) {
-            stars++;
-        }
-
-        if (timeCount <= 120) {
-            stars++;
-        }
+        int stars = 1; 
+        if (arePowerupsUnused()) stars++;
+        if (timeCount <= 120) stars++;
 
         return stars;
     }
