@@ -94,7 +94,7 @@
                      <children>
                         <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../power-ups/double-damage.png" />
+                              <Image url="@../power-ups/power-surge.png" />
                            </image>
                         </ImageView>
                         <StackPane prefHeight="70.0" prefWidth="11.0" />
