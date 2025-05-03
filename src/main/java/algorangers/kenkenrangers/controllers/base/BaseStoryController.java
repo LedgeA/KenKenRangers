@@ -59,7 +59,7 @@ public abstract class BaseStoryController extends BaseGameController {
         if (CONVERSE_COUNT < outroDialogueStart) {
             introDialogue(text);
             CONVERSE_COUNT++;
-            SoundUtils.playPress();
+            SoundUtils.press();
             return;
         }
         
@@ -67,7 +67,7 @@ public abstract class BaseStoryController extends BaseGameController {
         tf_villain.setVisible(false);
 
         if (!gameOver) return;
-        SoundUtils.playPress();
+        SoundUtils.press();
         
         if (!textSkipped && !gameWon) {
             CONVERSE_COUNT = losingDialogueStart;
@@ -76,7 +76,7 @@ public abstract class BaseStoryController extends BaseGameController {
 
         GameUtils.setGridFocusable(k_view, false);
         s_finish.setVisible(true);
-        SoundUtils.stopMusic();
+        SoundUtils.musicOff();
 
         if (gameWon) {
             winningDialogue(text);
@@ -128,7 +128,7 @@ public abstract class BaseStoryController extends BaseGameController {
         startTimer();
         startAttackInterval();
         startGameResultChecker();
-        SoundUtils.playMusic();
+        SoundUtils.musicOn();
     }
 
     protected void setupFinishButton() {
@@ -169,7 +169,7 @@ public abstract class BaseStoryController extends BaseGameController {
         int highscore = DatabaseManager.retrieveHighScore(name, gameMode);
         if (score > highscore) DatabaseManager.updateHighscore(name, gameMode, score);
         
-        SoundUtils.playGameFinished(gameOver);
+        SoundUtils.finished(gameOver);
         GameUtils.navigate("game-over.fxml", p_main);
     }
 }

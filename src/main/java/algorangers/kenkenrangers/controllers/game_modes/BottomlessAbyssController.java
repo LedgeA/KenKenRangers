@@ -29,7 +29,7 @@ public class BottomlessAbyssController extends BaseGameController {
         gameMode = "bottomless_abyss";
         generateRandomEnvironment();
         updateDifficulty();
-        SoundUtils.playMusic();
+        SoundUtils.musicOn();
 
         k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
@@ -113,9 +113,9 @@ public class BottomlessAbyssController extends BaseGameController {
             score, 
             3);
         
-        SoundUtils.playGameFinished(gameOver);    
+        SoundUtils.finished(gameOver);    
         if (!cleared) {
-            SoundUtils.stopMusic();
+            SoundUtils.musicOff();
             GameUtils.navigate("game-over.fxml", p_main);
             return;
         }

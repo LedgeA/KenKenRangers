@@ -74,9 +74,7 @@ public class TutorialController extends BaseGameController {
             "Invincibility makes you invincible for a set amount of time.",
             "Power Surge doubles the power of any super power casted within a set amount of time.",
             "Cell Reveal reveals 2 of your unsolved tiles.",
-            "Let's practice! Tap on a cell to enter a number.",
-            "Use your skills, think strategically, and become a true KenKen master!",
-            "Good luck, and may the numbers be ever in your favor!"
+            "Try it out! Tap on a cell to enter a number."
         };
     }
 
@@ -94,13 +92,13 @@ public class TutorialController extends BaseGameController {
             if (paused) return;
             DIALOGUE_COUNT++;
 
-            SoundUtils.playPress();
+            SoundUtils.press();
             if (DIALOGUE_COUNT == 12) {
                 // Start Timelines and enable buttons
                 startTimer();
                 startAttackInterval();
                 startGameResultChecker();
-                SoundUtils.playMusic();
+                SoundUtils.musicOn();
                 GameUtils.setGridFocusable(k_view, true);
                 GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
             };
@@ -148,8 +146,8 @@ public class TutorialController extends BaseGameController {
             score, 
             computeStars());
 
-        SoundUtils.stopMusic();
-        SoundUtils.playGameFinished(gameOver);
+        SoundUtils.musicOff();
+        SoundUtils.finished(gameOver);
         GameUtils.navigate("game-over.fxml", p_main);
     }
 

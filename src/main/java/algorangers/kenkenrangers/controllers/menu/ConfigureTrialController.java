@@ -45,14 +45,14 @@ public class ConfigureTrialController {
                 powerSurge, 
                 invincibility, 
                 cellReveal);
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("custom-trial.fxml", p_main);
 
         });
         
 
         t_goBack.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("main-menu.fxml", p_main);
         });
     }
@@ -77,7 +77,7 @@ public class ConfigureTrialController {
     private void setupButton(Button button, Runnable updater, Text targetText, int limit) {
         button.setOnAction(e -> {
             if (getTextAsNum(targetText) == limit) return;
-            SoundUtils.playPress();
+            SoundUtils.press();
             
             updater.run();
             targetText.setText(getValueForText(targetText));

@@ -39,7 +39,7 @@ public class SelectChapterController {
 
         GameUtils.setMenuTextAppearance(t_cancel);
         t_cancel.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("main-menu.fxml", p_main);
         });
     }
@@ -89,7 +89,7 @@ public class SelectChapterController {
         imageView.setOnMouseClicked(event -> {
             String fxml = "chapter-" + numToWord(chapterCount) + ".fxml";
 
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate(fxml, p_main);
         });
 

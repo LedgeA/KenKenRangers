@@ -19,7 +19,7 @@ public class CustomTrialController extends BaseGameController {
     protected void initialize() throws SQLException {
         gameMode = "custom_trial";
         setInitialSettings();
-        SoundUtils.playMusic();
+        SoundUtils.musicOn();
         
         k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
@@ -91,8 +91,8 @@ public class CustomTrialController extends BaseGameController {
             score, 
             computeStars());
         
-        SoundUtils.playMusic();
-        SoundUtils.playGameFinished(gameOver);
+        SoundUtils.musicOn();
+        SoundUtils.finished(gameOver);
         GameUtils.navigate("game-over.fxml", p_main);
     }
 }

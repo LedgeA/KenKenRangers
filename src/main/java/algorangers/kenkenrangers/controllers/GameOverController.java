@@ -96,7 +96,7 @@ public class GameOverController {
 
     private void setMenuButton() {
         i_menu.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("main-menu.fxml", p_main);
         });
     }

@@ -49,7 +49,7 @@ public class ContinueController {
 
     private void setOnClickListeners() {
         t_goBack.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("initial-main-menu.fxml", p_main);
         });
 
@@ -58,7 +58,7 @@ public class ContinueController {
             t_removePlayer.setVisible(false);
             t_remove.setVisible(true);
             t_cancel.setVisible(true);
-            SoundUtils.playPress();
+            SoundUtils.press();
         });
 
         t_remove.setOnMouseClicked(event -> {
@@ -72,7 +72,7 @@ public class ContinueController {
                 v_players.getChildren().remove(i);
                 names.remove(i);
             }
-            SoundUtils.playPress();
+            SoundUtils.press();
             
         });
         t_cancel.setOnMouseClicked(event -> {
@@ -80,7 +80,7 @@ public class ContinueController {
             t_removePlayer.setVisible(true);
             t_remove.setVisible(false);
             t_cancel.setVisible(false);
-            SoundUtils.playPress();
+            SoundUtils.press();
         });
 
 
@@ -102,7 +102,7 @@ public class ContinueController {
             StackPane stackPane = new StackPane(fieldView, text);
             stackPane.setPrefWidth(436);  
             stackPane.setOnMouseClicked(event -> {
-                SoundUtils.playPress();
+                SoundUtils.press();
                 if (removePlayers) {
                     if (fieldView.getEffect() == null) {
                         fieldView.setEffect(new ColorAdjust(0, 0, -0.5, 0));

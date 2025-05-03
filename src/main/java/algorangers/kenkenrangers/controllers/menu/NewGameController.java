@@ -40,7 +40,7 @@ public class NewGameController {
             
             DatabaseManager.createNewPlayer(tf_name.getText().trim());
             DatabaseManager.updateCurrentPlayer(tf_name.getText());
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("tutorial.fxml", p_main);
             
         });
@@ -48,12 +48,12 @@ public class NewGameController {
         t_proceed.setOnMouseClicked(event -> {
             DatabaseManager.createNewPlayer(tf_name.getText().trim());
             DatabaseManager.updateCurrentPlayer(tf_name.getText());
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("tutorial.fxml", p_main);
         });
 
         t_cancel.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("initial-main-menu.fxml", p_main);
         });
     }

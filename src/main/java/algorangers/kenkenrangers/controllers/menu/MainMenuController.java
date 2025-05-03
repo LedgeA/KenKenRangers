@@ -39,22 +39,22 @@ public class MainMenuController {
     
     private void setOnClickListeners() {
         t_rangersSaga.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("select-chapter.fxml", p_main);
         });
 
         t_bottomlessAbyss.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("bottomless-abyss.fxml", p_main);
         });
 
         t_customTrial.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("configure-trial.fxml", p_main);
         });
 
         t_tutorial.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("tutorial.fxml", p_main);
         });
 

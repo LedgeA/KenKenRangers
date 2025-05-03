@@ -22,7 +22,7 @@ public class SoundUtils {
 
     static {
         music.setCycleCount(MediaPlayer.INDEFINITE);
-        music.setVolume(0.5);
+        music.setVolume(0.7);
     }
 
     public static void preloadSounds() {}
@@ -33,43 +33,43 @@ public class SoundUtils {
         player.play();
     }
 
-    public static void playInput() {
+    public static void insert() {
         play(tap);
     }
 
-    public static void playCageCleared() {
+    public static void cleared() {
         play(cleared);
     }
 
-    public static void playCast() {
+    public static void cast() {
         play(cast);
     }
 
-    public static void playRecharge() {
+    public static void recharge() {
         play(recharge);
     }
 
-    public static void playBlocked() {
+    public static void blocked() {
         play(blocked);
     }
 
-    public static void playGameFinished(boolean gameWon) {
+    public static void finished(boolean gameWon) {
         play(gameWon ? win : lose);
     }
 
-    public static void playPress() {
+    public static void press() {
         play(press);
     }
 
-    public static void playMusic() {
+    public static void musicOn() {
         music.play();
     }
 
-    public static void pauseMusic() {
+    public static void musicPause() {
         music.pause();
     }
 
-    public static void stopMusic() {
+    public static void musicOff() {
         music.stop();
         music.seek(Duration.ZERO);
     }

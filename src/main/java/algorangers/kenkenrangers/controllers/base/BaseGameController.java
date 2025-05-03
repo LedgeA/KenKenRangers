@@ -95,12 +95,12 @@ public abstract class BaseGameController {
             playAllTimelines();
             paused = false;
 
-            SoundUtils.playPress();
+            SoundUtils.press();
             p_pause.setVisible(false);
         });
 
         i_quit.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
 
             stopAllTimelines();
             nullifyAllTimelines();
@@ -112,14 +112,14 @@ public abstract class BaseGameController {
         if (event.getCode() != KeyCode.SPACE) return;
 
         paused = !paused;
-        SoundUtils.playPress();
+        SoundUtils.press();
 
         if (paused) {
-            SoundUtils.pauseMusic();
+            SoundUtils.musicPause();
             pauseAllTimelines();
             t_time.setText(GameUtils.timeToString(timeCount)); // update time
         } else {
-            SoundUtils.playMusic();
+            SoundUtils.musicOn();
             playAllTimelines();
         }
     
@@ -147,7 +147,7 @@ public abstract class BaseGameController {
         attackInterval = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
 
             if (k_controller.getInvincibleState()) {
-                SoundUtils.playBlocked();
+                SoundUtils.blocked();
             } else {
                 k_controller.decreaseHp();
             }
@@ -186,7 +186,7 @@ public abstract class BaseGameController {
         powerUp.setOnMouseClicked(event -> {
             consume.run();
             powerUp.setDisable(true);
-            SoundUtils.playCast();
+            SoundUtils.cast();
 
             updatePowerUpCount(powerUp, remainingCount.get());
             Arc arc = ComponentCreator.addCooldownImages(v_cooldowns, imgName);
@@ -214,7 +214,7 @@ public abstract class BaseGameController {
             if (powerUp == s_invincibility) k_controller.invincibilityWearOff();
             if (powerUp == s_powerSurge) k_controller.multiplierWearOff();
             
-            SoundUtils.playRecharge();
+            SoundUtils.recharge();
             v_cooldowns.getChildren().remove(0); 
         });
 

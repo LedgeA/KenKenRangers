@@ -194,7 +194,7 @@ public class KenkenController {
         button.setOnKeyPressed(event -> {
             if (!inputIsValid(event.getText())) return;
             
-            SoundUtils.playInput();
+            SoundUtils.insert();
             button.setText(event.getText());
             updateButton(button);
             evaluateAllInputs();
@@ -212,7 +212,7 @@ public class KenkenController {
             if (!cage.areCageEntriesAreValid(solutionGrid, inputGrid)) continue;
             List<Cell> cells = cage.getCells();
             disableCells(cells);
-            SoundUtils.playCageCleared();
+            SoundUtils.cleared();
 
             iterator.remove(); 
             this.hp += 5;

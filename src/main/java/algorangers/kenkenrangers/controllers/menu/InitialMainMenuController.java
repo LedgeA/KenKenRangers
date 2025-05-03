@@ -31,12 +31,12 @@ public class InitialMainMenuController {
     
     private void setOnClickListeners() {
         t_newGame.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("new-game.fxml", p_main);
         });
 
         t_continue.setOnMouseClicked(event -> {
-            SoundUtils.playPress();
+            SoundUtils.press();
             GameUtils.navigate("continue.fxml", p_main);
         });
 
