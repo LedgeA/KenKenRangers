@@ -1,8 +1,5 @@
 package algorangers.kenkenrangers.database;
 
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,8 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import algorangers.kenkenrangers.Launcher;
 
 public class DatabaseManager {
 
@@ -26,26 +21,84 @@ public class DatabaseManager {
         int time, int score, int stars) {}
 
         public static Connection getConnection() throws SQLException {
-            if (connection != null && !connection.isClosed()) {
-                return connection;
-            }
-
             try {
-                Path jarLocation = Paths.get(Launcher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-                Path installDir = jarLocation.getParent().getParent();
-                Path dbPath = installDir.resolve("data/kenken.db");
-
-                connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath.toString());
+                Class.forName("org.sqlite.JDBC");
+            } catch (ClassNotFoundException e) {
+                throw new SQLException("SQLite JDBC driver not found.", e);
+            }
+            
+            if (connection == null || connection.isClosed()) {
+                connection = DriverManager.getConnection("jdbc:sqlite:kenken.db");
                 Statement stmt = connection.createStatement();
                 stmt.execute("PRAGMA foreign_keys = ON");
-
-                return connection;
-            } catch (URISyntaxException e) {
-                throw new RuntimeException("Failed to locate the SQLite database path", e);
-            }
+            
+                // Create tables if they don't exist
+                stmt.execute("""
+                    CREATE TABLE IF NOT EXISTS players (
+                        name TEXT PRIMARY KEY,
+                        latest_finished_chap INTEGER DEFAULT 0
+                    )
+                """);
+            
+                stmt.execute("""
+                    CREATE TABLE IF NOT EXISTS highscores (
+                        name TEXT,
+                        chap_1 INTEGER DEFAULT 0,
+                        chap_2 INTEGER DEFAULT 0,
+                        chap_3 INTEGER DEFAULT 0,
+                        chap_4 INTEGER DEFAULT 0,
+                        chap_5 INTEGER DEFAULT 0,
+                        chap_6 INTEGER DEFAULT 0,
+                        bottomless_abyss INTEGER DEFAULT 0,
+                        FOREIGN KEY (name) REFERENCES players(name) ON DELETE CASCADE
+                    )
+                """);
+            
+                // Check if game_session table exists
+                ResultSet rs = stmt.executeQuery("""
+                    SELECT name FROM sqlite_master WHERE type='table' AND name='game_session'
+                """);
+            
+                if (!rs.next()) {
+                    // Create game_session table
+                    stmt.execute("""
+                        CREATE TABLE game_session (
+                            name TEXT,
+                            game_mode TEXT,
+                            dimension INTEGER,
+                            dot INTEGER,
+                            init_powersurge INTEGER,
+                            init_invincibility INTEGER,
+                            init_cellreveal INTEGER,
+                            rem_powersurge INTEGER,
+                            rem_invincibility INTEGER,
+                            rem_cellreveal INTEGER,
+                            time INTEGER,
+                            score INTEGER,
+                            stars INTEGER
+                        )
+                    """);
+            
+                    // Insert default game session row
+                    stmt.executeUpdate("""
+                        INSERT INTO game_session (
+                            name, game_mode, dimension, dot,
+                            init_powersurge, init_invincibility, init_cellreveal,
+                            rem_powersurge, rem_invincibility, rem_cellreveal,
+                            time, score, stars
+                        ) VALUES (
+                            '', 'tutorial', 3, 0,
+                            0, 0, 0,
+                            0, 0, 0,
+                            0, 0, 0
+                        )
+                    """);
+                }
+                rs.close();
+            }            
+            
+            return connection;
         }
-
-        
 
     public static void updateInitialGameSession(int dimension, int dps, String game_mode, int init_ps, int init_i, int init_cr) {
         String sql = "UPDATE game_session SET " +
