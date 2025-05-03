@@ -266,7 +266,7 @@ public abstract class BaseGameController {
         if (!gameWon) currentMeterHeight = 0;
 
         // track 
-        if (currentMeterHeight <= 25 || currentMeterHeight > 0) {
+        if (currentMeterHeight <= 25 && currentMeterHeight > 0) {
             prevMeterHeight = 25;
             currentMeterHeight = 25;
         } else if (currentMeterHeight > 540) {

@@ -1,13 +1,18 @@
 package algorangers.kenkenrangers.database;
 
-import java.sql.Statement;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import algorangers.kenkenrangers.Launcher;
 
 public class DatabaseManager {
 
@@ -20,20 +25,27 @@ public class DatabaseManager {
         int rem_ps, int rem_i, int rem_cr,
         int time, int score, int stars) {}
 
-    public static Connection getConnection() throws SQLException {
-        try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            throw new SQLException("SQLite JDBC driver not found.", e);
+        public static Connection getConnection() throws SQLException {
+            if (connection != null && !connection.isClosed()) {
+                return connection;
+            }
+
+            try {
+                Path jarLocation = Paths.get(Launcher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+                Path installDir = jarLocation.getParent().getParent();
+                Path dbPath = installDir.resolve("data/kenken.db");
+
+                connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath.toString());
+                Statement stmt = connection.createStatement();
+                stmt.execute("PRAGMA foreign_keys = ON");
+
+                return connection;
+            } catch (URISyntaxException e) {
+                throw new RuntimeException("Failed to locate the SQLite database path", e);
+            }
         }
-        if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection("jdbc:sqlite:kenken.db"); 
-            Statement stmt = connection.createStatement();
-            stmt.execute("PRAGMA foreign_keys = ON");
-        } 
+
         
-        return connection;
-    }
 
     public static void updateInitialGameSession(int dimension, int dps, String game_mode, int init_ps, int init_i, int init_cr) {
         String sql = "UPDATE game_session SET " +
