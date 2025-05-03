@@ -93,13 +93,14 @@ public class TutorialController extends BaseGameController {
         p_main.setOnMouseClicked(event -> {
             if (paused) return;
             DIALOGUE_COUNT++;
-            
+
             SoundUtils.playPress();
             if (DIALOGUE_COUNT == 12) {
                 // Start Timelines and enable buttons
                 startTimer();
                 startAttackInterval();
                 startGameResultChecker();
+                SoundUtils.playMusic();
                 GameUtils.setGridFocusable(k_view, true);
                 GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
             };
@@ -147,6 +148,7 @@ public class TutorialController extends BaseGameController {
             score, 
             computeStars());
 
+        SoundUtils.stopMusic();
         SoundUtils.playGameFinished(gameOver);
         GameUtils.navigate("game-over.fxml", p_main);
     }

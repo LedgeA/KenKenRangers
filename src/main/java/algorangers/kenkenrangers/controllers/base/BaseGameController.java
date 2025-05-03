@@ -113,10 +113,13 @@ public abstract class BaseGameController {
 
         paused = !paused;
         SoundUtils.playPress();
+
         if (paused) {
+            SoundUtils.pauseMusic();
             pauseAllTimelines();
             t_time.setText(GameUtils.timeToString(timeCount)); // update time
         } else {
+            SoundUtils.playMusic();
             playAllTimelines();
         }
     
@@ -151,6 +154,7 @@ public abstract class BaseGameController {
             
             // if hp runs out, end the game
             if (k_controller.getHp() <= 0) {
+                updateGaugeMeter();
                 gameWon = false;
                 gameOver = true;
             }
@@ -259,7 +263,9 @@ public abstract class BaseGameController {
         double hpPercentage = k_controller.getHp() / 100.0;
         double currentMeterHeight = 540 * hpPercentage;
 
-        if (currentMeterHeight < 25) {
+        if (!gameWon) currentMeterHeight = 0;
+
+        if (currentMeterHeight <= 25 || currentMeterHeight > 0) {
             prevMeterHeight = 25;
             currentMeterHeight = 25;
         } else if (currentMeterHeight > 540) {

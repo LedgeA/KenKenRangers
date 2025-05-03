@@ -1,7 +1,9 @@
 package algorangers.kenkenrangers.utils;
 
+import javafx.animation.Timeline;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 public class SoundUtils {
     
@@ -19,7 +21,16 @@ public class SoundUtils {
 
     private static final Media press = new Media(SoundUtils.class.getResource(path + "press.wav").toExternalForm());
 
+    private static final MediaPlayer music = 
+        new MediaPlayer(
+            new Media(SoundUtils.class.getResource(path + "game.mp3").toExternalForm()));
+
     public static void preloadSounds() {}
+
+    static {
+        music.setCycleCount(MediaPlayer.INDEFINITE);
+        music.setVolume(0.5);
+    }
     
     public static void playInput() {
         System.out.println("Tap");
@@ -62,6 +73,19 @@ public class SoundUtils {
     public static void playPress() {
         MediaPlayer mediaPlayer = new MediaPlayer(press);
         mediaPlayer.play();
+    }
+
+    public static void playMusic() {    
+        music.play();
+    }
+
+    public static void pauseMusic() {
+        music.pause();
+    }
+
+    public static void stopMusic() {
+        music.stop();
+        music.seek(Duration.ZERO);
     }
 
 

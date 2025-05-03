@@ -63,11 +63,7 @@ public class ChapterFourController extends BaseStoryController {
                 switchDialogue(false);
                 t_villain.setText(text);
                 
-                GameUtils.setGridFocusable(k_view, true);
-                GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
-                startTimer();
-                startAttackInterval();
-                startGameResultChecker();
+                gameStart();
             }
         }
     }

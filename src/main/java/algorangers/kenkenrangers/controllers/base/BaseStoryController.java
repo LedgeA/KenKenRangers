@@ -10,6 +10,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
@@ -66,6 +67,7 @@ public abstract class BaseStoryController extends BaseGameController {
         tf_villain.setVisible(false);
 
         if (!gameOver) return;
+        SoundUtils.playPress();
         
         if (!textSkipped && !gameWon) {
             CONVERSE_COUNT = losingDialogueStart;
@@ -74,8 +76,8 @@ public abstract class BaseStoryController extends BaseGameController {
 
         GameUtils.setGridFocusable(k_view, false);
         s_finish.setVisible(true);
-        SoundUtils.playPress();
-        
+        SoundUtils.stopMusic();
+
         if (gameWon) {
             winningDialogue(text);
         } else {
@@ -118,6 +120,15 @@ public abstract class BaseStoryController extends BaseGameController {
 
         gameResultChecker.setCycleCount(Animation.INDEFINITE);
         gameResultChecker.play();
+    }
+
+    protected void gameStart() {
+        GameUtils.setGridFocusable(k_view, true);
+        GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
+        startTimer();
+        startAttackInterval();
+        startGameResultChecker();
+        SoundUtils.playMusic();
     }
 
     protected void setupFinishButton() {
