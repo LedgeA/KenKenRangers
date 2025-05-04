@@ -35,27 +35,28 @@ public class TutorialController extends BaseGameController {
     protected void initialize() throws SQLException {
         gameMode = "tutorial";
 
+        // diffculty
         DIMENSION = 3;
         dot = 5;
         
         k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
 
-        // Setup Tutorial Dialogue
+        // setup tutorial dialogue
         insertDialogues();
         setTextFlowContent();
 
         // enable powerups
-        powerUpsHandler();
+        setupAllPowerUps();
 
         // disable powerups and grid
-        GameUtils.setGridFocusable(k_view, false);
+        GameUtils.setGridUnclickable(k_view, false);
         GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, false);
 
-        // Setup Pause Menu Visiblity
+        // setup pause menu
         setUpPause();
     
-        // Add k_view at the below tf_dialogue
+        // add k_view below tf_dialogue
         int pos = p_main.getChildren().indexOf(tf_dialogue);
         p_main.getChildren().add(pos, k_view);
     }
@@ -66,8 +67,7 @@ public class TutorialController extends BaseGameController {
             "Your mission is to fill the grid with numbers, just like Sudoku. But there's a twist!",
             "The grid is divided into color-coded cages.",
             "Your goal is to use the numbers inside the cage to match the target number using the given math operation.",
-            "+ and × deals damage to the enemy. - and ÷ reduces the damage you receive.",
-            "Numbers must NOT repeat in anyrow or column.",
+            "Numbers must NOT repeat in any row or column.",
             "The numbers you use depend on the grid size:\n- For a 3×3 grid, use only numbers 1 to 3.\n- For a 4×4 grid, use numbers 1 to 4\n... and so on!",
             "Take too long in solving the Kenken Puzzle and the enemy will beat you.",
             "To make things exciting, we've added special power-ups!",
@@ -77,7 +77,7 @@ public class TutorialController extends BaseGameController {
             "Try it out! Tap on a cell to enter a number."
         };
     }
-
+    
     private void setTextFlowContent() {
 
         tf_dialogue.setVisible(true);
@@ -99,7 +99,7 @@ public class TutorialController extends BaseGameController {
                 startAttackInterval();
                 startGameResultChecker();
                 SoundUtils.musicOn();
-                GameUtils.setGridFocusable(k_view, true);
+                GameUtils.setGridUnclickable(k_view, true);
                 GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
             };
 

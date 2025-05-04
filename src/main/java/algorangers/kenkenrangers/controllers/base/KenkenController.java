@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import algorangers.kenkenrangers.models.*;
+import algorangers.kenkenrangers.models.Cage.Cell;
 import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -57,15 +58,20 @@ public class KenkenController {
         this.invincibility = invincibility;
         this.cellReveal = cellReveal;
 
+        // instantiate model
         k_model = new Kenken(DIMENSION);
-        this.solutionGrid = k_model.getGrid();
 
+        // retrieve reference of solution grid and cages
+        this.solutionGrid = k_model.getGrid();
         k_cages = k_model.getCages();
+
+        // initialize an array to save reference of the generate buttons
         this.buttonRefs = new Button[DIMENSION][DIMENSION];
 
         setupGrid();
     }
 
+    // setup gui
     private void setupGrid() {
         k_view = new GridPane();
         k_view.setPrefSize(500, 500);
@@ -90,6 +96,7 @@ public class KenkenController {
         addCells();
     }
 
+    // set cell constraints of grid pane
     private void setConstraints() {
         double percentage = 100.0 / DIMENSION;
 
@@ -104,6 +111,9 @@ public class KenkenController {
         }
     }
 
+    // setup cells
+    // iterate to cages then cells
+    // set the first cell to include both target and operation in display
     private void addCells() {
         InnerShadow shadowFx = shadowFx();
 
@@ -114,22 +124,12 @@ public class KenkenController {
             Iterator<Cell> iterator = cells.iterator();
             addCell(cage, iterator.next(), shadowFx, color);
             
+            // cage passed to keep the cells from being generated with target and operation
             while (iterator.hasNext()) addCell(null, iterator.next(), shadowFx, color);
-            
         }
     }
 
-    private InnerShadow shadowFx() {
-        InnerShadow shadowFx = new InnerShadow();
-        shadowFx.setOffsetX(0);
-        shadowFx.setOffsetY(0);
-        shadowFx.setRadius(20);   
-        shadowFx.setChoke(0.2); 
-        shadowFx.setColor(Color.BLACK);
-
-        return shadowFx;
-    }
-
+    // create, add the cell, and save the reference to the buttonRefs array
     private void addCell(Cage cage, Cell cell, InnerShadow innerShadow, String color) {
         int row = cell.row();
         int col = cell.col();
@@ -149,6 +149,19 @@ public class KenkenController {
         this.buttonRefs[row][col] = button;
     }
 
+    // helper function to generate fx when button is in focus
+    private InnerShadow shadowFx() {
+        InnerShadow shadowFx = new InnerShadow();
+        shadowFx.setOffsetX(0);
+        shadowFx.setOffsetY(0);
+        shadowFx.setRadius(20);   
+        shadowFx.setChoke(0.2); 
+        shadowFx.setColor(Color.BLACK);
+
+        return shadowFx;
+    }
+
+    // creates label for the first cells of the cage
     private Label createLabel(int target, char operation) {
         Label label = new Label(target + " " + operation);
         
@@ -169,6 +182,7 @@ public class KenkenController {
         return label;
     }
 
+    // creates button of which are added to the grid gui cells
     private Button createButton(InnerShadow innerShadow, String color) {
         Button button = new Button();
 
@@ -187,22 +201,51 @@ public class KenkenController {
                 new BackgroundFill(
                 Color.web(color), CornerRadii.EMPTY, Insets.EMPTY)));
                 
+        // darken button when in focus
         button.focusedProperty().addListener((obs, oldVal, newVal) -> {
             button.setEffect(newVal ? innerShadow : null);
         });
 
+        // play sound when key is pressed while button is in focus
+        // process input. if input is valid, update button and check if it follows the solution
         button.setOnKeyPressed(event -> {
             if (!inputIsValid(event.getText())) return;
             
             SoundUtils.insert();
             button.setText(event.getText());
-            updateButton(button);
+            updateInputGrid(button);
             evaluateAllInputs();
         });
 
         return button;
     }
 
+    // check if input is number from 1 to DIMENSION
+    private boolean inputIsValid(String input) {
+        try {
+            int num = Integer.parseInt(input);
+            return num > 0 && num <= DIMENSION;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    // find button position
+    // update input grid cell to the current text of the button
+    private void updateInputGrid(Button button) {
+        for (int row = 0; row < DIMENSION; row++) {
+            for (int col = 0; col < DIMENSION; col++) {
+                if (buttonRefs[row][col] == button) {
+                    inputGrid[row][col] = Integer.parseInt(button.getText());
+
+                    return;
+                }
+            }
+        }
+    }
+
+    // iterate through all cages and check if correct
+    // if yes, disable all buttons, play sound, remove cage reference, and increase hp
     protected void evaluateAllInputs() {
         Iterator<Cage> iterator = k_cages.iterator();
 
@@ -219,6 +262,7 @@ public class KenkenController {
         }
     }
 
+    // if all the cages are valid, disable all buttons through buttonRefs
     private void disableCells(List<Cell> cells) {
         int cellSize = cells.size();
 
@@ -231,33 +275,16 @@ public class KenkenController {
         }
     }
 
-    private boolean inputIsValid(String input) {
-        try {
-            int num = Integer.parseInt(input);
-            return num > 0 && num <= DIMENSION;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private void updateButton(Button button) {
-        for (int row = 0; row < DIMENSION; row++) {
-            for (int col = 0; col < DIMENSION; col++) {
-                if (buttonRefs[row][col] == button) {
-                    inputGrid[row][col] = Integer.parseInt(button.getText());
-
-                    return;
-                }
-            }
-        }
-    }
-
+    // used for cell reveal powerup
+    // find all available cells first
+    // set limit and counter for the revealed cells
+    // continue revealing cells until either counter = limit or no more available cell exists
     private void revealCells() {
         List<Cell> availableCells = findAvailableCells();
-        int cellToReveal = multiplier * 2;
+        int limit = multiplier * 2;
         int counter = 0;
 
-        while (counter < cellToReveal && availableCells.size() != 0) {
+        while (counter < limit && availableCells.size() != 0) {
             int randCell = rand.nextInt(availableCells.size());
             Cell cell = availableCells.get(randCell);
             availableCells.remove(randCell);
@@ -274,6 +301,7 @@ public class KenkenController {
         }
     }
 
+    // find not disabled buttons
     private List<Cell> findAvailableCells() {
         List<Cell> availableCells = new ArrayList<>();
         
@@ -294,10 +322,6 @@ public class KenkenController {
 
     public int getRemainingCageAmount() {
         return this.k_cages.size();
-    }
-
-    public void increaseHp() {
-        this.hp += this.dot;
     }
 
     public void decreaseHp() {
@@ -336,19 +360,19 @@ public class KenkenController {
         return this.cellReveal;
     }
 
-    public void invincibilityWearOff() {
-        this.invincible = false;
-    }
-
-    public boolean getInvincibleState() {
-        return this.invincible;
-    }
-    
     public void multiplierWearOff() {
         this.multiplier = 1;
     }
 
+    public void invincibilityWearOff() {
+        this.invincible = false;
+    }
+
     public int getMultiplier() {
         return this.multiplier;
+    }
+
+    public boolean getInvincibleState() {
+        return this.invincible;
     }
 }

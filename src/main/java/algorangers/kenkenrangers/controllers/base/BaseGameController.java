@@ -69,10 +69,11 @@ public abstract class BaseGameController {
 
     // Database Parameters
     protected String name;
+    protected String gameMode;
     protected int DIMENSION = 4;
     protected int hp = 100, dot = 10;
     protected int powerSurge = 3, invincibility = 3, cellReveal = 3;
-    protected String gameMode;
+    protected int score = 0;
 
     protected boolean paused = false;
     protected boolean gameOver = false, gameWon = true;
@@ -82,33 +83,36 @@ public abstract class BaseGameController {
     protected final int BASE_WIDTH = 1280, BASE_HEIGHT = 720;
 
     protected abstract void startGameResultChecker();
-    protected abstract void gameEnd(boolean cleared) throws SQLException;
-    protected int score = 0;
+    protected abstract void gameEnd(boolean gameWon) throws SQLException;
 
+    // add listener to scene itself
+    // stops timelines or plays it based on button pressed
     protected void setUpPause() {
         p_main.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene == null) return; 
-            newScene.setOnKeyPressed(event -> spacePressed(event));
+            newScene.setOnKeyPressed(event -> escapePressed(event));
         });
 
         i_resume.setOnMouseClicked(event -> {
-            playAllTimelines();
-            paused = false;
-
             SoundUtils.press();
+            paused = false;
+            
+            playAllTimelines();
             p_pause.setVisible(false);
         });
 
         i_quit.setOnMouseClicked(event -> {
             SoundUtils.press();
-
+            SoundUtils.musicOff();
+            
             stopAllTimelines();
             nullifyAllTimelines();
             GameUtils.navigate("main-menu.fxml", p_main);
         });
     }
 
-    private void spacePressed(KeyEvent event) {
+    // triggers pause when escape is pressed
+    private void escapePressed(KeyEvent event) {
         if (event.getCode() != KeyCode.ESCAPE) return;
 
         paused = !paused;
@@ -126,6 +130,8 @@ public abstract class BaseGameController {
         p_pause.setVisible(paused);
     }
 
+    // obligation is to update time and gauge and check if grid is already cleared 
+    // set gameOver to true if so (gameWon is true by default so no need to update it)
     protected void startTimer() {
         timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             timeCount++;
@@ -143,6 +149,8 @@ public abstract class BaseGameController {
         
     }
 
+    // obligation is to inflict damage to player if not in invincible state
+    // checks if the player ran out of hp, then sets gameOver to true and gameWon to false
     protected void startAttackInterval() {
         attackInterval = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
 
@@ -164,7 +172,8 @@ public abstract class BaseGameController {
         attackInterval.play();
     }
     
-    protected void powerUpsHandler() {
+
+    protected void setupAllPowerUps() {
         setupPowerUp(s_powerSurge, k_controller::consumePowerSurge, k_controller::getPowerSurge, "power-surge");
         setupPowerUp(s_invincibility, k_controller::consumeInvincibility, k_controller::getInvincibility, "invincibility");
         setupPowerUp(s_cellReveal, k_controller::consumeCellReveal, k_controller::getCellReveal, "cell-reveal");
@@ -172,6 +181,7 @@ public abstract class BaseGameController {
         setupPowerUpCast();
     }
 
+    // clips casted power up
     private void setupPowerUpCast() {
         Rectangle clip = new Rectangle(60, 60);
         clip.setArcWidth(20);  
@@ -182,57 +192,56 @@ public abstract class BaseGameController {
         i_powerUpUsed.setClip(clip);
     }
 
+    // when powerup is casted, decreases powerup count, starts cooldown, and applies cast effect
+    // disable powerup if it ran out
     private void setupPowerUp(StackPane powerUp, Runnable consume, Supplier<Integer> remainingCount, String imgName) {
         powerUp.setOnMouseClicked(event -> {
-            consume.run();
-            powerUp.setDisable(true);
             SoundUtils.cast();
 
+            consume.run();
+            powerUp.setDisable(true);
+
             updatePowerUpCount(powerUp, remainingCount.get());
-            Arc arc = ComponentCreator.addCooldownImages(v_cooldowns, imgName);
-            setCooldown(powerUp, arc);
+            setCooldown(powerUp, ComponentCreator.addCooldownImages(v_cooldowns, imgName));
             setPowerUpCast(imgName);
 
-            if (remainingCount.get() == 0) {
-                powerUp.setOnMouseClicked(null);
-                return;
-            } 
+            if (remainingCount.get() == 0) powerUp.setOnMouseClicked(null);
         });
     }
     
+    // animates during cooldown
+    // disables powered-up state after cooldown
+    // removes cooldowned power up in gui 
     private void setCooldown(StackPane powerUp, Arc arc) {
-        double cooldownTime = 5 * k_controller.getMultiplier();
-
+        double cooldownTime = 5 * k_controller.getMultiplier(); // when powerup is buffed, cooldown is increased
+        
         Timeline cooldown = new Timeline(
             new KeyFrame(Duration.ZERO, new KeyValue(arc.lengthProperty(), 360)),
             new KeyFrame(Duration.seconds(cooldownTime), new KeyValue(arc.lengthProperty(), 0))
         );
 
         cooldown.setOnFinished(e -> {
+            SoundUtils.recharge();
             powerUp.setDisable(false);
 
             if (powerUp == s_invincibility) k_controller.invincibilityWearOff();
             if (powerUp == s_powerSurge) k_controller.multiplierWearOff();
             
-            SoundUtils.recharge();
             v_cooldowns.getChildren().remove(0); 
         });
 
         cooldown.play();
     }
 
+    // set ups the animation for when a powerup is cast
     private void setPowerUpCast(String imgName) {
-        i_powerUpUsed.setImage(ComponentCreator.createImage(imgName));
+        // if another power up is casted and is in mid animation, cancel it
+        if (powerUpUsed != null && powerUpUsed.getStatus() == Animation.Status.RUNNING) {
+            powerUpUsed.stop();
+        }
 
-            if (powerUpUsed != null && powerUpUsed.getStatus() == Animation.Status.RUNNING) {
-                powerUpUsed.stop();
-            }
-
-            i_powerUpUsed.setImage(ComponentCreator.createImage(imgName));
-            i_powerUpUsed.setFitWidth(60);
-            i_powerUpUsed.setFitHeight(60);
-            i_powerUpUsed.setOpacity(1);
-    
+        ComponentCreator.updatePowerUpCastImage(i_powerUpUsed, imgName);
+        
         powerUpUsed = new Timeline(
             new KeyFrame(Duration.millis(500),
                 new KeyValue(i_powerUpUsed.fitWidthProperty(), 120, Interpolator.EASE_BOTH),
@@ -240,23 +249,18 @@ public abstract class BaseGameController {
                 new KeyValue(i_powerUpUsed.opacityProperty(), 0, Interpolator.EASE_BOTH)
             )
         );
-
+        
         powerUpUsed.setOnFinished(event -> i_powerUpUsed.setImage(null));
 
         powerUpUsed.play();
     }
 
+    // updates count inside the powerup image
     private void updatePowerUpCount(StackPane powerUp, int remainingCount) {
         Pane pane = (Pane) powerUp.getChildren().get(1);
         Text text = (Text) pane.getChildren().get(0);
 
         text.setText(String.valueOf(remainingCount));
-    }
-    
-    protected void setPowerUpFocus(boolean isFocusable) {
-        s_powerSurge.setFocusTraversable(isFocusable);
-        s_invincibility.setFocusTraversable(isFocusable);
-        s_cellReveal.setFocusTraversable(isFocusable);
     }
 
     protected void updateGaugeMeter() {
@@ -276,7 +280,7 @@ public abstract class BaseGameController {
 
         if (prevMeterHeight == currentMeterHeight) return; // cancel update if hp is unchanged
 
-        prevMeterHeight = currentMeterHeight;
+        prevMeterHeight = currentMeterHeight; // set current height as the previous
 
         // show damage count
         t_dot.setText("- " + String.valueOf(dot));
@@ -297,7 +301,8 @@ public abstract class BaseGameController {
 
         hpUpdater.play();
     }
-
+    
+    // computes stars with one being the default
     protected int computeStars() {
         if (timeCount == 0) return 0; // if player lost
         

@@ -29,7 +29,7 @@ public class CustomTrialController extends BaseGameController {
         startGameResultChecker();
 
         // enable powerups
-        powerUpsHandler();
+        setupAllPowerUps();
 
         // Setup Pause Menu Visiblity
         setUpPause();
@@ -43,7 +43,7 @@ public class CustomTrialController extends BaseGameController {
         GameSession gameSession = DatabaseManager.retrieveGameSession();
 
         DIMENSION = gameSession.dimension();
-        dot = gameSession.dps();
+        dot = gameSession.dot();
         powerSurge = gameSession.init_ps();
         invincibility = gameSession.init_i();
         cellReveal = gameSession.init_cr();
@@ -72,9 +72,6 @@ public class CustomTrialController extends BaseGameController {
 
     @Override
     protected void gameEnd(boolean cleared) throws SQLException {
-        
-        score = 0;
-
         DatabaseManager.updateInitialGameSession(
             DIMENSION, 
             dot, 

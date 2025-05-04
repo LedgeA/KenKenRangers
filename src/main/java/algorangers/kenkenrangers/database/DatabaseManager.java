@@ -18,7 +18,7 @@ public class DatabaseManager {
     
     public record GameSession(
         String name, String gameMode,
-        int dimension, int dps, 
+        int dimension, int dot, 
         int init_ps, int init_i, int init_cr, 
         int rem_ps, int rem_i, int rem_cr,
         int time, int score, int stars) {}
@@ -354,7 +354,6 @@ public class DatabaseManager {
             e.printStackTrace();
         }     
     }
-
 
     public static void resetGameSession() throws SQLException {
         String sql = """

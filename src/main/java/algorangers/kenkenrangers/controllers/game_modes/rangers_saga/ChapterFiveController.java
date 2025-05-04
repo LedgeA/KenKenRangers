@@ -13,33 +13,35 @@ public class ChapterFiveController extends BaseStoryController {
     protected void initialize() throws SQLException {
 
         gameMode = "chap_5";
-
+        
+        // difficulty
         DIMENSION = 6;
         dot = 10;
 
         k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
+        // dialogue points
         outroDialogueStart = 2;
         losingDialogueStart = 4;
         outroDialogueEnd = 6;
 
-        // Setup Story Dialogue
+        // setup story dialogue
         insertDialogues();
         setUpDialogue();
 
         // enable powerups
-        powerUpsHandler();
+        setupAllPowerUps();
 
         // disable powerups and grid
-        GameUtils.setGridFocusable(k_view, false);
+        GameUtils.setGridUnclickable(k_view, false);
         GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
         
-        // Setup Pause Menu Visiblity
+        // setup pause menu and finish button
         setUpPause();
         setupFinishButton();
 
-        // Add k_view just below tf_dialogue
+        // add k_view just below dialogue box
         int pos = p_main.getChildren().indexOf(tf_villain);
         p_main.getChildren().add(pos, k_view);
     }
@@ -58,14 +60,13 @@ public class ChapterFiveController extends BaseStoryController {
 
     @Override
     protected void introDialogue(String text) {
-        switch(CONVERSE_COUNT) {
-            case 1 -> {
-                switchDialogue(false);
-                t_villain.setText(text);
-                
-                gameStart();
-            }
-        }
+        if (CONVERSE_COUNT != 1) return;
+
+        switchDialogue(false);
+        t_villain.setText(text);
+        
+        gameStart();
+   
     }
     
     @Override

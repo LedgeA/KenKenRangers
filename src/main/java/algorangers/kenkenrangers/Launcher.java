@@ -22,7 +22,7 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        loadFont();
+        loadFont(); // load font before loading the stage
 
         FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("views/initial-main-menu.fxml"));
         Parent root = fxmlLoader.load();
@@ -38,7 +38,7 @@ public class Launcher extends Application {
         root.scaleYProperty().bind(root.scaleXProperty());
         
         setStageProperties(stage, scene);
-        SoundUtils.preloadSounds(); 
+        SoundUtils.preloadSounds(); // load the sounds
 
         stage.show();
 
@@ -76,7 +76,7 @@ public class Launcher extends Application {
             }
         });
 
-        // stage.setFullScreen(true);
+        stage.setFullScreen(true);
     }
 
     public static void main(String[] args) {

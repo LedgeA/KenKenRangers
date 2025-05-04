@@ -67,9 +67,17 @@ public class ComponentCreator {
         return arc;
     }
 
-    public static Image createImage(String imgName) {
+    public static void updatePowerUpCastImage(ImageView powerUp, String imgName) {
         String imagePath = "/algorangers/kenkenrangers/power-ups/" + imgName + ".png";
+        powerUp.setImage(
+            new Image(
+                ComponentCreator.class.getResource(imagePath)
+                .toExternalForm())
+        );
 
-        return new Image(ComponentCreator.class.getResource(imagePath).toExternalForm());
+        powerUp.setFitWidth(60);
+        powerUp.setFitHeight(60);
+        powerUp.setOpacity(1);
+
     }
 }

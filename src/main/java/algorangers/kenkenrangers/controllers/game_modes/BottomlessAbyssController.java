@@ -34,19 +34,37 @@ public class BottomlessAbyssController extends BaseGameController {
         k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
+        // start timelines
         startTimer();
         startAttackInterval();
         startGameResultChecker();
 
         // enable powerups
-        powerUpsHandler();
+        setupAllPowerUps();
 
-        // Setup Pause Menu Visiblity
+        // setup pause menu
         setUpPause();
     
-        // Add k_view at the below pause menu
+        // add k_view at the below pause menu
         int pos = p_main.getChildren().indexOf(p_pause);
         p_main.getChildren().add(pos, k_view);
+    }
+
+    // difficulty is updated per game
+    // dot first updates from 10 -> 15
+    // if dot > 15, dimensinsion++ and reset dot = 10
+    private void updateDifficulty() throws SQLException {
+        GameSession gameSession = DatabaseManager.retrieveGameSession();
+        
+        dot = gameSession.dot() + 5;
+        DIMENSION = gameSession.dimension();
+        if (dot > 15) {
+            DIMENSION += 1;
+            dot = 10;
+        }
+
+        // since game_session has dimension = 0 at start, skip it to 3 immediately
+        if (DIMENSION < 3) DIMENSION = 3; 
     }
 
     @Override
@@ -70,9 +88,10 @@ public class BottomlessAbyssController extends BaseGameController {
     }
 
     @Override
-    protected void gameEnd(boolean cleared) throws SQLException {
+    protected void gameEnd(boolean gameWon) throws SQLException {
         GameSession gameSession = DatabaseManager.retrieveGameSession();
 
+        // add all current values to the values inside the game session
         name = gameSession.name();
         int newPowerSurge = gameSession.init_ps() + powerSurge;
         int newInvincibility = gameSession.init_i() + invincibility;
@@ -87,7 +106,7 @@ public class BottomlessAbyssController extends BaseGameController {
         int allPowerUps = newPowerSurge + newInvincibility + newCellReveal;
         int allPowerUpsRemaining = newPowerSurgeUsed + newInvincibilityUsed + newCellRevealUsed;
 
-        if (!cleared) {
+        if (!gameWon) {
             int timesCleared = newPowerSurge / 3;
             int powerUpDeductions = 10 * (allPowerUps - allPowerUpsRemaining);
             int difficultyBonusRate = DIMENSION * dot;
@@ -97,6 +116,7 @@ public class BottomlessAbyssController extends BaseGameController {
             if (score > highscore) DatabaseManager.updateHighscore(name, "bottomless_abyss", score);
         }
 
+        // update game session with the updated values
         DatabaseManager.updateInitialGameSession(
             DIMENSION, 
             dot, 
@@ -111,16 +131,16 @@ public class BottomlessAbyssController extends BaseGameController {
             newCellRevealUsed, 
             newTime, 
             score, 
-            3);
+            3);    
+
         
-        SoundUtils.finished(gameOver);    
-        if (!cleared) {
+        if (!gameWon) {
             SoundUtils.musicOff();
+            SoundUtils.finished(gameWon);
             GameUtils.navigate("game-over.fxml", p_main);
             return;
         }
 
-        gameOver = true;
         GameUtils.navigate("bottomless-abyss.fxml", p_main);
         
     }
@@ -137,14 +157,5 @@ public class BottomlessAbyssController extends BaseGameController {
         i_character.setImage(new Image(getClass().getResource(villainPath).toExternalForm()));
         background.setImage(new Image(getClass().getResource(backgroundPath).toExternalForm()));
 
-    }
-
-    private void updateDifficulty() throws SQLException {
-        GameSession gameSession = DatabaseManager.retrieveGameSession();
-        
-        dot = gameSession.dps() + 5;
-        if (dot > 15) DIMENSION = gameSession.dimension() + 1;
-
-        if (DIMENSION < 3) DIMENSION = 3;
     }
 }

@@ -7,7 +7,9 @@ public class Cage {
   int target;
   char operation;
   String color;
-  
+    
+    public record Cell(int row, int col) {}
+
     public Cage(List<Cell> cells, int target, char operation, String color) {
         this.cells = cells;
         this.target = target;

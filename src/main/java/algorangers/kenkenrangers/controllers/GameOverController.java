@@ -53,6 +53,14 @@ public class GameOverController {
         setMenuButton();
     }
 
+    private void setMenuButton() {
+        i_menu.setOnMouseClicked(event -> {
+            SoundUtils.press();
+            GameUtils.navigate("main-menu.fxml", p_main);
+        });
+    }
+
+    // retrieve all data first
     private void retrieveGameData() throws SQLException {
         GameSession gameSession = DatabaseManager.retrieveGameSession();
 
@@ -70,9 +78,9 @@ public class GameOverController {
         
 
         if (gameMode.equals("tutorial") || gameMode.equals("custom_trial")) {
-            v_score.getChildren().remove(1);
+            v_score.getChildren().remove(1); // remove "Best Score"
         } else {
-            bestScore = DatabaseManager.retrieveHighScore(name, gameMode);
+            bestScore = DatabaseManager.retrieveHighScore(name, gameMode); 
         }
 
         if (score > bestScore) {
@@ -80,11 +88,11 @@ public class GameOverController {
             DatabaseManager.updateHighscore(name, gameMode, score);
         }
 
+        // when game mode is not tutorial or custom_trial
         if (score != 0) {
             int lastFinishedChapter = DatabaseManager.retrieveLatestFinishedChapter(name);
             int currentChapter = chapterToInt(gameMode);
 
-            System.out.println(currentChapter + " :: " + lastFinishedChapter);
             if (currentChapter > lastFinishedChapter) {
                 DatabaseManager.updateLatestFinishedChapter(name, currentChapter);
             }
@@ -94,14 +102,9 @@ public class GameOverController {
         DatabaseManager.resetGameSession();
     }
 
-    private void setMenuButton() {
-        i_menu.setOnMouseClicked(event -> {
-            SoundUtils.press();
-            GameUtils.navigate("main-menu.fxml", p_main);
-        });
-    }
-
+    // update time, scores, and stars
     private void loadRecords() {
+        // update texts
         t_time.setText(GameUtils.timeToString(timeFinished));
 
         t_powerSurge.setText(String.valueOf(powerSurgeUsed + "/" + powerSurge));
@@ -110,6 +113,7 @@ public class GameOverController {
 
         Image starImage = new Image(getClass().getResource("/algorangers/kenkenrangers/icons/star.png").toExternalForm());
 
+        // load images
         for (int i = 0; i < this.stars; i++) {
             ImageView imageView = new ImageView(starImage);
 

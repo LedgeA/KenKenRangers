@@ -46,6 +46,8 @@ public abstract class BaseStoryController extends BaseGameController {
     protected abstract void losingDialogue(String text);
 
     protected void updateDialogue() {
+
+        // removes listener if dialogue has ended
         if (CONVERSE_COUNT == outroDialogueEnd || (CONVERSE_COUNT == losingDialogueStart && gameWon)) {
             tf_player.setVisible(false);
             p_main.setOnMouseClicked(null);
@@ -54,30 +56,35 @@ public abstract class BaseStoryController extends BaseGameController {
 
         System.out.println("Dialogue Count: " + CONVERSE_COUNT);
 
-        String text = dialogue[CONVERSE_COUNT];
+        String text = dialogue[CONVERSE_COUNT]; 
 
+        // intro dialogue
         if (CONVERSE_COUNT < outroDialogueStart) {
+            SoundUtils.press();
             introDialogue(text);
             CONVERSE_COUNT++;
-            SoundUtils.press();
             return;
         }
         
+        // hide both dialogues
         tf_player.setVisible(false);
         tf_villain.setVisible(false);
 
+        // denies access to outro dialogues
         if (!gameOver) return;
         SoundUtils.press();
         
+        // textSkipped flag used for skipping to losing dialogue if the game is lost
         if (!textSkipped && !gameWon) {
             CONVERSE_COUNT = losingDialogueStart;
             textSkipped = true;
         }
 
-        GameUtils.setGridFocusable(k_view, false);
+        GameUtils.setGridUnclickable(k_view, false);
         s_finish.setVisible(true);
         SoundUtils.musicOff();
 
+        // branches to winning and losing dialogue
         if (gameWon) {
             winningDialogue(text);
         } else {
@@ -87,6 +94,7 @@ public abstract class BaseStoryController extends BaseGameController {
         CONVERSE_COUNT++;
     }
 
+    // setup dialogue gui and add listener to main screen
     protected void setUpDialogue() {
         tf_player.setVisible(true);
         t_player.setText(dialogue[CONVERSE_COUNT]);
@@ -102,11 +110,14 @@ public abstract class BaseStoryController extends BaseGameController {
         });
     }
     
+    // used for switching visible dialogues boxes
     protected void switchDialogue(boolean isPlayer) {
         tf_player.setVisible(isPlayer);
         tf_villain.setVisible(!isPlayer);
     }
 
+    // checks the if the game is over and if the game is won
+    @Override
     protected void startGameResultChecker() {
         gameResultChecker = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             if (!gameOver) return;
@@ -122,15 +133,18 @@ public abstract class BaseStoryController extends BaseGameController {
         gameResultChecker.play();
     }
 
+    // called after intro dialogue of chapter controllers
     protected void gameStart() {
-        GameUtils.setGridFocusable(k_view, true);
+        SoundUtils.musicOn();
+        GameUtils.setGridUnclickable(k_view, true);
         GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
+        
         startTimer();
         startAttackInterval();
         startGameResultChecker();
-        SoundUtils.musicOn();
     }
 
+    // finish button for finishing game after outro dialogue
     protected void setupFinishButton() {
         s_finish.setOnMouseClicked(event -> {
             try {
@@ -142,14 +156,16 @@ public abstract class BaseStoryController extends BaseGameController {
     }
 
     @Override
-    protected void gameEnd(boolean cleared) throws SQLException {
+    protected void gameEnd(boolean gameWon) throws SQLException {
 
+        // score computation
         int powerUpDeductions = 10 * (9 - countRemainingPowerups());
         int difficultyBonusRate = DIMENSION * dot;
         score = difficultyBonusRate * (120 - timeCount) * 100 + powerUpDeductions;
 
-        if (!cleared) score = 0;
+        if (!gameWon) score = 0; // sets score to 0 if you lost
         
+        // update game_session
         DatabaseManager.updateInitialGameSession(
             DIMENSION, 
             dot, 
@@ -166,6 +182,7 @@ public abstract class BaseStoryController extends BaseGameController {
             score, 
             computeStars());
 
+        // updates highscore if the current score is greater than highscore
         int highscore = DatabaseManager.retrieveHighScore(name, gameMode);
         if (score > highscore) DatabaseManager.updateHighscore(name, gameMode, score);
         

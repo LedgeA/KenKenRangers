@@ -33,36 +33,40 @@ public class ChapterOneController extends BaseStoryController {
 
         gameMode = "chap_1";
 
+        // difficulty
         DIMENSION = 4;
         dot = 10;
 
         k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
+        // dialogue points
         outroDialogueStart = 3;
         losingDialogueStart = 5;
         outroDialogueEnd = 9;
 
-        // Setup Story Dialogue
+        // setup story dialogue
         insertDialogues();
         startMonologue();
 
         // enable powerups
-        powerUpsHandler();
+        setupAllPowerUps();
 
         // disable powerups and grid
-        GameUtils.setGridFocusable(k_view, false);
+        GameUtils.setGridUnclickable(k_view, false);
         GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
         
-        // Setup Pause Menu Visiblity
+        // setup pause menu and finish button
         setUpPause();
         setupFinishButton();
 
-        // Add k_view just below tf_dialogue
+        // add k_view just below tf_dialogue
         int pos = p_main.getChildren().indexOf(tf_villain);
         p_main.getChildren().add(pos, k_view);
     }
 
+    // starts monologue animation and texts
+    // monologue is skipped if the screen is pressed
     private void startMonologue() {      
         Timeline monologueTimeline = new Timeline(
             new KeyFrame(Duration.seconds(3), event -> updateMonologue())
@@ -81,8 +85,8 @@ public class ChapterOneController extends BaseStoryController {
 
         monologueTimeline.play();
 
+        // skip monologue if pressed
         p_monologue.setOnMousePressed(event -> {
-            // hide monologue if pressed during animation
             p_monologue.setVisible(false);
             p_monologue.setOnMousePressed(null);
 
@@ -91,6 +95,7 @@ public class ChapterOneController extends BaseStoryController {
         });  
     }
 
+    // triggers fade animation and replaces text
     private void updateMonologue() {
         if (MONOLOGUE_COUNT == backstoryMonologue.length) return;
         
@@ -101,7 +106,7 @@ public class ChapterOneController extends BaseStoryController {
             MONOLOGUE_COUNT++;
         }, t_monologue);
     }
-
+    
     @Override
     protected void insertDialogues() {
         dialogue = new String[] {
@@ -175,6 +180,7 @@ public class ChapterOneController extends BaseStoryController {
         }
     }
 
+    // used to switch between senior ranger and player
     private void switchRanger(boolean isPlayer) {
         i_player.setVisible(isPlayer);
         i_senior.setVisible(!isPlayer);

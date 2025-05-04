@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
+import algorangers.kenkenrangers.models.Cage.Cell;
+
 public class Kenken {
     private final int DIMENSION;
     private final int[][] grid;
@@ -39,6 +41,7 @@ public class Kenken {
         fillGrid(0, 0);
     }
     
+    // backtracking algorithm
     private boolean fillGrid(int row, int col) {
         if (row == DIMENSION) return true;
         if (col == DIMENSION) return fillGrid(row + 1, 0);
@@ -67,7 +70,9 @@ public class Kenken {
         return true;
     }
     
+    // iterate through grid while iterating cages
     private void generateCages() {
+        // mark each visited cells (cells who already belong to a cage) 
         boolean[][] visited = new boolean[DIMENSION][DIMENSION];     
 
         for (int row = 0; row < DIMENSION; row++) {
@@ -76,7 +81,7 @@ public class Kenken {
             }
         }
     }
-
+    
     private void setCell(boolean[][] visited, int row, int col) {
         if (visited[row][col]) return; 
 
@@ -103,23 +108,25 @@ public class Kenken {
             if (cCol + 1 < DIMENSION && !visited[cRow][cCol + 1]) openCells.add(new Cell(cRow, cCol + 1));
         }
         
+        // no operation (cell = 1)
         char operation = ' ';
 
+        // generate an operation based on the number of cells
         switch (cells.size()) {
             case 2: operation = RANDOM.nextBoolean() ? '-' : '/';
             case 3, 4: operation = RANDOM.nextBoolean() ? '+' : '*';
         }
 
-        int target = computeTarget(cells, operation);
-
+        int target = computeTarget(cells, operation); 
+        
         // if target is not int and target = 0
         if (target == -1) {
             operation = RANDOM.nextBoolean() ? '+' : '*';
             target = computeTarget(cells, operation);
         } 
 
-        // if product is too large and size = 4
-        if (target > 60 && cells.size() == 4) {
+        // if target is too big (mostly due to 4 cell multiplication)
+        if (target > 60) {
             operation = '+';
             target = computeTarget(cells, operation);
         }  
@@ -129,14 +136,18 @@ public class Kenken {
     }
         
     private int computeTarget(List<Cell> cells, char operation) {
+        // set first cell as target
+        // target has to be float initially to check non-integer quotients
         float target = grid[cells.get(0).row()][cells.get(0).col()];
 
+        // iterate through all cells starting from second cell
+        // while performing operation
         for (int i = 1; i < cells.size(); i++) {
             int value = grid[cells.get(i).row()][cells.get(i).col()];
             target = performArithmetic(target, value, operation); 
         }
         
-         // check if !int or = 0
+         // check if non-integer quotient or = 0
         if (target - (int) target != 0 || target == 0) {
             return -1;
         }

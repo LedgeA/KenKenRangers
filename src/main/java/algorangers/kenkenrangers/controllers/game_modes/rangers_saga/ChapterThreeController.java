@@ -14,32 +14,34 @@ public class ChapterThreeController extends BaseStoryController {
 
         gameMode = "chap_3";
 
+        // difficulty
         DIMENSION = 5;
         dot = 10;
 
         k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
         
+        // dialogue points
         outroDialogueStart = 2;
         losingDialogueStart = 4;
         outroDialogueEnd = 6;
 
-        // Setup Story Dialogue
+        // setup story sialogue
         insertDialogues();
         setUpDialogue();
 
         // enable powerups
-        powerUpsHandler();
+        setupAllPowerUps();
 
         // disable powerups and grid
-        GameUtils.setGridFocusable(k_view, false);
+        GameUtils.setGridUnclickable(k_view, false);
         GameUtils.setComponentsClickable(new Node[]{s_powerSurge, s_invincibility, s_cellReveal}, true);
         
-        // Setup Pause Menu Visiblity
+        // setup pause menu and finish button
         setUpPause();
         setupFinishButton();
 
-        // Add k_view just below tf_dialogue
+        // add k_view just below tf_dialogue
         int pos = p_main.getChildren().indexOf(tf_villain);
         p_main.getChildren().add(pos, k_view);
     }

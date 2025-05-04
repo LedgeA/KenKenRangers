@@ -35,12 +35,12 @@ public class GameUtils {
              + (sec < 10 ? "0" : "") + String.valueOf(sec);
     }
 
-    public static void setGridFocusable(Parent parent, boolean isFocusable) {
+    public static void setGridUnclickable(Parent parent, boolean isFocusable) {
         for (Node child : parent.getChildrenUnmodifiable()) {
             child.setFocusTraversable(isFocusable);
 
             if (child instanceof Parent) {
-                setGridFocusable((Parent) child, isFocusable);
+                setGridUnclickable((Parent) child, isFocusable);
             }
         }
     }
