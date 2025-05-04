@@ -1,5 +1,8 @@
 package algorangers.kenkenrangers.database;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,11 +31,19 @@ public class DatabaseManager {
             }
             
             if (connection == null || connection.isClosed()) {
-                connection = DriverManager.getConnection("jdbc:sqlite:kenken.db");
+                String appDataPath = System.getenv("LOCALAPPDATA"); 
+                Path dbPath = Paths.get(appDataPath, "KenKen", "kenken.db");
+                File dbFile = dbPath.toFile();
+                dbFile.getParentFile().mkdirs(); 
+
+                System.out.println("Using database at: " + dbPath); 
+                
+
+                connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+
                 Statement stmt = connection.createStatement();
                 stmt.execute("PRAGMA foreign_keys = ON");
             
-                // Create tables if they don't exist
                 stmt.execute("""
                     CREATE TABLE IF NOT EXISTS players (
                         name TEXT PRIMARY KEY,
@@ -54,13 +65,11 @@ public class DatabaseManager {
                     )
                 """);
             
-                // Check if game_session table exists
                 ResultSet rs = stmt.executeQuery("""
                     SELECT name FROM sqlite_master WHERE type='table' AND name='game_session'
                 """);
             
                 if (!rs.next()) {
-                    // Create game_session table
                     stmt.execute("""
                         CREATE TABLE game_session (
                             name TEXT,
@@ -79,7 +88,6 @@ public class DatabaseManager {
                         )
                     """);
             
-                    // Insert default game session row
                     stmt.executeUpdate("""
                         INSERT INTO game_session (
                             name, game_mode, dimension, dot,
@@ -94,6 +102,7 @@ public class DatabaseManager {
                         )
                     """);
                 }
+                
                 rs.close();
             }            
             
