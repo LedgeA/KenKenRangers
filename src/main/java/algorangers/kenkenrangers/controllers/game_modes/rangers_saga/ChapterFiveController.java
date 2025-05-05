@@ -54,7 +54,7 @@ public class ChapterFiveController extends BaseStoryController {
             "So this… is your world after all…",
             "Even nature's fury couldn’t stop me. The end is near.",
             "The jungle consumes the weak. You were prey the moment you stepped in.",
-            "I underestimated them… but they won’t get a second chance.",
+            "I underestimated them… but they won’t get a second chance."
         };
 	}
 

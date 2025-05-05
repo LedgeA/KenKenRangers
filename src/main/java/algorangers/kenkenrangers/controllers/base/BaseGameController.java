@@ -202,7 +202,6 @@ public abstract class BaseGameController {
     
         setupPowerUpCast();
     }
-    
 
     // clips casted power up
     private void setupPowerUpCast() {
