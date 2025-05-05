@@ -7,6 +7,7 @@ import algorangers.kenkenrangers.database.DatabaseManager;
 import algorangers.kenkenrangers.utils.GameUtils;
 import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -76,6 +77,13 @@ public class ContinueController {
             
         });
         t_cancel.setOnMouseClicked(event -> {
+            for (Node node : v_players.getChildren()) {
+                StackPane stackPane = (StackPane) node;
+                ImageView fieldView = (ImageView) stackPane.getChildren().get(0);
+            
+                if (fieldView.getEffect() != null) fieldView.setEffect(null);;
+            }
+
             removePlayers = false;
             t_removePlayer.setVisible(true);
             t_remove.setVisible(false);

@@ -152,7 +152,7 @@
                   <ImageView fx:id="i_powerUpUsed" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </StackPane>
-            <Text fx:id="t_dot" layoutX="164.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #000; -fx-effect: dropshadow(gaussian, black, 10, 0, 0, 0), dropshadow(gaussian, black, 20, 0, 0, 0), dropshadow(gaussian, black, 30, 0, 0, 0);" text="-15" visible="false">
+            <Text fx:id="t_dot" layoutX="164.0" layoutY="200.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="2.0" text="-15" visible="false">
                <font>
                   <Font name="Press Start 2P Regular" size="24.0" />
                </font>

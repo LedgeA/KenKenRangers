@@ -309,11 +309,16 @@ public abstract class BaseGameController {
 
         if (prevMeterHeight == currentMeterHeight) return; // cancel update if hp is unchanged
 
-        prevMeterHeight = currentMeterHeight; // set current height as the previous
-
+        if (currentMeterHeight < prevMeterHeight) {
+            t_dot.setText("- " + String.valueOf(dot));
+        } else {
+            t_dot.setText("+ " + String.valueOf(5));
+        }
+        
         // show damage count
-        t_dot.setText("- " + String.valueOf(dot));
         t_dot.setVisible(true);
+
+        prevMeterHeight = currentMeterHeight; // set current height as the previous
 
         // update animate size and text
         Timeline hpUpdater = 

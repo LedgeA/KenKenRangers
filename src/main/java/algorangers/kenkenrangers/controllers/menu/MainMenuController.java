@@ -3,6 +3,7 @@ package algorangers.kenkenrangers.controllers.menu;
 import algorangers.kenkenrangers.utils.GameUtils;
 import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.fxml.FXML;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -27,6 +28,7 @@ public class MainMenuController {
     public void initialize() {
         setTextAppearances();
         setOnClickListeners();
+        setEscapePressed();
     }
 
     private void setTextAppearances() {
@@ -36,6 +38,19 @@ public class MainMenuController {
         GameUtils.setMenuTextAppearance(t_tutorial);
 
     }
+
+    private void setEscapePressed() {
+        p_main.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene == null) return; 
+
+            newScene.setOnKeyPressed(event -> {
+                if (event.getCode() != KeyCode.ESCAPE) return;
+                SoundUtils.press();
+                GameUtils.navigate("continue.fxml", p_main);
+            });
+        });
+    }
+
     
     private void setOnClickListeners() {
         t_rangersSaga.setOnMouseClicked(event -> {
