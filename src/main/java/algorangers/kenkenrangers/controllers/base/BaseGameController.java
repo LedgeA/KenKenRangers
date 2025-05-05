@@ -3,6 +3,7 @@ package algorangers.kenkenrangers.controllers.base;
 import javafx.util.Duration;
 
 import java.sql.SQLException;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javafx.animation.Animation;
@@ -57,12 +58,13 @@ public abstract class BaseGameController {
     protected ImageView i_character, i_powerUpUsed;
 
     @FXML
-    protected VBox v_cooldowns;
+    private VBox v_cooldowns;
 
     protected KenkenController k_controller;
     protected GridPane k_view;
 
     protected Timeline timer, attackInterval, gameResultChecker;
+    protected Timeline powerSurgeTimeline, invincibilityTimeline, cellRevealTimeline;
     protected int timeCount = 0;
 
     private Timeline powerUpUsed; 
@@ -174,12 +176,33 @@ public abstract class BaseGameController {
     
 
     protected void setupAllPowerUps() {
-        setupPowerUp(s_powerSurge, k_controller::consumePowerSurge, k_controller::getPowerSurge, "power-surge");
-        setupPowerUp(s_invincibility, k_controller::consumeInvincibility, k_controller::getInvincibility, "invincibility");
-        setupPowerUp(s_cellReveal, k_controller::consumeCellReveal, k_controller::getCellReveal, "cell-reveal");
-
+        setupPowerUp(
+            s_powerSurge,
+            k_controller::consumePowerSurge,
+            k_controller::getPowerSurge,
+            t -> powerSurgeTimeline = t,
+            "power-surge"
+        );
+    
+        setupPowerUp(
+            s_invincibility,
+            k_controller::consumeInvincibility,
+            k_controller::getInvincibility,
+            t -> invincibilityTimeline = t,
+            "invincibility"
+        );
+    
+        setupPowerUp(
+            s_cellReveal,
+            k_controller::consumeCellReveal,
+            k_controller::getCellReveal,
+            t -> cellRevealTimeline = t,
+            "cell-reveal"
+        );
+    
         setupPowerUpCast();
     }
+    
 
     // clips casted power up
     private void setupPowerUpCast() {
@@ -194,7 +217,7 @@ public abstract class BaseGameController {
 
     // when powerup is casted, decreases powerup count, starts cooldown, and applies cast effect
     // disable powerup if it ran out
-    private void setupPowerUp(StackPane powerUp, Runnable consume, Supplier<Integer> remainingCount, String imgName) {
+    private void setupPowerUp(StackPane powerUp, Runnable consume, Supplier<Integer> remainingCount, Consumer<Timeline> timelineSetter, String imgName) {
         powerUp.setOnMouseClicked(event -> {
             SoundUtils.cast();
 
@@ -202,36 +225,42 @@ public abstract class BaseGameController {
             powerUp.setDisable(true);
 
             updatePowerUpCount(powerUp, remainingCount.get());
-            setCooldown(powerUp, ComponentCreator.addCooldownImages(v_cooldowns, imgName));
+            Timeline t = setCooldown(powerUp, imgName);
+            timelineSetter.accept(t);
+
             setPowerUpCast(imgName);
 
             if (remainingCount.get() == 0) powerUp.setOnMouseClicked(null);
         });
     }
+
     
     // animates during cooldown
     // disables powered-up state after cooldown
     // removes cooldowned power up in gui 
-    private void setCooldown(StackPane powerUp, Arc arc) {
-        double cooldownTime = 5 * k_controller.getMultiplier(); // when powerup is buffed, cooldown is increased
-        
-        Timeline cooldown = new Timeline(
+    private Timeline setCooldown(StackPane powerUp, String imgName) {
+        Arc arc = ComponentCreator.addCooldownImages(v_cooldowns, imgName);
+        double cooldownTime = 5 * k_controller.getMultiplier();
+    
+        Timeline timeline = new Timeline(
             new KeyFrame(Duration.ZERO, new KeyValue(arc.lengthProperty(), 360)),
             new KeyFrame(Duration.seconds(cooldownTime), new KeyValue(arc.lengthProperty(), 0))
         );
-
-        cooldown.setOnFinished(e -> {
+    
+        timeline.setOnFinished(e -> {
             SoundUtils.recharge();
             powerUp.setDisable(false);
-
+    
             if (powerUp == s_invincibility) k_controller.invincibilityWearOff();
             if (powerUp == s_powerSurge) k_controller.multiplierWearOff();
-            
-            v_cooldowns.getChildren().remove(0); 
+    
+            v_cooldowns.getChildren().remove(0);
         });
-
-        cooldown.play();
+    
+        timeline.play();
+        return timeline;
     }
+    
 
     // set ups the animation for when a powerup is cast
     private void setPowerUpCast(String imgName) {
@@ -329,24 +358,41 @@ public abstract class BaseGameController {
         if (timer != null) timer.play();
         if (attackInterval != null) attackInterval.play();
         if (gameResultChecker != null) gameResultChecker.play();
+        
+        if (powerSurgeTimeline != null) powerSurgeTimeline.play();
+        if (invincibilityTimeline != null) invincibilityTimeline.play();
+        if (cellRevealTimeline != null) cellRevealTimeline.play();
     }
 
     protected void stopAllTimelines() {
         if (timer != null) timer.stop();
         if (attackInterval != null) attackInterval.stop();
         if (gameResultChecker != null) gameResultChecker.stop();
+
+        if (powerSurgeTimeline != null) powerSurgeTimeline.stop();
+        if (invincibilityTimeline != null) invincibilityTimeline.stop();
+        if (cellRevealTimeline != null) cellRevealTimeline.stop();
     }
 
     protected void pauseAllTimelines() {
         if (timer != null) timer.pause();
         if (attackInterval != null) attackInterval.pause();
         if (gameResultChecker != null) gameResultChecker.pause();
+
+        if (powerSurgeTimeline != null) powerSurgeTimeline.pause();
+        if (invincibilityTimeline != null) invincibilityTimeline.pause();
+        if (cellRevealTimeline != null) cellRevealTimeline.pause();
+
+        if (powerUpUsed != null) powerUpUsed.pause();
     }
 
     protected void nullifyAllTimelines() {
         timer = null;
         attackInterval = null;
         gameResultChecker = null;
+
+        powerSurgeTimeline = null;
+        invincibilityTimeline = null;
+        cellRevealTimeline = null;
     }
-}
-//      
+}   

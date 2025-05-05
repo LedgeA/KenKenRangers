@@ -258,7 +258,8 @@ public class KenkenController {
             SoundUtils.cleared();
 
             iterator.remove(); 
-            this.hp += 5;
+            
+            if (hp <= 100 - dot) this.hp += 5;
         }
     }
 

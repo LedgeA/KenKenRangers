@@ -16,12 +16,12 @@ public class Kenken {
     private final List<Cage> cages = new ArrayList<>();
 
     List<String> colors = new ArrayList<>(Arrays.asList(
-        "#FF5733", "#33FF57", "#5733FF", "#FF33A1", "#A1FF33", 
-        "#33A1FF", "#FF9E33", "#9E33FF", "#33FF9E", "#9EFF33", 
-        "#FF33FF", "#33FFFF", "#FF5733", "#5733FF", "#FF33A1", 
-        "#A1FF33", "#33A1FF", "#FF9E33", "#9E33FF", "#33FF9E", 
-        "#9EFF33", "#FF33FF", "#33FFFF", "#FF5733", "#5733FF", 
-        "#FF33A1", "#A1FF33", "#33A1FF", "#FF9E33", "#9E33FF"
+        "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4",
+        "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff",
+        "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", "#ffd8b1",
+        "#000075", "#808080", "#ffffff", "#000000", "#a9a9a9", "#ff7f00",
+        "#1f77b4", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2",
+        "#7f7f7f", "#bcbd22", "#17becf", "#ff1493", "#00ced1", "#daa520"
     ));
 
     
