@@ -16,7 +16,7 @@ public class ChapterTwoController extends BaseStoryController {
 
         // difficulty
         DIMENSION = 4;
-        dot = 20;
+        dot = 10;
 
         k_controller = new KenkenController(DIMENSION, dot, powerSurge, invincibility, cellReveal);
         k_view = k_controller.getK_view();
