@@ -16,13 +16,16 @@ public class Kenken {
     private final List<Cage> cages = new ArrayList<>();
 
     List<String> colors = new ArrayList<>(Arrays.asList(
-        "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4",
-        "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff",
-        "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", "#ffd8b1",
-        "#00ff7f", "#808080", "#ffffff", "#000000", "#a9a9a9", "#ff7f00",
-        "#1f77b4", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2",
-        "#7f7f7f", "#bcbd22", "#17becf", "#ff1493", "#00ced1", "#daa520"
+        "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", 
+        "#FFA500", "#800080", "#008000", "#008080", "#800000", "#808000", 
+        "#00CED1", "#DC143C", "#FF1493", "#1E90FF", "#32CD32", "#FFD700", 
+        "#ADFF2F", "#FF69B4", "#4B0082", "#40E0D0", "#FF7F50", "#7FFF00", 
+        "#BA55D3", "#F08080", "#00FA9A", "#FF6347", "#DA70D6", "#87CEEB", 
+        "#66CDAA", "#CD5C5C", "#20B2AA", "#9370DB", "#3CB371", "#FFDAB9", 
+        "#F0E68C", "#D2691E", "#D3D3D3", "#FF8C00", "#B8860B", "#8A2BE2", 
+        "#A52A2A", "#B0E0E6", "#FFB6C1", "#9ACD32", "#C71585", "#C0C0C0"
     ));
+
 
     
     private final Random RANDOM = new Random();

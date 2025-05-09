@@ -55,7 +55,9 @@ public class BottomlessAbyssController extends BaseGameController {
     // if dot > 15, dimensinsion++ and reset dot = 10
     private void updateDifficulty() throws SQLException {
         GameSession gameSession = DatabaseManager.retrieveGameSession();
-        
+
+        System.out.println(gameSession.dimension());
+
         dot = gameSession.dot() + 5;
         DIMENSION = gameSession.dimension();
         if (dot > 15) {
@@ -65,6 +67,7 @@ public class BottomlessAbyssController extends BaseGameController {
 
         // since game_session has dimension = 0 at start, skip it to 3 immediately
         if (DIMENSION < 3) DIMENSION = 3; 
+        if (dot < 10) dot = 10;
     }
 
     @Override

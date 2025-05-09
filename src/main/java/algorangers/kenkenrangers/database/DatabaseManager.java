@@ -38,7 +38,6 @@ public class DatabaseManager {
 
                 System.out.println("Using database at: " + dbPath); 
                 
-
                 connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
 
                 Statement stmt = connection.createStatement();
