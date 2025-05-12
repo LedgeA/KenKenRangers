@@ -22,7 +22,7 @@ public class SoundUtils {
 
     static {
         music.setCycleCount(MediaPlayer.INDEFINITE);
-        music.setVolume(0.7);
+        music.setVolume(0.5);
     }
 
     public static void preloadSounds() {}
