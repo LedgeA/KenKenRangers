@@ -74,7 +74,7 @@ public class TutorialController extends BaseGameController {
             "Invincibility makes you invincible for a set amount of time.",
             "Power Surge doubles the power of any super power casted within a set amount of time.",
             "Cell Reveal reveals 2 of your unsolved tiles.",
-            "Try it out! Tap on a cell to enter a number."
+            "Try it out! Have a go at it!."
         };
     }
     
