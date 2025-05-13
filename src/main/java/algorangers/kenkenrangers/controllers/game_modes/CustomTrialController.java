@@ -11,6 +11,9 @@ import algorangers.kenkenrangers.utils.SoundUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class CustomTrialController extends BaseGameController {
@@ -30,6 +33,7 @@ public class CustomTrialController extends BaseGameController {
 
         // enable powerups
         setupAllPowerUps();
+        updatePowerUps();
 
         // Setup Pause Menu Visiblity
         setUpPause();
@@ -37,6 +41,19 @@ public class CustomTrialController extends BaseGameController {
         // Add k_view at the below pause menu
         int pos = p_main.getChildren().indexOf(p_pause);
         p_main.getChildren().add(pos, k_view);
+    }
+
+    private void updatePowerUps() {
+        updatePowerUp(s_powerSurge, k_controller.getPowerSurge());
+        updatePowerUp(s_invincibility, k_controller.getInvincibility());
+        updatePowerUp(s_cellReveal, k_controller.getCellReveal());
+
+    }
+    
+    private void updatePowerUp(StackPane stackPane, int remainingCount) {
+        Text text = (Text) ((Pane) stackPane.getChildren().get(1)).getChildren().get(0);
+        text.setText(String.valueOf(remainingCount));
+        if (remainingCount == 0) stackPane.setOnMouseClicked(null);
     }
 
     private void setInitialSettings() throws SQLException {
