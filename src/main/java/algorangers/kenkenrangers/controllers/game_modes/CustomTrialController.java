@@ -105,7 +105,7 @@ public class CustomTrialController extends BaseGameController {
             score, 
             computeStars());
         
-        SoundUtils.musicOn();
+        SoundUtils.musicOff();
         SoundUtils.finished(gameOver);
         GameUtils.navigate("game-over.fxml", p_main);
     }
