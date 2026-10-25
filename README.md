@@ -74,14 +74,3 @@ export LOCALAPPDATA="$PWD/.dependencies/app-data"
 Choose **Continue** to select an existing player. The mode menu provides **Rangers' Saga**, **Bottomless Abyss**, **Custom Trial**, and the tutorial. Custom Trial lets you adjust grid size, damage over time, and each power-up count before starting.
 
 The application launches fullscreen. Press **F11** to leave fullscreen mode.
-
-## Configuration
-
-| Location or setting | Purpose |
-| --- | --- |
-| `LOCALAPPDATA` | Parent directory for the application's `KenKen/kenken.db` save file |
-| [pom.xml](pom.xml) | Java compilation target, JavaFX version, and Maven dependencies |
-| **Custom Trial** screen | Grid dimensions, damage over time, and power-up quantities |
-| `src/main/resources/algorangers/kenkenrangers/` | FXML views, artwork, fonts, and audio |
-
-The SQLite database is created automatically when first accessed. No database server, credentials, or external service is required. To move saved profiles, close the game and copy `KenKen/kenken.db` to the corresponding directory under the new `LOCALAPPDATA` location.
